@@ -41,8 +41,8 @@ object BroStream extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "kafka:9092"
-    val shemaRegistryURL = "http://localhost:8081"
+    val kafkaUrl = "localhost:9092"
+    //val shemaRegistryURL = "http://localhost:8081"
     val topic ="bro"
 
     val spark = getSparkSession(args)
