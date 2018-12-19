@@ -16,7 +16,6 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 
-
 object BroStream extends StreamUtils {
   case class ConnCountObj(
                            timestamp: String,
@@ -42,20 +41,29 @@ object BroStream extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.252.108.22:9092"
-//    val shemaRegistryURL = "http://10.252.108.22:8081"
+    val kafkaUrl = "kafka:9092"
+    val shemaRegistryURL = "http://localhost:8081"
     val topic ="bro"
 
     val spark = getSparkSession(args)
     import spark.implicits._
 
     spark.sparkContext.setLogLevel("ERROR")
+ //   spark.sparkContext.setLogLevel("INFO")
     val kafkaStreamDF = spark.readStream
       .format("kafka")
       .option("kafka.bootstrap.servers",kafkaUrl)
       .option("subscribe", topic)
       .option("startingOffsets","latest")
       .load()
+    // ========== DF with no aggregations ==========
+   // val noAggDF = kafkaStreamDF.select("*")
+
+    // Print new data to console
+    // noAggDF
+//      .writeStream
+//      .format("console")
+//      .start()
 
     val schema : StructType = StructType(
       Seq(StructField
@@ -95,10 +103,8 @@ object BroStream extends StreamUtils {
         .getField("conn")
         .alias("conn")
       )
-
     val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
       from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
-
     val connDf = parsedRawDf
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
         r.getAs[String](1),
@@ -126,11 +132,12 @@ object BroStream extends StreamUtils {
     //Sink to Mongodb
     val ConnCountQuery = connDf
       .writeStream
+//      .format("console")
       .outputMode("append")
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
-      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.252.108.98/spark.broisot"))
+      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://localhost/spark.bro"))
       var mongoConnector: MongoConnector = _
       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 

@@ -4,7 +4,7 @@
 		module="bro-aal-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20181018013333"
+		publication="20181201164402"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>
