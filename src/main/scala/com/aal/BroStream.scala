@@ -41,7 +41,7 @@ object BroStream extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "master:9092"
+    val kafkaUrl = "master.pens.ac.id:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="bro"
 
