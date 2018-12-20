@@ -103,13 +103,15 @@ object BroStream extends StreamUtils {
         .getField("conn")
         .alias("conn")
       )
+
+    val parsedLog = parsedLogData.select("*")
     
     // Print new data to console
-     parsedLogData
+     parsedLog
      .writeStream
       .format("console")
      .start()
-     
+
     val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
       from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
     val connDf = parsedRawDf
