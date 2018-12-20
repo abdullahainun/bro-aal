@@ -105,11 +105,7 @@ object BroStream extends StreamUtils {
 
     val parsedLog = parsedLogData.select("conn.*")
     
-    // Print new data to console
-     parsedLog
-     .writeStream
-      .format("console")
-     .start()
+    
 
     val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
       from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
@@ -136,6 +132,11 @@ object BroStream extends StreamUtils {
         r.getAs[Integer](19)
       ))
 
+    // Print new data to console
+     connDf
+     .writeStream
+      .format("console")
+     .start()
 
     //Sink to Mongodb
     val ConnCountQuery = connDf
