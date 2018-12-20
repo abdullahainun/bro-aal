@@ -87,8 +87,7 @@ object BroStream extends StreamUtils {
         StructField("orig_pkts", IntegerType, true),
         StructField("orig_ip_bytes", IntegerType, true),
         StructField("resp_pkts", IntegerType, true),
-        StructField("resp_ip_bytes", IntegerType, true),
-        StructField("tunnel_parents", ArrayType(StringType, true)))
+        StructField("resp_ip_bytes", IntegerType, true))
       )
       )
       )
@@ -142,7 +141,7 @@ object BroStream extends StreamUtils {
     val ConnCountQuery = connDf
       .writeStream
 //      .format("console")
-//      .outputMode("append")
+      .outputMode("append")
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
