@@ -57,13 +57,13 @@ object BroStream extends StreamUtils {
       .option("startingOffsets","latest")
       .load()
     // ========== DF with no aggregations ==========
-   // val noAggDF = kafkaStreamDF.select("*")
+    val noAggDF = kafkaStreamDF.select("*")
 
     // Print new data to console
-    // noAggDF
-//      .writeStream
-//      .format("console")
-//      .start()
+     noAggDF
+      .writeStream
+      .format("console")
+     .start()
 
     val schema : StructType = StructType(
       Seq(StructField
