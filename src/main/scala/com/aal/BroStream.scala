@@ -141,7 +141,7 @@ object BroStream extends StreamUtils {
     //Sink to Mongodb
     val ConnCountQuery = connDf
       .writeStream
-//      .format("console")
+      .format("console")
       .outputMode("append")
 
       .foreach(new ForeachWriter[ConnCountObj] {
