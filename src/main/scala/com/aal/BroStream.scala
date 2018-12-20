@@ -104,7 +104,7 @@ object BroStream extends StreamUtils {
         .alias("conn")
       )
 
-    val parsedLog = parsedLogData.select("*")
+    val parsedLog = parsedLogData.select("conn.*")
     
     // Print new data to console
      parsedLog
