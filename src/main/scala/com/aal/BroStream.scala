@@ -142,7 +142,7 @@ object BroStream extends StreamUtils {
     val ConnCountQuery = connDf
       .writeStream
 //      .format("console")
-      .outputMode("append")
+//      .outputMode("append")
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
