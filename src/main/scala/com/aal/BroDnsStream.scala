@@ -79,9 +79,9 @@ object BroStream extends StreamUtils {
         StructField("RD", BooleanType, true),
         StructField("RA", BooleanType, true),
         StructField("Z", IntegerType, true),
-        StructField("answers", ArrayType, true),
-        StructField("TTLs", ArrayType, true),
-        StructField("rejected", BooleanType, true)))
+        StructField("answers", ArrayType(StringType, true)),
+        StructField("TTLs", ArrayType(IntegerType, true)),
+        StructField("rejected", BooleanType, true)
       )
       )
       )
