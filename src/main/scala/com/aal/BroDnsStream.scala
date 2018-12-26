@@ -63,8 +63,7 @@ object BroStream extends StreamUtils {
 
     val schema : StructType = StructType(
       Seq(StructField
-      ("dns", StructType(Seq(
-        StructField("ts",DoubleType,true),
+      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
         StructField("id.orig_h", StringType, true),
         StructField("id.orig_p", IntegerType, true),
