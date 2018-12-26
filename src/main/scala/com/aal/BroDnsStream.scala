@@ -25,7 +25,7 @@ object BroStream extends StreamUtils {
                            idRespH: String,
                            idRespP: Integer,
                            proto: String,
-                           transId: Double,
+                           transId: Integer,
                            query: String,
                            rcode: Double,
                            rcodeName: String,
