@@ -58,7 +58,7 @@ object BroStream extends StreamUtils {
     // Print new data to console
      noAggDF
      .writeStream
-      .format("console")
+     .format("console")
      .start()
 
     val schema : StructType = StructType(
@@ -82,6 +82,7 @@ object BroStream extends StreamUtils {
         StructField("answers", ArrayType(StringType, true)),
         StructField("TTLs", ArrayType(IntegerType, true)),
         StructField("rejected", BooleanType, true)
+      )
       )
       )
       )
