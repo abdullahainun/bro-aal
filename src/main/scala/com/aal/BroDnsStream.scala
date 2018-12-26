@@ -33,6 +33,9 @@ object BroStream extends StreamUtils {
                            TC: Boolean,
                            RD: Boolean,
                            RA: Boolean,
+                           Z:Integer,
+                           answers:String,
+                           TTLs:Double,
                            rejected: Boolean
                          )
 
