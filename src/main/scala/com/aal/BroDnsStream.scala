@@ -91,15 +91,15 @@ object BroStream extends StreamUtils {
       )
     )
 
-    // val parsedLogData = kafkaStreamDF
-    //   .select(col("value")
-    //     .cast(StringType)
-    //     .as("col")
-    //   )
-    //   .select(from_json(col("col"), schema)
-    //     .getField("dns")
-    //     .alias("dns")
-    //   )
+    val parsedLogData = kafkaStreamDF
+      .select(col("value")
+        .cast(StringType)
+        .as("col")
+      )
+      .select(from_json(col("col"), schema)
+        .getField("dns")
+        .alias("dns")
+      )
 
     // // Print new data to console
     //  parsedLogData
