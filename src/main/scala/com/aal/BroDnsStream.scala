@@ -83,7 +83,7 @@ object BroStream extends StreamUtils {
         StructField("RA", BooleanType, true),
         StructField("Z", IntegerType, true),
         StructField("answers", ArrayType(StringType, true)),
-        StructField("TTLs", ArrayType(IntegerType, true)),
+        StructField("TTLs", ArrayType(DoubleType, true)),
         StructField("rejected", BooleanType, true)
       )
       )
@@ -103,7 +103,7 @@ object BroStream extends StreamUtils {
 
     // Print new data to console
      parsedLogData
-     .writeStream
+     .writeStream 
       .format("console")
      .start()
 
