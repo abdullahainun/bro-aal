@@ -35,7 +35,7 @@ object BroStream extends StreamUtils {
                            RA: Boolean,
                            Z:Integer,
                            answers:String,
-                           TTLs:Double,
+                           TTLs:Integer,
                            rejected: Boolean
                          )
 
@@ -83,7 +83,7 @@ object BroStream extends StreamUtils {
         StructField("RA", BooleanType, true),
         StructField("Z", IntegerType, true),
         StructField("answers", ArrayType(StringType, true)),
-        StructField("TTLs", ArrayType(DoubleType, true)),
+        StructField("TTLs", ArrayType(IntegerType, true)),
         StructField("rejected", BooleanType, true)
       )
       )
@@ -91,21 +91,21 @@ object BroStream extends StreamUtils {
       )
     )
 
-    val parsedLogData = kafkaStreamDF
-      .select(col("value")
-        .cast(StringType)
-        .as("col")
-      )
-      .select(from_json(col("col"), schema)
-        .getField("dns")
-        .alias("dns")
-      )
+    // val parsedLogData = kafkaStreamDF
+    //   .select(col("value")
+    //     .cast(StringType)
+    //     .as("col")
+    //   )
+    //   .select(from_json(col("col"), schema)
+    //     .getField("dns")
+    //     .alias("dns")
+    //   )
 
-    // Print new data to console
-     parsedLogData
-     .writeStream 
-      .format("console")
-     .start()
+    // // Print new data to console
+    //  parsedLogData
+    //  .writeStream 
+    //   .format("console")
+    //  .start()
 
     val parsedRawDf = parsedLogData.select("dns.*").withColumn("ts",to_utc_timestamp(
       from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
@@ -128,7 +128,7 @@ object BroStream extends StreamUtils {
         r.getAs[Boolean](14),
         r.getAs[Integer](15),
         r.getAs[String](16),
-        r.getAs[Double](17),
+        r.getAs[Integer](17),
         r.getAs[Boolean](18)
       ))
 
