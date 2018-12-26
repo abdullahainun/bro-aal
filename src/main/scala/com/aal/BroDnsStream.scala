@@ -73,7 +73,7 @@ object BroStream extends StreamUtils {
         StructField("id.resp_h", StringType, true),
         StructField("id.resp_p", IntegerType, true),
         StructField("proto", StringType, true),
-        StructField("trans_id", DoubleType, true),
+        StructField("trans_id", IntegerType, true),
         StructField("query", StringType, true),
         StructField("rcode", IntegerType, true),
         StructField("rcode_name", StringType, true),
