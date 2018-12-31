@@ -15,7 +15,7 @@ private[aal] trait StreamUtils {
   }
 
   def getSparkSession(args: Array[String]): SparkSession = {
-    val uri: String = args.headOption.getOrElse("mongodb://db/spark.bro15jun")
+    val uri: String = args.headOption.getOrElse("mongodb://10.252.108.98/bro.connlog")
 
     val conf = new SparkConf()
       .setMaster ("spark://master.pens.ac.id:7077")
