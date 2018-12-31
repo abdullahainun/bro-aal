@@ -219,8 +219,6 @@ object BroConnStream extends StreamUtils {
                   }
                   // set ps, bs and pps                  
                   if(sc.duration != 0){
-                    bs = (sc.origIpBytes + sc.respIpBytes * 8) / sc.duration
-                    ps = sc.origPkts + sc.respPkts /sc.duration
                     pps = sc.origPkts + sc.respPkts / sc.duration
                   }
 
