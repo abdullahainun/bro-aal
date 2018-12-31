@@ -174,7 +174,7 @@ object BroConnStream extends StreamUtils {
                   var bs = 0;
                   var ps = 0;
                   var ait = 0;
-                  var pps = 0;   
+                  var pps = 0.0;   
 
                   // set nnp
                   if( px == 0 ){
