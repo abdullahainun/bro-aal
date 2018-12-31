@@ -190,16 +190,28 @@ object BroConnStream extends StreamUtils {
                   }
                   // psp
                   psp = nsp/px;
-                  iopr = sc.origPkts / sc.respPkts;
+                  if(sc.respPkts != 0){
+                    iopr = sc.origPkts / sc.respPkts;
+                  }else{
+                    iopr = 0
+                  }
                   // set reconnect
                   // reconnect match {
                   //   case sc.history if sc.history.startsWith("Sr%") => 1
                   //   case _=> 0
                   // }
                   // set fps
-                  fps = sc.origIpBytes / sc.origPkts
+                  if(sc.origPkts !=0 ){
+                    fps = sc.origIpBytes / sc.origPkts                    
+                  }else{
+                    fps = 0
+                  }
                   // set tbt
-                  tbt = sc.origIpBytes + sc.respIpBytes
+                  if(sc.respIpBytes != 0){
+                    tbt = sc.origIpBytes + sc.respIpBytes                    
+                  }else{
+                    tbt = 0
+                  }
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
