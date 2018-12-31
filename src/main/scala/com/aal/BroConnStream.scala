@@ -212,6 +212,17 @@ object BroConnStream extends StreamUtils {
                   }else{
                     tbt = 0
                   }
+
+                  if(px != 0){
+                    apl = ( sc.origIpBytes + sc.respIpBytes ) / px
+                  }
+                  // set ps, bs and pps                  
+                  if(sc.duration != 0){
+                    bs = (origIpBytes + respIpBytes * 8) / sc.duration
+                    ps = sc.origPkts + sc.respPkts /sc.duration
+                    pps = sc.origPkts + sc.respPkts / sc.duration
+                  }
+
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
