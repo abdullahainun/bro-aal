@@ -54,7 +54,7 @@ object BroStream extends StreamUtils {
       .format("kafka")
       .option("kafka.bootstrap.servers",kafkaUrl)
       .option("subscribe", topic)
-      .option("startingOffsets","latest")
+      .option("startingOffsets","earliest")
       .load()
     // ========== DF with no aggregations ==========
    val noAggDF = kafkaStreamDF.select("*")
@@ -176,6 +176,7 @@ object BroStream extends StreamUtils {
               doc.put("orig_ip_bytes", sc.origIpBytes)
               doc.put("resp_bytes", sc.respPkts)
               doc.put("resp_ip_bytes", sc.respIpBytes)
+              doc.put("PX",sc.sc.origPkts + sc.respPkts)
               doc
             }).asJava)
           })
