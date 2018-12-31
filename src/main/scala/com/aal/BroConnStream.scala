@@ -160,14 +160,46 @@ object BroConnStream extends StreamUtils {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
-                  var nnp = 0;
                   var px = sc.origPkts + sc.respPkts;
-                  if( px == 0 ){
-                    nnp = 1
-                  }else{
-                    nnp = 0
-                  }
+                  var nnp = 0;
+                  var nsp = 0;
+                  var psp = 0;
+                  var iopr = 0;
+                  var reconnect = 0;
+                  var fps = 0;
+                  var tbt = 0;
+                  var apl = 0;
+                  var dpl = 0;
+                  var pv = 0
+                  var bs = 0;
+                  var ps = 0;
+                  var ait = 0;
+                  var pps = 0;   
 
+                  // set nnp
+                  if( px == 0 ){
+                    nnp = 1;
+                  }else{
+                    nnp = 0;
+                  }
+                  // set nsp
+                  if(px >= 63 && px <= 400 ){
+                    nsp = 1;
+                  }else{
+                    nsp = 0;
+                  }
+                  // psp
+                  psp = nsp/px;
+                  iopr = sc.origPkts / sc.respPkts;
+                  // set reconnect
+                  reconnect match {
+                    case sc.history if sc.history.startsWith("Sr%") => 1
+                    case _=> 0
+                  }
+                  // set fps
+                  fps = sc.origIpBytes / sc.origPkts
+                  // set tbt
+                  tbt = sc.origIpBytes + respIpBytes
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
@@ -189,19 +221,19 @@ object BroConnStream extends StreamUtils {
                   doc.put("resp_ip_bytes", sc.respIpBytes)
                   doc.put("PX",px)                  
                   doc.put("NNP",nnp)
-                  doc.put("NSP",sc.origPkts + sc.respPkts)
-                  doc.put("PSP",sc.origPkts + sc.respPkts)
-                  doc.put("IOPR",sc.origPkts + sc.respPkts)
-                  doc.put("Reconnect",sc.origPkts + sc.respPkts)
-                  doc.put("FPS",sc.origPkts + sc.respPkts)
-                  doc.put("TBT",sc.origPkts + sc.respPkts)
-                  doc.put("APL",sc.origPkts + sc.respPkts)
-                  doc.put("DPL",sc.origPkts + sc.respPkts)
-                  doc.put("PV",sc.origPkts + sc.respPkts)
-                  doc.put("BS",sc.origPkts + sc.respPkts)
-                  doc.put("PS",sc.origPkts + sc.respPkts)
-                  doc.put("AIT",sc.origPkts + sc.respPkts)
-                  doc.put("PPS",sc.origPkts + sc.respPkts)
+                  doc.put("NSP",nsp)
+                  doc.put("PSP",psp)
+                  doc.put("IOPR",iopr)
+                  doc.put("Reconnect",reconnect)
+                  doc.put("FPS",fps)
+                  doc.put("TBT",tbt)
+                  doc.put("APL",apl)
+                  doc.put("DPL",dpl)
+                  doc.put("PV",pv)
+                  doc.put("BS",bs)
+                  doc.put("PS",ps)
+                  doc.put("AIT",ait)
+                  doc.put("PPS",pps)
                   doc
                 }).asJava)
               })
