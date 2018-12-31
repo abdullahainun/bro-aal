@@ -192,14 +192,14 @@ object BroConnStream extends StreamUtils {
                   psp = nsp/px;
                   iopr = sc.origPkts / sc.respPkts;
                   // set reconnect
-                  reconnect match {
-                    case sc.history if sc.history.startsWith("Sr%") => 1
-                    case _=> 0
-                  }
+                  // reconnect match {
+                  //   case sc.history if sc.history.startsWith("Sr%") => 1
+                  //   case _=> 0
+                  // }
                   // set fps
                   fps = sc.origIpBytes / sc.origPkts
                   // set tbt
-                  tbt = sc.origIpBytes + respIpBytes
+                  tbt = sc.origIpBytes + sc.respIpBytes
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
