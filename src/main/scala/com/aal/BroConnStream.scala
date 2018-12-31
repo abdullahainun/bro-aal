@@ -160,6 +160,14 @@ object BroConnStream extends StreamUtils {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
+                  var nnp = 0;
+                  var px = sc.origPkts + sc.respPkts;
+                  if( px == 0 ){
+                    nnp = 1
+                  }else{
+                    nnp = 0
+                  }
+
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
@@ -179,7 +187,21 @@ object BroConnStream extends StreamUtils {
                   doc.put("orig_ip_bytes", sc.origIpBytes)
                   doc.put("resp_bytes", sc.respPkts)
                   doc.put("resp_ip_bytes", sc.respIpBytes)
-                  doc.put("PX",sc.origPkts + sc.respPkts)
+                  doc.put("PX",px)                  
+                  doc.put("NNP",nnp)
+                  doc.put("NSP",sc.origPkts + sc.respPkts)
+                  doc.put("PSP",sc.origPkts + sc.respPkts)
+                  doc.put("IOPR",sc.origPkts + sc.respPkts)
+                  doc.put("Reconnect",sc.origPkts + sc.respPkts)
+                  doc.put("FPS",sc.origPkts + sc.respPkts)
+                  doc.put("TBT",sc.origPkts + sc.respPkts)
+                  doc.put("APL",sc.origPkts + sc.respPkts)
+                  doc.put("DPL",sc.origPkts + sc.respPkts)
+                  doc.put("PV",sc.origPkts + sc.respPkts)
+                  doc.put("BS",sc.origPkts + sc.respPkts)
+                  doc.put("PS",sc.origPkts + sc.respPkts)
+                  doc.put("AIT",sc.origPkts + sc.respPkts)
+                  doc.put("PPS",sc.origPkts + sc.respPkts)
                   doc
                 }).asJava)
               })
