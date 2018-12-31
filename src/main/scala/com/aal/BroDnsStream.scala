@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 
-object BroStream extends StreamUtils {
+object BroDnsStream extends StreamUtils {
   case class ConnCountObj(
                            timestamp: String,
                            uid: String,
