@@ -196,10 +196,11 @@ object BroConnStream extends StreamUtils {
                     iopr = 0
                   }
                   // set reconnect
-                  // reconnect match {
-                  //   case sc.history if sc.history.startsWith("Sr%") => 1
-                  //   case _=> 0
-                  // }
+                  if (sc.history == "ShADadfFr"){
+                    reconnect = 1
+                  }else{
+                    reconnect = 0
+                  }
                   // set fps
                   if(sc.origPkts !=0 ){
                     fps = sc.origIpBytes / sc.origPkts                    
@@ -229,14 +230,7 @@ object BroConnStream extends StreamUtils {
                   doc.put("id_orig_p", sc.idOrigP)
                   doc.put("id_resp_h", sc.idRespH)
                   doc.put("id_resp_p", sc.idRespP)
-                  doc.put("proto", sc.proto)
-                  doc.put("service", sc.service)
                   doc.put("duration", sc.duration)
-                  doc.put("orig_bytes", sc.orig_bytes)
-                  doc.put("conn_state", sc.connState)
-                  doc.put("local_orig", sc.localOrig)
-                  doc.put("local_resp", sc.localResp)
-                  doc.put("missed_bytes", sc.missedBytes)
                   doc.put("history", sc.history)
                   doc.put("orig_pkts", sc.origPkts)
                   doc.put("orig_ip_bytes", sc.origIpBytes)
@@ -251,11 +245,6 @@ object BroConnStream extends StreamUtils {
                   doc.put("FPS",fps)
                   doc.put("TBT",tbt)
                   doc.put("APL",apl)
-                  doc.put("DPL",dpl)
-                  doc.put("PV",pv)
-                  doc.put("BS",bs)
-                  doc.put("PS",ps)
-                  doc.put("AIT",ait)
                   doc.put("PPS",pps)
                   doc
                 }).asJava)
