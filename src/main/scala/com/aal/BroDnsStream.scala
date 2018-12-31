@@ -141,7 +141,7 @@ object BroStream extends StreamUtils {
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
-      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://localhost/spark.dnslog"))
+      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://localhost/bro.dnslog"))
       var mongoConnector: MongoConnector = _
       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
