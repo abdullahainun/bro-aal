@@ -219,7 +219,7 @@ object BroConnStream extends StreamUtils {
                   }
                   // set ps, bs and pps                  
                   if(sc.duration != 0){
-                    pps = sc.origPkts + sc.respPkts / sc.duration
+                    pps = ( sc.origPkts + sc.respPkts ) / sc.duration
                   }
 
                   doc.put("ts", sc.timestamp)
