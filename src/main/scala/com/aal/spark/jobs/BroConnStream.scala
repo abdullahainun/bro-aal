@@ -284,7 +284,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](19),
         r.getAs[Integer](20),
         r.getAs[Integer](21),
-        r.getAs[Integer](22),
+        r.getAs[Integer](22)
         // r.getAs[Integer](23),
         // r.getAs[Integer](24),
         // r.getAs[Integer](25),
