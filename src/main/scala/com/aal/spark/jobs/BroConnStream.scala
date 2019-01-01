@@ -163,91 +163,91 @@ object BroConnStream extends StreamUtils {
         result
     })
 
-    // rumus psp
-    val psp = udf((nsp:Double, px: Double) => {
-        var result = px
+    // // rumus psp
+    // val psp = udf((nsp:Double, px: Double) => {
+    //     var result = px
 
-        if(!(px == 0.0)){
-            result = nsp/px
-        }
-    })
-
-    // rumus iopr
-    val iopr = udf((origPkts:Int, respPkts:Int) => {
-        var result = 0
-        if(respPkts != 0){
-            result = origPkts / respPkts;
-        }else{
-            result = 0
-        }
-        result
-    })
-
-    // rumus reconnect
-    val reconnect = udf((history:String) => {
-        var result = 0
-        // rumus reconnect
-        var temp = history  contains "Sr" 
-        if (temp == true){
-            result = 1
-        }else{
-            result = 0
-        }
-        result
-    })
-
-    // rumus fps
-    val fps = udf((origIpBytes:Int, origPkts:Int) => {
-        var result = 0
-        if(origPkts !=0 ){
-          result = origIpBytes / origPkts                    
-        }else{
-          result = 0
-        }
-
-        result
-    })
-
-    // rumus tbt
-    val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
-
-    val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
-        var result = 0
-        if(px == 0){
-            result = 0             
-        }else{
-            result = (origIpBytes + respIpBytes )/px
-        }
-        result
-    })
-    // val dpl = udf(() => {
-    //     var result = 0
-
+    //     if(!(px == 0.0)){
+    //         result = nsp/px
+    //     }
     // })
-    // val pv =  udf(() => {
-    //     var result = 0
-    // }
-    // val bs = udf(() => {
-    //     var result = 0
 
-    // })
-    // val ps = udf(() => {
+    // // rumus iopr
+    // val iopr = udf((origPkts:Int, respPkts:Int) => {
     //     var result = 0
-
+    //     if(respPkts != 0){
+    //         result = origPkts / respPkts;
+    //     }else{
+    //         result = 0
+    //     }
+    //     result
     // })
-    // val ait = udf(() => {
+
+    // // rumus reconnect
+    // val reconnect = udf((history:String) => {
     //     var result = 0
-
+    //     // rumus reconnect
+    //     var temp = history  contains "Sr" 
+    //     if (temp == true){
+    //         result = 1
+    //     }else{
+    //         result = 0
+    //     }
+    //     result
     // })
-    val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
-        var result = 0.0
-        if(px != 0){
-            result = (origPkts + respPkts ) / duration
-        }else{
-            result = 0.0  
-        }
-        result
-    })
+
+    // // rumus fps
+    // val fps = udf((origIpBytes:Int, origPkts:Int) => {
+    //     var result = 0
+    //     if(origPkts !=0 ){
+    //       result = origIpBytes / origPkts                    
+    //     }else{
+    //       result = 0
+    //     }
+
+    //     result
+    // })
+
+    // // rumus tbt
+    // val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
+
+    // val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
+    //     var result = 0
+    //     if(px == 0){
+    //         result = 0             
+    //     }else{
+    //         result = (origIpBytes + respIpBytes )/px
+    //     }
+    //     result
+    // })
+    // // val dpl = udf(() => {
+    // //     var result = 0
+
+    // // })
+    // // val pv =  udf(() => {
+    // //     var result = 0
+    // // }
+    // // val bs = udf(() => {
+    // //     var result = 0
+
+    // // })
+    // // val ps = udf(() => {
+    // //     var result = 0
+
+    // // })
+    // // val ait = udf(() => {
+    // //     var result = 0
+
+    // // })
+    // val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
+    //     var result = 0.0
+    //     if(px != 0){
+    //         result = (origPkts + respPkts ) / duration
+    //     }else{
+    //         result = 0.0  
+    //     }
+    //     result
+    // })
 
     val newDF = parsedRawDf  
       .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
