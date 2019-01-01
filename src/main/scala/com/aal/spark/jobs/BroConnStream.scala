@@ -44,7 +44,7 @@ object BroConnStream extends StreamUtils {
                            PX:Integer,
                            NNP:Integer,
                            NSP:Integer,
-                           PSP:Integer
+                           PSP:Integer,
                            IOPR:Integer,
                            Reconnect:Integer,
                            FPS:Integer,
@@ -287,7 +287,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](20),
         r.getAs[Integer](21),
         r.getAs[Integer](22),
-        r.getAs[Integer](23)
+        r.getAs[Integer](23),
         r.getAs[Integer](24),
         r.getAs[Integer](25),
         r.getAs[Integer](26),
