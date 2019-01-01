@@ -48,7 +48,7 @@ object BroConnStream extends StreamUtils {
                            FPS:Integer,
                            TBT:Integer,
                            APL:Integer,
-                           PPS:Double,
+                           PPS:Double
                          )
 
 

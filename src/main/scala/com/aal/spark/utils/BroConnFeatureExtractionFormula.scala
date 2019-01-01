@@ -10,7 +10,7 @@ object BroConnFeatureExtractionFormula{
     val px = udf((origPkts: Integer, respPkts: Integer) => origPkts + respPkts )
     
     // rumus nnp
-    val nnp = udf(px: Integer) => {
+    val nnp = udf((px: Integer) => {
         var result = 0
         if( px == 0 ){
           result =  1;
@@ -22,7 +22,7 @@ object BroConnFeatureExtractionFormula{
     })
 
     // rumus nsp
-    val nsp = udf(px: Integer) => {
+    val nsp = udf((px: Integer) => {
         var result = 0
 
         if(px >= 63 && px <= 400 ){
@@ -34,7 +34,7 @@ object BroConnFeatureExtractionFormula{
     })
 
     // rumus psp
-    val psp = udf(nsp:Integer, px: Integer) => {
+    val psp = udf((nsp:Integer, px: Integer) => {
         var result = 0
         if(px != 0  ){
             result = nsp/px;
