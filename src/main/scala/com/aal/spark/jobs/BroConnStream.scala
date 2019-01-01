@@ -120,8 +120,11 @@ object BroConnStream extends StreamUtils {
     //  versi alfian
     // Transform data stream to Dataframe
     val parsedLog = kafkaStreamDF.selectExpr("CAST(value AS STRING)").as[(String)]
-      .select(from_json($"value", schema).as("conn"))
-      .select("conn.*")  
+      .select(from_json(col("col"), schema)
+        .getField("conn")
+        .alias("conn")        
+      )
+      .select("conn.*")
 
     val parsedRawDf = parsedLog
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
