@@ -14,9 +14,9 @@ object BroConnFeatureExtractionFormula{
 
         result
     })
-    
+
     // rumus nnp
-    val nnp = udf((px: Integer) => {
+    val nnp = udf((px: Int) => {
         var result = 0
         if( px == 0 ){
           result =  1;
@@ -28,7 +28,7 @@ object BroConnFeatureExtractionFormula{
     })
 
     // rumus nsp
-    val nsp = udf((px: Integer) => {
+    val nsp = udf((px: Int) => {
         var result = 0
 
         if(px >= 63 && px <= 400 ){
@@ -39,17 +39,19 @@ object BroConnFeatureExtractionFormula{
         result
     })
 
-    // rumus psp
-    val psp = udf((nsp:Integer, px: Integer) => {
-        var result = px
-
-        if(!(px == 0)){
-            result = nsp/px
+    // // rumus psp
+    val psp = udf((nsp:Double, px: Double) => {
+        var result = 0.0
+        if(px == 0.0){
+            result = 0.0
+        }else{
+            result = nsp / px;
         }
+        result
     })
 
     // rumus iopr
-    val iopr = udf((origPkts:Integer, respPkts:Integer) => {
+    val iopr = udf((origPkts:Int, respPkts:Int) => {
         var result = 0
         if(respPkts != 0){
             result = origPkts / respPkts;
@@ -59,21 +61,21 @@ object BroConnFeatureExtractionFormula{
         result
     })
 
-    // rumus reconnect
-    val reconnect = udf((history:String) => {
-        var result = 0
-        // rumus reconnect
-        var temp = history  contains "Sr" 
-        if (temp == true){
-            result = 1
-        }else{
-            result = 0
-        }
-        result
-    })
+    // // rumus reconnect
+    // val reconnect = udf((history:String) => {
+    //     var result = 0
+    //     // rumus reconnect
+    //     var temp = history  contains "Sr" 
+    //     if (temp == true){
+    //         result = 1
+    //     }else{
+    //         result = 0
+    //     }
+    //     result.toString
+    // })
 
     // rumus fps
-    val fps = udf((origIpBytes:Integer, origPkts:Integer) => {
+    val fps = udf((origIpBytes:Int, origPkts:Int) => {
         var result = 0
         if(origPkts !=0 ){
           result = origIpBytes / origPkts                    
@@ -85,9 +87,9 @@ object BroConnFeatureExtractionFormula{
     })
 
     // rumus tbt
-    val tbt = udf((origIpBytes:Integer, respIpBytes:Integer) => origIpBytes + respIpBytes )
+    val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
 
-    val apl = udf((px:Integer, origIpBytes:Integer, respIpBytes:Integer) => {
+    val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
         var result = 0
         if(px == 0){
             result = 0             
@@ -115,7 +117,7 @@ object BroConnFeatureExtractionFormula{
     //     var result = 0
 
     // })
-    val pps = udf((duration:Double, origPkts:Integer, respPkts:Integer) => {
+    val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
         var result = 0.0
         if(px != 0){
             result = (origPkts + respPkts ) / duration

@@ -132,136 +132,19 @@ object BroConnStream extends StreamUtils {
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       
-    val px = udf((origPkts: Int, respPkts: Int) => {
-        var result = 0
-        result = origPkts + respPkts 
-
-        result
-    })
-
-    // rumus nnp
-    val nnp = udf((px: Int) => {
-        var result = 0
-        if( px == 0 ){
-          result =  1;
-        }else{
-          result =  0;
-        }
-
-        result
-    })
-
-    // rumus nsp
-    val nsp = udf((px: Int) => {
-        var result = 0
-
-        if(px >= 63 && px <= 400 ){
-            result = 1;
-        }else{
-            result = 0;
-        }
-        result
-    })
-
-    // // rumus psp
-    val psp = udf((nsp:Double, px: Double) => {
-        var result = 0.0
-        if(px == 0.0){
-            result = 0.0
-        }else{
-            result = nsp / px;
-        }
-        result
-    })
-
-    // rumus iopr
-    val iopr = udf((origPkts:Int, respPkts:Int) => {
-        var result = 0
-        if(respPkts != 0){
-            result = origPkts / respPkts;
-        }else{
-            result = 0
-        }
-        result
-    })
-
-    // // rumus reconnect
-    // val reconnect = udf((history:String) => {
-    //     var result = 0
-    //     // rumus reconnect
-    //     var temp = history  contains "Sr" 
-    //     if (temp == true){
-    //         result = 1
-    //     }else{
-    //         result = 0
-    //     }
-    //     result.toString
-    // })
-
-    // rumus fps
-    val fps = udf((origIpBytes:Int, origPkts:Int) => {
-        var result = 0
-        if(origPkts !=0 ){
-          result = origIpBytes / origPkts                    
-        }else{
-          result = 0
-        }
-
-        result
-    })
-
-    // rumus tbt
-    val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
-
-    val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
-        var result = 0
-        if(px == 0){
-            result = 0             
-        }else{
-            result = (origIpBytes + respIpBytes )/px
-        }
-        result
-    })
-    // val dpl = udf(() => {
-    //     var result = 0
-
-    // })
-    // val pv =  udf(() => {
-    //     var result = 0
-    // }
-    // val bs = udf(() => {
-    //     var result = 0
-
-    // })
-    // val ps = udf(() => {
-    //     var result = 0
-
-    // })
-    // val ait = udf(() => {
-    //     var result = 0
-
-    // })
-    val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
-        var result = 0.0
-        if(px != 0){
-            result = (origPkts + respPkts ) / duration
-        }else{
-            result = 0.0  
-        }
-        result
-    })
+    
 
     val newDF = parsedRawDf  
-      .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("NNP", nnp(col("PX").cast("int")))
-      .withColumn("NSP", nsp(col("PX").cast("int")))
-      .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
-      .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("Reconnect", reconnect(col("history").cast("string")))
-      .withColumn("FPS", fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("TBT", tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("APL", apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
+      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
