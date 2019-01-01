@@ -110,12 +110,12 @@ object BroConnFeatureExtractionFormula{
     //     var result = 0
 
     // })
-    val pps = udf((duration:Integer, origPkts:Integer, respPkts:Integer) => {
-        var result = 0
+    val pps = udf((duration:Double, origPkts:Integer, respPkts:Integer) => {
+        var result = 0.0
         if(px != 0){
             result = (origPkts + respPkts ) / duration
         }else{
-            result = 0  
+            result = 0.0  
         }
         result
     })

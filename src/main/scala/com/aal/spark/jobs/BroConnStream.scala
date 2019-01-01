@@ -48,7 +48,7 @@ object BroConnStream extends StreamUtils {
                            FPS:Integer,
                            TBT:Integer,
                            APL:Integer,
-                           PPS:Integer,
+                           PPS:Double,
                          )
 
 
@@ -126,7 +126,15 @@ object BroConnStream extends StreamUtils {
     val parsedRawDf = parsedLog
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-       
+      .withColumn("NNP" BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType))
+      .withColumn("NSP" BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType))
+      .withColumn("PSP" BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
+      .withColumn("IOPR" BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("Reconnect" BroConnFeatureExtractionFormula.reconnect(col("history").cast(StringType)))
+      .withColumn("FPS" BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("TBT" BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("APL" BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("PPS" BroConnFeatureExtractionFormula.px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
     
     val connDf = parsedRawDf
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
@@ -149,7 +157,16 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](17),
         r.getAs[Integer](18),
         r.getAs[Integer](19),
-        r.getAs[Integer](20)
+        r.getAs[Integer](20),
+        r.getAs[Integer](21),
+        r.getAs[Integer](22),
+        r.getAs[Integer](23),
+        r.getAs[Integer](24),
+        r.getAs[Integer](25),
+        r.getAs[Integer](26),
+        r.getAs[Integer](27),
+        r.getAs[Integer](28),
+        r.getAs[Double](29),
       ))
 
     // Print new data to console
@@ -193,16 +210,15 @@ object BroConnStream extends StreamUtils {
                   doc.put("resp_bytes", sc.respPkts)
                   doc.put("resp_ip_bytes", sc.respIpBytes)
                   doc.put("PX", sc.PX)
-                  // doc.put("PX",px)                  
-                  // doc.put("NNP",nnp)
-                  // doc.put("NSP",nsp)
-                  // doc.put("PSP",psp)
-                  // doc.put("IOPR",iopr)
-                  // doc.put("Reconnect",reconnect)
-                  // doc.put("FPS",fps)
-                  // doc.put("TBT",tbt)
-                  // doc.put("APL",apl)
-                  // doc.put("PPS",pps)
+                  doc.put("NNP",sc.PX)
+                  doc.put("NSP",sc.NSP)
+                  doc.put("PSP",sc.PSP)
+                  doc.put("IOPR",sc.IOPR)
+                  doc.put("Reconnect",sc.Reconnect)
+                  doc.put("FPS",sc.FPS)
+                  doc.put("TBT",sc.TBT)
+                  doc.put("APL",sc.APL)
+                  doc.put("PPS",sc.PPS)
                   doc
                 }).asJava)
               })
