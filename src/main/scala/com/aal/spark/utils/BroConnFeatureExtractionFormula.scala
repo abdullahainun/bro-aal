@@ -8,8 +8,8 @@ import org.apache.spark.sql.functions.udf
 import org.apache.spark.sql.types._
 
 object BroConnFeatureExtractionFormula{
-    val px = udf((origPkts: Integer, respPkts: Integer) => {
-        var result : Integer = 0
+    val px = udf((origPkts: Int, respPkts: Int) => {
+        var result = 0
         result = origPkts + respPkts 
 
         result
