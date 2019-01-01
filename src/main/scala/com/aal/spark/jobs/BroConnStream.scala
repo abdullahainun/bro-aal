@@ -295,7 +295,7 @@ object BroConnStream extends StreamUtils {
       ))
 
     // Print new data to console
-     connDf
+     newDF
      .writeStream
       .format("console")
      .start()
