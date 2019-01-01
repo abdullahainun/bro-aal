@@ -195,7 +195,7 @@ object BroConnStream extends StreamUtils {
         }else{
             result = 0
         }
-        result
+        result.toString
     })
 
     // rumus fps
