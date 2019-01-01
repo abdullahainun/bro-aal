@@ -140,7 +140,7 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus nnp
-    val nnp = udf((px: Integer) => {
+    val nnp = udf((px: Int) => {
         var result = 0
         if( px == 0 ){
           result =  1;
@@ -152,7 +152,7 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus nsp
-    val nsp = udf((px: Integer) => {
+    val nsp = udf((px: Int) => {
         var result = 0
 
         if(px >= 63 && px <= 400 ){
@@ -164,7 +164,7 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus psp
-    val psp = udf((nsp:Integer, px: Integer) => {
+    val psp = udf((nsp:Int, px: Int) => {
         var result = px
 
         if(!(px == 0)){
@@ -173,7 +173,7 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus iopr
-    val iopr = udf((origPkts:Integer, respPkts:Integer) => {
+    val iopr = udf((origPkts:Int, respPkts:Int) => {
         var result = 0
         if(respPkts != 0){
             result = origPkts / respPkts;
@@ -197,7 +197,7 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus fps
-    val fps = udf((origIpBytes:Integer, origPkts:Integer) => {
+    val fps = udf((origIpBytes:Int, origPkts:Int) => {
         var result = 0
         if(origPkts !=0 ){
           result = origIpBytes / origPkts                    
@@ -209,9 +209,9 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus tbt
-    val tbt = udf((origIpBytes:Integer, respIpBytes:Integer) => origIpBytes + respIpBytes )
+    val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
 
-    val apl = udf((px:Integer, origIpBytes:Integer, respIpBytes:Integer) => {
+    val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
         var result = 0
         if(px == 0){
             result = 0             
@@ -239,7 +239,7 @@ object BroConnStream extends StreamUtils {
     //     var result = 0
 
     // })
-    val pps = udf((duration:Double, origPkts:Integer, respPkts:Integer) => {
+    val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
         var result = 0.0
         if(px != 0){
             result = (origPkts + respPkts ) / duration
@@ -250,16 +250,16 @@ object BroConnStream extends StreamUtils {
     })
 
     val newDF = parsedRawDf  
-      .withColumn("PX", px(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("NNP", nnp(col("PX").cast(IntegerType)))
-      .withColumn("NSP", nsp(col("PX").cast(IntegerType)))
-      .withColumn("PSP", psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
-      .withColumn("IOPR", iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("NNP", nnp(col("PX").cast("int")))
+      .withColumn("NSP", nsp(col("PX").cast("int")))
+      .withColumn("PSP", psp(col("NSP").cast("int"), col("PX").cast("int")))
+      .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("Reconnect", reconnect(col("history").cast("string")))
-      .withColumn("FPS", px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("TBT", px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      .withColumn("APL", px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      .withColumn("PPS", px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", px(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", px(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", px(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
