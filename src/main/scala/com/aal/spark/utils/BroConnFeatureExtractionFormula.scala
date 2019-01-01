@@ -35,13 +35,11 @@ object BroConnFeatureExtractionFormula{
 
     // rumus psp
     val psp = udf((nsp:Integer, px: Integer) => {
-        var result = 0
-        if(px != 0  ){
-            result = nsp/px;
-        }else{
-            result = 0;
+        var result = px
+
+        if(!(px == 0)){
+            result = nsp/px
         }
-        result
     })
 
     // rumus iopr
@@ -85,10 +83,10 @@ object BroConnFeatureExtractionFormula{
 
     val apl = udf((px:Integer, origIpBytes:Integer, respIpBytes:Integer) => {
         var result = 0
-        if(px != 0){
-            result = (origIpBytes + respIpBytes )/px
+        if(px == 0){
+            result = 0             
         }else{
-            result = 0  
+            result = (origIpBytes + respIpBytes )/px
         }
         result
     })
