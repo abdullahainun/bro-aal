@@ -299,6 +299,7 @@ object BroConnStream extends StreamUtils {
      .writeStream
       .format("console")
      .start()
+     .awaitTermination()
 
     // //Sink to Mongodb
     // val ConnCountQuery = connDf
