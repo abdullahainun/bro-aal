@@ -140,6 +140,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](17),
         r.getAs[Integer](18),
         r.getAs[Integer](19)
+        r.getAs[Integer](20)
       ))
 
     // Print new data to console
