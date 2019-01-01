@@ -18,7 +18,7 @@ private[spark] trait StreamUtils {
     val uri: String = args.headOption.getOrElse("mongodb://10.148.0.4/bro.connlog")
 
     val conf = new SparkConf()
-      .setMaster ("spark://10.148.0.4:7077")
+      .setMaster ("spark://localhost:7077")
       .setAppName("StreamProtocolCountToMongo")
       .set("spark.app.id", "StreamProtocolCountToMongo")
       .set("spark.mongodb.input.uri", uri)
