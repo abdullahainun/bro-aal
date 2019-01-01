@@ -7,7 +7,12 @@ package com.aal.spark.utils
 import org.apache.spark.sql.functions.udf
 
 object BroConnFeatureExtractionFormula{
-    val px = udf((origPkts: Integer, respPkts: Integer) => origPkts + respPkts )
+    val px = udf((origPkts: Integer, respPkts: Integer) => {
+        var result = 0
+        result = origPkts + respPkts 
+
+        result
+    })
     
     // rumus nnp
     val nnp = udf((px: Integer) => {
