@@ -139,17 +139,127 @@ object BroConnStream extends StreamUtils {
         result
     })
 
+    // rumus nnp
+    val nnp = udf((px: Integer) => {
+        var result = 0
+        if( px == 0 ){
+          result =  1;
+        }else{
+          result =  0;
+        }
+
+        result
+    })
+
+    // rumus nsp
+    val nsp = udf((px: Integer) => {
+        var result = 0
+
+        if(px >= 63 && px <= 400 ){
+            result = 1;
+        }else{
+            result = 0;
+        }
+        result
+    })
+
+    // rumus psp
+    val psp = udf((nsp:Integer, px: Integer) => {
+        var result = px
+
+        if(!(px == 0)){
+            result = nsp/px
+        }
+    })
+
+    // rumus iopr
+    val iopr = udf((origPkts:Integer, respPkts:Integer) => {
+        var result = 0
+        if(respPkts != 0){
+            result = origPkts / respPkts;
+        }else{
+            result = 0
+        }
+        result
+    })
+
+    // rumus reconnect
+    val reconnect = udf((history:String) => {
+        var result = 0
+        // rumus reconnect
+        var temp = history  contains "Sr" 
+        if (temp == true){
+            result = 1
+        }else{
+            result = 0
+        }
+        result
+    })
+
+    // rumus fps
+    val fps = udf((origIpBytes:Integer, origPkts:Integer) => {
+        var result = 0
+        if(origPkts !=0 ){
+          result = origIpBytes / origPkts                    
+        }else{
+          result = 0
+        }
+
+        result
+    })
+
+    // rumus tbt
+    val tbt = udf((origIpBytes:Integer, respIpBytes:Integer) => origIpBytes + respIpBytes )
+
+    val apl = udf((px:Integer, origIpBytes:Integer, respIpBytes:Integer) => {
+        var result = 0
+        if(px == 0){
+            result = 0             
+        }else{
+            result = (origIpBytes + respIpBytes )/px
+        }
+        result
+    })
+    // val dpl = udf(() => {
+    //     var result = 0
+
+    // })
+    // val pv =  udf(() => {
+    //     var result = 0
+    // }
+    // val bs = udf(() => {
+    //     var result = 0
+
+    // })
+    // val ps = udf(() => {
+    //     var result = 0
+
+    // })
+    // val ait = udf(() => {
+    //     var result = 0
+
+    // })
+    val pps = udf((duration:Double, origPkts:Integer, respPkts:Integer) => {
+        var result = 0.0
+        if(px != 0){
+            result = (origPkts + respPkts ) / duration
+        }else{
+            result = 0.0  
+        }
+        result
+    })
+
     val newDF = parsedRawDf  
-      .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType)))
-      // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
-      // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
-      // .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      // .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
-      // .withColumn("FPS", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      // .withColumn("TBT", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      // .withColumn("APL", BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      // .withColumn("PPS", BroConnFeatureExtractionFormula.px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("PX", px(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("NNP", nnp(col("PX").cast(IntegerType)))
+      .withColumn("NSP", nsp(col("PX").cast(IntegerType)))
+      .withColumn("PSP", psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
+      .withColumn("IOPR", iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("Reconnect", reconnect(col("history").cast("string")))
+      .withColumn("FPS", px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("TBT", px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("APL", px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("PPS", px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
