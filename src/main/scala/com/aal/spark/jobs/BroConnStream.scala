@@ -135,7 +135,7 @@ object BroConnStream extends StreamUtils {
       // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
       // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
       // .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast(StringType)))
+      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
       // .withColumn("FPS", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
       // .withColumn("TBT", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
       // .withColumn("APL", BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
