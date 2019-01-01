@@ -15,7 +15,7 @@ private[spark] trait StreamUtils {
   }
 
   def getSparkSession(args: Array[String]): SparkSession = {
-    val uri: String = args.headOption.getOrElse("mongodb://10.148.0.4/bro.connlog")
+    val uri: String = args.headOption.getOrElse("mongodb://localhost/bro.connlog")
 
     val conf = new SparkConf()
       .setMaster ("spark://localhost:7077")
