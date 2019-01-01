@@ -43,8 +43,8 @@ object BroConnStream extends StreamUtils {
                            respIpBytes: Integer,
                            PX:Integer,
                            NNP:Integer,
-                           NSP:Integer
-                          //  PSP:Integer,
+                           NSP:Integer,
+                           PSP:Integer
                           //  IOPR:Integer,
                           //  Reconnect:Integer,
                           //  FPS:Integer,
@@ -164,13 +164,15 @@ object BroConnStream extends StreamUtils {
     })
 
     // // rumus psp
-    // val psp = udf((nsp:Double, px: Double) => {
-    //     var result = px
-
-    //     if(!(px == 0.0)){
-    //         result = nsp/px
-    //     }
-    // })
+    val psp = udf((nsp:Double, px: Double) => {
+        var result = 0
+        if(respPkts == 0){
+            result = 0
+        }else{
+            result = nsp / px;
+        }
+        result
+    })
 
     // // rumus iopr
     // val iopr = udf((origPkts:Int, respPkts:Int) => {
@@ -253,7 +255,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", nnp(col("PX").cast("int")))
       .withColumn("NSP", nsp(col("PX").cast("int")))
-      // .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
+      .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
       // .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("Reconnect", reconnect(col("history").cast("string")))
       // .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
@@ -284,8 +286,8 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](19),
         r.getAs[Integer](20),
         r.getAs[Integer](21),
-        r.getAs[Integer](22)
-        // r.getAs[Integer](23),
+        r.getAs[Integer](22),
+        r.getAs[Integer](23)
         // r.getAs[Integer](24),
         // r.getAs[Integer](25),
         // r.getAs[Integer](26),
