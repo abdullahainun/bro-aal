@@ -125,6 +125,7 @@ object BroConnStream extends StreamUtils {
     //     .alias("conn")        
     //   )
     //   .select("conn.*")
+    
 
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
