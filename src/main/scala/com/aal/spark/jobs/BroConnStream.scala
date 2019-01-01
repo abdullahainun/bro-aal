@@ -165,9 +165,9 @@ object BroConnStream extends StreamUtils {
 
     // // rumus psp
     val psp = udf((nsp:Double, px: Double) => {
-        var result = 0
-        if(respPkts == 0){
-            result = 0
+        var result = 0.0
+        if(px == 0.0){
+            result = 0.0
         }else{
             result = nsp / px;
         }
