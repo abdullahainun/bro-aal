@@ -253,7 +253,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", nnp(col("PX").cast("int")))
       .withColumn("NSP", nsp(col("PX").cast("int")))
-      .withColumn("PSP", psp(col("NSP").cast("int"), col("PX").cast("int")))
+      // .withColumn("PSP", psp(col("NSP").cast("int"), col("PX").cast("int")))
       .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("Reconnect", reconnect(col("history").cast("string")))
       .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
@@ -285,7 +285,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](20),
         r.getAs[Integer](21),
         r.getAs[Integer](22),
-        r.getAs[Integer](23),
+        // r.getAs[Integer](23),
         r.getAs[Integer](24),
         r.getAs[Integer](25),
         r.getAs[Integer](26),
@@ -337,7 +337,7 @@ object BroConnStream extends StreamUtils {
                   doc.put("PX", sc.PX)
                   doc.put("NNP",sc.PX)
                   doc.put("NSP",sc.NSP)
-                  doc.put("PSP",sc.PSP)
+                  // doc.put("PSP",sc.PSP)
                   doc.put("IOPR",sc.IOPR)
                   doc.put("Reconnect",sc.Reconnect)
                   doc.put("FPS",sc.FPS)
