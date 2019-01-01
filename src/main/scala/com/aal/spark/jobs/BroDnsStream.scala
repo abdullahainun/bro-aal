@@ -1,4 +1,4 @@
-package com.aal
+package com.aal.spark.jobs
 
 /**
   * Created by aal on 17/10/18.
@@ -40,7 +40,7 @@ object BroDnsStream extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "master.pens.ac.id:9092"
+    val kafkaUrl = "kafka:9092"
     // val shemaRegistryURL = "http://localhost:8081"
     val topic ="brodns"
 
@@ -141,7 +141,7 @@ object BroDnsStream extends StreamUtils {
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
-      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.252.108.98/bro.dnslog"))
+      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/bro.dnslog"))
       var mongoConnector: MongoConnector = _
       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
