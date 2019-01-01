@@ -126,15 +126,15 @@ object BroConnStream extends StreamUtils {
     val parsedRawDf = parsedLog
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("NNP" BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType)))
-      .withColumn("NSP" BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
-      .withColumn("PSP" BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
-      .withColumn("IOPR" BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("Reconnect" BroConnFeatureExtractionFormula.reconnect(col("history").cast(StringType)))
-      .withColumn("FPS" BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
-      .withColumn("TBT" BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      .withColumn("APL" BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
-      .withColumn("PPS" BroConnFeatureExtractionFormula.px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType)))
+      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
+      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
+      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast(StringType)))
+      .withColumn("FPS", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
+      .withColumn("TBT", BroConnFeatureExtractionFormula.px(col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("APL", BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
+      .withColumn("PPS", BroConnFeatureExtractionFormula.px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
     
     val connDf = parsedRawDf
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
