@@ -300,67 +300,67 @@ object BroConnStream extends StreamUtils {
       .format("console")
      .start()
 
-    //Sink to Mongodb
-    val ConnCountQuery = connDf
-      .writeStream
-      .format("console")
-      .outputMode("append")
+    // //Sink to Mongodb
+    // val ConnCountQuery = connDf
+    //   .writeStream
+    //   .format("console")
+    //   .outputMode("append")
 
-      .foreach(new ForeachWriter[ConnCountObj] {
+    //   .foreach(new ForeachWriter[ConnCountObj] {
 
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/bro.connlog"))
-          var mongoConnector: MongoConnector = _
-          var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
+    //       val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/bro.connlog"))
+    //       var mongoConnector: MongoConnector = _
+    //       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
-          override def process(value: ConnCountObj): Unit = {
-            ConnCounts.append(value)
-            println(ConnCounts)
-          }
+    //       override def process(value: ConnCountObj): Unit = {
+    //         ConnCounts.append(value)
+    //         println(ConnCounts)
+    //       }
 
-          override def close(errorOrNull: Throwable): Unit = {
-            if (ConnCounts.nonEmpty) {
-              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
-                collection.insertMany(ConnCounts.map(sc => {
-                  var doc = new Document()                  
-                  doc.put("ts", sc.timestamp)
-                  doc.put("uid", sc.uid)
-                  doc.put("id_orig_h", sc.idOrigH)
-                  doc.put("id_orig_p", sc.idOrigP)
-                  doc.put("id_resp_h", sc.idRespH)
-                  doc.put("id_resp_p", sc.idRespP)
-                  doc.put("duration", sc.duration)
-                  doc.put("history", sc.history)
-                  doc.put("orig_pkts", sc.origPkts)
-                  doc.put("orig_ip_bytes", sc.origIpBytes)
-                  doc.put("resp_bytes", sc.respPkts)
-                  doc.put("resp_ip_bytes", sc.respIpBytes)
-                  doc.put("PX", sc.PX)
-                  doc.put("NNP",sc.PX)
-                  doc.put("NSP",sc.NSP)
-                  // doc.put("PSP",sc.PSP)
-                  // doc.put("IOPR",sc.IOPR)
-                  // doc.put("Reconnect",sc.Reconnect)
-                  // doc.put("FPS",sc.FPS)
-                  // doc.put("TBT",sc.TBT)
-                  // doc.put("APL",sc.APL)
-                  // doc.put("PPS",sc.PPS)
-                  doc
-                }).asJava)
-              })
-            }
-          }
+    //       override def close(errorOrNull: Throwable): Unit = {
+    //         if (ConnCounts.nonEmpty) {
+    //           mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+    //             collection.insertMany(ConnCounts.map(sc => {
+    //               var doc = new Document()                  
+    //               doc.put("ts", sc.timestamp)
+    //               doc.put("uid", sc.uid)
+    //               doc.put("id_orig_h", sc.idOrigH)
+    //               doc.put("id_orig_p", sc.idOrigP)
+    //               doc.put("id_resp_h", sc.idRespH)
+    //               doc.put("id_resp_p", sc.idRespP)
+    //               doc.put("duration", sc.duration)
+    //               doc.put("history", sc.history)
+    //               doc.put("orig_pkts", sc.origPkts)
+    //               doc.put("orig_ip_bytes", sc.origIpBytes)
+    //               doc.put("resp_bytes", sc.respPkts)
+    //               doc.put("resp_ip_bytes", sc.respIpBytes)
+    //               doc.put("PX", sc.PX)
+    //               doc.put("NNP",sc.PX)
+    //               doc.put("NSP",sc.NSP)
+    //               // doc.put("PSP",sc.PSP)
+    //               // doc.put("IOPR",sc.IOPR)
+    //               // doc.put("Reconnect",sc.Reconnect)
+    //               // doc.put("FPS",sc.FPS)
+    //               // doc.put("TBT",sc.TBT)
+    //               // doc.put("APL",sc.APL)
+    //               // doc.put("PPS",sc.PPS)
+    //               doc
+    //             }).asJava)
+    //           })
+    //         }
+    //       }
 
-          override def open(partitionId: Long, version: Long): Boolean = {
-            mongoConnector = MongoConnector(writeConfig.asOptions)
-            println(mongoConnector)
-            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
-            true
-          }
+    //       override def open(partitionId: Long, version: Long): Boolean = {
+    //         mongoConnector = MongoConnector(writeConfig.asOptions)
+    //         println(mongoConnector)
+    //         ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+    //         true
+    //       }
 
-    }).start()
+    // }).start()
 
 
-    ConnCountQuery.awaitTermination()
+    // ConnCountQuery.awaitTermination()
   }
 }
 
