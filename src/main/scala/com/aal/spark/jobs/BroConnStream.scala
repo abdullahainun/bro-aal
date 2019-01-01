@@ -164,10 +164,10 @@ object BroConnStream extends StreamUtils {
     })
 
     // rumus psp
-    val psp = udf((nsp:Int, px: Int) => {
+    val psp = udf((nsp:Double, px: Double) => {
         var result = px
 
-        if(!(px == 0)){
+        if(!(px == 0.0)){
             result = nsp/px
         }
     })
@@ -253,7 +253,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", nnp(col("PX").cast("int")))
       .withColumn("NSP", nsp(col("PX").cast("int")))
-      // .withColumn("PSP", psp(col("NSP").cast("int"), col("PX").cast("int")))
+      // .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
       // .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("Reconnect", reconnect(col("history").cast("string")))
       // .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
