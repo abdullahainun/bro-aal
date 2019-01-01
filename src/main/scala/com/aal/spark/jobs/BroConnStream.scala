@@ -53,7 +53,7 @@ object BroConnStream extends StreamUtils {
 
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "kafka:9092"
+    val kafkaUrl = "10.148.0.3:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 
@@ -125,7 +125,7 @@ object BroConnStream extends StreamUtils {
     //     .alias("conn")        
     //   )
     //   .select("conn.*")
-    
+
 
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
