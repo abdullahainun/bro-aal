@@ -129,19 +129,11 @@ object BroConnStream extends StreamUtils {
     //   )
     //   .select("conn.*")
 
-
-    val px = udf((origPkts: Integer, respPkts: Integer) => {
-        var result : Integer = 0
-        result = origPkts + respPkts 
-
-        result
-    })
-
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       
     val newDF = parsedRawDf  
-      .withColumn("PX", px(col("orig_pkts").cast("integer"), col("resp_pkts").cast("integer")))
+      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("integer"), col("resp_pkts").cast("integer")))
       // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType)))
       // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
       // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
