@@ -152,7 +152,7 @@ object BroConnStream extends StreamUtils {
       // .withColumn("APL", BroConnFeatureExtractionFormula.px(col("PX").cast(IntegerType), col("orig_ip_bytes").cast(IntegerType), col("resp_ip_bytes").cast(IntegerType)))
       // .withColumn("PPS", BroConnFeatureExtractionFormula.px(col("duration").cast(DoubleType), col("orig_pkts").cast(IntegerType), col("resp_pkts").cast(IntegerType)))
     
-    val connDf = newDf
+    val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
         r.getAs[String](1),
         r.getAs[String](2),
