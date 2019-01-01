@@ -185,18 +185,18 @@ object BroConnStream extends StreamUtils {
         result
     })
 
-    // rumus reconnect
-    val reconnect = udf((history:String) => {
-        var result = 0
-        // rumus reconnect
-        var temp = history  contains "Sr" 
-        if (temp == true){
-            result = 1
-        }else{
-            result = 0
-        }
-        result.toString
-    })
+    // // rumus reconnect
+    // val reconnect = udf((history:String) => {
+    //     var result = 0
+    //     // rumus reconnect
+    //     var temp = history  contains "Sr" 
+    //     if (temp == true){
+    //         result = 1
+    //     }else{
+    //         result = 0
+    //     }
+    //     result.toString
+    // })
 
     // rumus fps
     val fps = udf((origIpBytes:Int, origPkts:Int) => {
@@ -257,7 +257,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("NSP", nsp(col("PX").cast("int")))
       .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", reconnect(col("history").cast("string")))
+      // .withColumn("Reconnect", reconnect(col("history").cast("string")))
       .withColumn("FPS", fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
@@ -292,8 +292,8 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](25),
         r.getAs[Integer](26),
         r.getAs[Integer](27),
-        r.getAs[Integer](28),
-        r.getAs[Double](29)
+        r.getAs[Double](28)
+        // r.getAs[Double](29)
       ))
 
     // Print new data to console
