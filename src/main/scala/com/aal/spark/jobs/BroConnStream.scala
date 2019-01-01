@@ -14,6 +14,7 @@ import org.bson._
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import com.aal.spark.utils.*
 
 
 object BroConnStream extends StreamUtils {
