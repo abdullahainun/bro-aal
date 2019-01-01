@@ -5,6 +5,7 @@ package com.aal.spark.utils
   * rumus - rumus feature extraction pada conn log bro - ids
   */
 import org.apache.spark.sql.functions.udf
+import org.apache.spark.sql.types._
 
 object BroConnFeatureExtractionFormula{
     val px = udf((origPkts: Integer, respPkts: Integer) => {
