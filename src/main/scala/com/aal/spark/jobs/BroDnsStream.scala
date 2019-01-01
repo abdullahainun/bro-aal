@@ -14,7 +14,7 @@ import org.bson._
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-import com.aal.spark.utils.*
+import com.aal.spark.utils._
 
 
 object BroDnsStream extends StreamUtils {
