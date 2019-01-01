@@ -254,12 +254,12 @@ object BroConnStream extends StreamUtils {
       .withColumn("NNP", nnp(col("PX").cast("int")))
       .withColumn("NSP", nsp(col("PX").cast("int")))
       // .withColumn("PSP", psp(col("NSP").cast("int"), col("PX").cast("int")))
-      .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", reconnect(col("history").cast("string")))
-      .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("TBT", px(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("APL", px(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", px(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("Reconnect", reconnect(col("history").cast("string")))
+      // .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("TBT", px(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      // .withColumn("APL", px(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      // .withColumn("PPS", px(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
@@ -286,12 +286,12 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](21),
         r.getAs[Integer](22),
         // r.getAs[Integer](23),
-        r.getAs[Integer](24),
-        r.getAs[Integer](25),
-        r.getAs[Integer](26),
-        r.getAs[Integer](27),
-        r.getAs[Integer](28),
-        r.getAs[Double](29)
+        // r.getAs[Integer](24),
+        // r.getAs[Integer](25),
+        // r.getAs[Integer](26),
+        // r.getAs[Integer](27),
+        // r.getAs[Integer](28),
+        // r.getAs[Double](29)
       ))
 
     // Print new data to console
@@ -338,12 +338,12 @@ object BroConnStream extends StreamUtils {
                   doc.put("NNP",sc.PX)
                   doc.put("NSP",sc.NSP)
                   // doc.put("PSP",sc.PSP)
-                  doc.put("IOPR",sc.IOPR)
-                  doc.put("Reconnect",sc.Reconnect)
-                  doc.put("FPS",sc.FPS)
-                  doc.put("TBT",sc.TBT)
-                  doc.put("APL",sc.APL)
-                  doc.put("PPS",sc.PPS)
+                  // doc.put("IOPR",sc.IOPR)
+                  // doc.put("Reconnect",sc.Reconnect)
+                  // doc.put("FPS",sc.FPS)
+                  // doc.put("TBT",sc.TBT)
+                  // doc.put("APL",sc.APL)
+                  // doc.put("PPS",sc.PPS)
                   doc
                 }).asJava)
               })
