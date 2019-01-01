@@ -133,7 +133,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       
     val newDF = parsedRawDf  
-      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("integer"), col("resp_pkts").cast("integer")))
+      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast(IntegerType)))
       // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast(IntegerType)))
       // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast(IntegerType), col("PX").cast(IntegerType)))
