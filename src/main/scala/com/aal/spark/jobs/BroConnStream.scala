@@ -7,7 +7,7 @@ package com.aal.spark.jobs
 import com.mongodb.client.MongoCollection
 import com.mongodb.spark.MongoConnector
 import com.mongodb.spark.config.WriteConfig
-import org.apache.spark.sql._
+import org.apache.spa
 import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp}
 import org.apache.spark.sql.types._
 import org.bson._
@@ -39,7 +39,16 @@ object BroConnStream extends StreamUtils {
                            origIpBytes: Integer,
                            respPkts: Integer,
                            respIpBytes: Integer,
-                           PX: Integer
+                           PX:Integer,
+                           NNP:Integer,
+                           NSP:Integer,
+                           PSP:Integer,
+                           IOPR:Integer,
+                           Reconnect:Integer,
+                           FPS:Integer,
+                           TBT:Integer,
+                           APL:Integer,
+                           PPS:Integer,
                          )
 
 
@@ -170,69 +179,7 @@ object BroConnStream extends StreamUtils {
             if (ConnCounts.nonEmpty) {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
-                  var doc = new Document()
-                  // var px = sc.origPkts + sc.respPkts;
-                  // var nnp = 0;
-                  // var nsp = 0;
-                  // var psp = 0;
-                  // var iopr = 0;
-                  // var reconnect = 0;
-                  // var fps = 0;
-                  // var tbt = 0;
-                  // var apl = 0;
-                  // var dpl = 0;
-                  // var pv = 0
-                  // var bs = 0;
-                  // var ps = 0;
-                  // var ait = 0;
-                  // var pps = 0.0;   
-
-                  // // set nnp
-                  // if( px == 0 ){
-                  //   nnp = 1;
-                  // }else{
-                  //   nnp = 0;
-                  // }
-                  // // set nsp
-                  // if(px >= 63 && px <= 400 ){
-                  //   nsp = 1;
-                  // }else{
-                  //   nsp = 0;
-                  // }
-                  // // psp
-                  // psp = nsp/px;
-                  // if(sc.respPkts != 0){
-                  //   iopr = sc.origPkts / sc.respPkts;
-                  // }else{
-                  //   iopr = 0
-                  // }
-                  // // set reconnect
-                  // if (sc.history == "ShADadfFr"){
-                  //   reconnect = 1
-                  // }else{
-                  //   reconnect = 0
-                  // }
-                  // // set fps
-                  // if(sc.origPkts !=0 ){
-                  //   fps = sc.origIpBytes / sc.origPkts                    
-                  // }else{
-                  //   fps = 0
-                  // }
-                  // // set tbt
-                  // if(sc.respIpBytes != 0){
-                  //   tbt = sc.origIpBytes + sc.respIpBytes                    
-                  // }else{
-                  //   tbt = 0
-                  // }
-
-                  // if(px != 0){
-                  //   apl = ( sc.origIpBytes + sc.respIpBytes ) / px
-                  // }
-                  // // set ps, bs and pps                  
-                  // if(sc.duration != 0){
-                  //   pps = ( sc.origPkts + sc.respPkts ) / sc.duration
-                  // }
-
+                  var doc = new Document()                  
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("id_orig_h", sc.idOrigH)
