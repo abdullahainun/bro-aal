@@ -45,12 +45,12 @@ object BroConnStream extends StreamUtils {
                            NNP:Integer,
                            NSP:Integer,
                            PSP:Integer
-                          //  IOPR:Integer,
-                          //  Reconnect:Integer,
-                          //  FPS:Integer,
-                          //  TBT:Integer,
-                          //  APL:Integer,
-                          //  PPS:Double
+                           IOPR:Integer,
+                           Reconnect:Integer,
+                           FPS:Integer,
+                           TBT:Integer,
+                           APL:Integer,
+                           PPS:Double
                          )
 
 
@@ -174,94 +174,94 @@ object BroConnStream extends StreamUtils {
         result
     })
 
-    // // rumus iopr
-    // val iopr = udf((origPkts:Int, respPkts:Int) => {
+    // rumus iopr
+    val iopr = udf((origPkts:Int, respPkts:Int) => {
+        var result = 0
+        if(respPkts != 0){
+            result = origPkts / respPkts;
+        }else{
+            result = 0
+        }
+        result
+    })
+
+    // rumus reconnect
+    val reconnect = udf((history:String) => {
+        var result = 0
+        // rumus reconnect
+        var temp = history  contains "Sr" 
+        if (temp == true){
+            result = 1
+        }else{
+            result = 0
+        }
+        result
+    })
+
+    // rumus fps
+    val fps = udf((origIpBytes:Int, origPkts:Int) => {
+        var result = 0
+        if(origPkts !=0 ){
+          result = origIpBytes / origPkts                    
+        }else{
+          result = 0
+        }
+
+        result
+    })
+
+    // rumus tbt
+    val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
+
+    val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
+        var result = 0
+        if(px == 0){
+            result = 0             
+        }else{
+            result = (origIpBytes + respIpBytes )/px
+        }
+        result
+    })
+    // val dpl = udf(() => {
     //     var result = 0
-    //     if(respPkts != 0){
-    //         result = origPkts / respPkts;
-    //     }else{
-    //         result = 0
-    //     }
-    //     result
-    // })
 
-    // // rumus reconnect
-    // val reconnect = udf((history:String) => {
+    // })
+    // val pv =  udf(() => {
     //     var result = 0
-    //     // rumus reconnect
-    //     var temp = history  contains "Sr" 
-    //     if (temp == true){
-    //         result = 1
-    //     }else{
-    //         result = 0
-    //     }
-    //     result
-    // })
-
-    // // rumus fps
-    // val fps = udf((origIpBytes:Int, origPkts:Int) => {
+    // }
+    // val bs = udf(() => {
     //     var result = 0
-    //     if(origPkts !=0 ){
-    //       result = origIpBytes / origPkts                    
-    //     }else{
-    //       result = 0
-    //     }
 
-    //     result
     // })
-
-    // // rumus tbt
-    // val tbt = udf((origIpBytes:Int, respIpBytes:Int) => origIpBytes + respIpBytes )
-
-    // val apl = udf((px:Int, origIpBytes:Int, respIpBytes:Int) => {
+    // val ps = udf(() => {
     //     var result = 0
-    //     if(px == 0){
-    //         result = 0             
-    //     }else{
-    //         result = (origIpBytes + respIpBytes )/px
-    //     }
-    //     result
+
     // })
-    // // val dpl = udf(() => {
-    // //     var result = 0
+    // val ait = udf(() => {
+    //     var result = 0
 
-    // // })
-    // // val pv =  udf(() => {
-    // //     var result = 0
-    // // }
-    // // val bs = udf(() => {
-    // //     var result = 0
-
-    // // })
-    // // val ps = udf(() => {
-    // //     var result = 0
-
-    // // })
-    // // val ait = udf(() => {
-    // //     var result = 0
-
-    // // })
-    // val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
-    //     var result = 0.0
-    //     if(px != 0){
-    //         result = (origPkts + respPkts ) / duration
-    //     }else{
-    //         result = 0.0  
-    //     }
-    //     result
     // })
+    val pps = udf((duration:Double, origPkts:Int, respPkts:Int) => {
+        var result = 0.0
+        if(px != 0){
+            result = (origPkts + respPkts ) / duration
+        }else{
+            result = 0.0  
+        }
+        result
+    })
 
     val newDF = parsedRawDf  
       .withColumn("PX", px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", nnp(col("PX").cast("int")))
       .withColumn("NSP", nsp(col("PX").cast("int")))
       .withColumn("PSP", psp(col("NSP").cast("double"), col("PX").cast("double")))
-      // .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("Reconnect", reconnect(col("history").cast("string")))
-      // .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("TBT", px(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      // .withColumn("APL", px(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      // .withColumn("PPS", px(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("IOPR", iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("Reconnect", reconnect(col("history").cast("string")))
+      .withColumn("FPS", px(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", px(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", px(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", px(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
@@ -288,12 +288,12 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](21),
         r.getAs[Integer](22),
         r.getAs[Integer](23)
-        // r.getAs[Integer](24),
-        // r.getAs[Integer](25),
-        // r.getAs[Integer](26),
-        // r.getAs[Integer](27),
-        // r.getAs[Integer](28),
-        // r.getAs[Double](29)
+        r.getAs[Integer](24),
+        r.getAs[Integer](25),
+        r.getAs[Integer](26),
+        r.getAs[Integer](27),
+        r.getAs[Integer](28),
+        r.getAs[Double](29)
       ))
 
     // Print new data to console
