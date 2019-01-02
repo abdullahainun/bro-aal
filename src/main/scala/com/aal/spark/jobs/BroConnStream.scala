@@ -139,7 +139,13 @@ object BroConnStream extends StreamUtils {
     //   )
     //   .select("conn.*")
 
-    parsedLogData.printSchema
+    // parsedLogData.printSchema
+        // Print new data to console
+     parsedLogData
+     .writeStream
+      .format("console")
+     .start()
+     .awaitTermination()
 
 
     val ip_normal_app_host: HashMap[String, String] = HashMap(
