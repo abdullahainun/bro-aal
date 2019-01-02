@@ -177,7 +177,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](25),
         r.getAs[Integer](26),
         r.getAs[Integer](27),
-        r.getAs[Double](28)
+        r.getAs[Double](28),
         r.getAs[String](29)
       ))
 
