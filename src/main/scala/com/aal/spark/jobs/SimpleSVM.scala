@@ -9,7 +9,7 @@ import org.apache.spark.mllib.util.MLUtils
 object SimpleSVM extends StreamUtils {
     def main(args: Array[String]): Unit = {
         // Load training data in LIBSVM format.
-        val data = MLUtils.loadLibSVMFile(StreamUtils.session, "/home/aal/bro-aal/sample_libsvm_data.txt")
+        val data = MLUtils.loadLibSVMFile(session, "/home/aal/bro-aal/sample_libsvm_data.txt")
 
         println("hello")
     }
