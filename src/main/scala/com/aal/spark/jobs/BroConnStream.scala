@@ -204,14 +204,14 @@ object BroConnStream extends StreamUtils {
     val reconnect = udf((history:String) => {
         var result = 0
         // rumus reconnect
-        println(history)
-        var temp = history.take(2)
-        if (temp == "Sr"){
-            result = 1
-        }else{
-            result = 0
-        }
-        result
+        // println(history)
+        // var temp = history.take(2)
+        // if (temp == "Sr"){
+        //     result = 1
+        // }else{
+        //     result = 0
+        // }
+        result.toString
     })
 
     val parsedRawDf = parsedLogData
