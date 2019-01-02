@@ -117,19 +117,28 @@ object BroConnStream extends StreamUtils {
 
 
     // versi ando
-    val parsedLogData = kafkaStreamDF
-      .select("value")
-      .withColumn("col", konversi(col("value").cast(StringType)))
-      //.select(col("value")
-      //  .cast(StringType)        
-       .as("col")
-      //)
-      .select(from_json(col("col"), schema)
-        .getField("conn")
-        .alias("conn")
-      )
-      .select("conn.*")
+    // val parsedLogData = kafkaStreamDF
+    //   .select("value")
+    //   .withColumn("col", konversi(col("value").cast(StringType)))
+    //   .select(col("value")
+    //    .cast(StringType)        
+    //    .as("col")
+    //   //)
+    //   .select(from_json(col("col"), schema)
+    //     .getField("conn")
+    //     .alias("conn")
+    //   )
+    //   .select("conn.*")
 
+    val parsedLogData = kafkaStreamDF
+    .select(col("value")
+      .cast(StringType)
+      .as("col")
+    )
+    .select(from_json(col("col"), schema)
+      .getField("conn")
+      .alias("conn")
+    )
     //  versi alfian
     // Transform data stream to Dataframe
     // val parsedLog = kafkaStreamDF.selectExpr("CAST(value AS STRING)").as[(String)]
