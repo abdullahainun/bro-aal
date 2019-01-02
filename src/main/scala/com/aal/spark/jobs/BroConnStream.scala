@@ -167,28 +167,28 @@ object BroConnStream extends StreamUtils {
         ("192.168.50.34", "zeus")
     )
 
-    val labeling = udf((ip_src: Column) => {
+    val labeling = udf((ip_src: String) => {
 
-       ip_src.map(row => {
-          if((ip_botnet_app_host contains ip_src) == true){
-              "malicious"
-          }else if((ip_normal_app_host contains ip_src) == true){
-              "normal"
-          }else{
-              "normal"
-          }
-        })
+      //  ip_src.map(row => {
+      //     if((ip_botnet_app_host contains ip_src) == true){
+      //         "malicious"
+      //     }else if((ip_normal_app_host contains ip_src) == true){
+      //         "normal"
+      //     }else{
+      //         "normal"
+      //     }
+      //   })
 
-        // var label = ""
-        // if((ip_botnet_app_host contains ip_src) == true){
-        //      label  = "malicious"
-        // }else if((ip_normal_app_host contains ip_src) == true){
-        //     label  = "normal"
-        // }else{
-        //     label  = "normal"
-        // }
+        var label = ""
+        if((ip_botnet_app_host contains ip_src) == true){
+             label  = "malicious"
+        }else if((ip_normal_app_host contains ip_src) == true){
+            label  = "normal"
+        }else{
+            label  = "normal"
+        }
 
-        
+        label
     })  
 
     val parsedRawDf = parsedLogData
@@ -205,7 +205,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("label", labeling(col("id.orig_h")))
+      .withColumn("label", labeling(col("id.orig_h").cast("string")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
