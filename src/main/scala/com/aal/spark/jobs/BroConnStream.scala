@@ -141,12 +141,12 @@ object BroConnStream extends StreamUtils {
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
       .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("orig_pkts").cast(StringType)))
+      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history")))
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("label", BroConnLabeling.labeling(col("ts").cast(StringType)))
+      .withColumn("label", BroConnLabeling.labeling(col("id.orig_h")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
