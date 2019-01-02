@@ -110,8 +110,7 @@ object BroConnStream extends StreamUtils {
     )
 
     val konversi = udf((row: String) => {
-      var hasil = row.replaceAll("id.", "id_")
-      println(hasil)
+      row.replaceAll("id.", "id_")
     })  
 
 
@@ -120,7 +119,7 @@ object BroConnStream extends StreamUtils {
     // versi ando
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("value", konversi(col("value").cast("string")))
+      .withColumn("value", konversi(col("value").cast(StringType)))
       .select(col("value")
         // .cast(StringType)        
         .as("col")
