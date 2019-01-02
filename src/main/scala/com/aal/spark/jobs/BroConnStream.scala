@@ -78,7 +78,7 @@ object BroConnStream extends StreamUtils {
      noAggDF
       .writeStream
       .format("console")
-     .start()
+      .start()
 
     val schema : StructType = StructType(
       Seq(StructField
@@ -122,7 +122,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("col", konversi(col("value").cast(StringType)))
       //.select(col("value")
       //  .cast(StringType)        
-      //  .as("col")
+       .as("col")
       //)
       .select(from_json(col("col"), schema)
         .getField("conn")
