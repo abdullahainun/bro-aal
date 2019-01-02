@@ -169,7 +169,7 @@ object BroConnStream extends StreamUtils {
 
     val labeling = udf((ip_src: Column) => {
 
-        ip_src = ip_src.map(row => {
+        var new = ip_src.map(row => {
           if((ip_botnet_app_host contains ip_src) == true){
               "malicious"
           }else if((ip_normal_app_host contains ip_src) == true){
@@ -188,7 +188,7 @@ object BroConnStream extends StreamUtils {
         //     label  = "normal"
         // }
 
-        ip_src
+        new
     })  
 
     val parsedRawDf = parsedLogData
