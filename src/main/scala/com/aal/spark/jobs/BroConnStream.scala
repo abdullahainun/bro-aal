@@ -139,6 +139,7 @@ object BroConnStream extends StreamUtils {
       .getField("conn")
       .alias("conn")
     )
+    .select("conn.*")
     //  versi alfian
     // Transform data stream to Dataframe
     // val parsedLog = kafkaStreamDF.selectExpr("CAST(value AS STRING)").as[(String)]
