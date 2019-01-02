@@ -275,7 +275,11 @@ object BroConnStream extends StreamUtils {
     //  .awaitTermination()
 
     // export to csv 
-    connDf.write.format("com.databricks.spark.csv").save("connlog.csv")
+    connDf
+    writeStream
+    .format("csv")        // can be "orc", "json", "csv", etc.
+    .option("path", "/home/aal/workspace/connlog.csv")
+    .start()
 
     // start svm machine learning code
     // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
