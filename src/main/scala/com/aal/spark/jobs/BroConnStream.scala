@@ -278,7 +278,8 @@ object BroConnStream extends StreamUtils {
     val parsedRawToCSV = connDf
     .writeStream
     .format("csv")        // can be "orc", "json", "csv", etc.
-    .option("checkpointLocation", "/home/aal/workspace/connlog.csv")
+    .option("checkpointLocation", "/home/aal/workspace/")
+    .option("path", "/home/aal/workspace/connlog.csv")
     .start()
     
     parsedRawToCSV.awaitTermination()
