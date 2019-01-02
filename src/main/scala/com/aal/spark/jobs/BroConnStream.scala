@@ -74,6 +74,7 @@ object BroConnStream extends StreamUtils {
     // ========== DF with no aggregations ==========
     val noAggDF = kafkaStreamDF.select("*")
 
+    kafkaStreamDF.printSchema
     // Print new data to console
      noAggDF
       .writeStream
@@ -133,8 +134,6 @@ object BroConnStream extends StreamUtils {
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       
-    
-
     val newDF = parsedRawDf  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
@@ -146,7 +145,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("label", BroConnLabeling.labeling(col("id.orig_h").cast("double")))
+      .withColumn("label", BroConnLabeling.labeling(col("id.orig_h").cast("str")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
