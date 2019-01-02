@@ -74,7 +74,6 @@ object BroConnStream extends StreamUtils {
     // ========== DF with no aggregations ==========
     val noAggDF = kafkaStreamDF.select("*")
 
-    kafkaStreamDF.printSchema
     // Print new data to console
      noAggDF
       .writeStream
@@ -131,6 +130,8 @@ object BroConnStream extends StreamUtils {
     //   )
     //   .select("conn.*")
 
+    parsedLogData.printSchema
+    
     val parsedRawDf = parsedLogData
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
       
