@@ -119,11 +119,11 @@ object BroConnStream extends StreamUtils {
     // versi ando
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("value", konversi(col("value").cast("string").as("col")))
-      // .select(col("value")
-      //   .cast(StringType)        
-      //   .as("col")
-      // )
+      .withColumn("value", konversi(col("value").cast("string")))
+      .select(col("value")
+        .cast(StringType)        
+        .as("col")
+      )
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
