@@ -121,7 +121,7 @@ object BroConnStream extends StreamUtils {
       .select("value")
       .withColumn("value", konversi(col("value").cast("string")))
       .select(col("value")
-        .cast(StringType)        
+        // .cast(StringType)        
         .as("col")
       )
       .select(from_json(col("col"), schema)
