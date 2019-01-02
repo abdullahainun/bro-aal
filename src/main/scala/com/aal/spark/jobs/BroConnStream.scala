@@ -110,7 +110,8 @@ object BroConnStream extends StreamUtils {
     )
 
     val konversi = udf((row: String) => {
-      row.replaceAll("id.", "id_")
+      var hasil = row.replaceAll("id.", "id_")
+      println(hasil)
     })  
 
 
