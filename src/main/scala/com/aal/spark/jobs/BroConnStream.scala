@@ -284,7 +284,6 @@ object BroConnStream extends StreamUtils {
     // val model = kmeans.fit(df2)
     // end svm machine learning code
 
-
     // //Sink to Mongodb
     // val ConnCountQuery = connDf
     //   .writeStream
