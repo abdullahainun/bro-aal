@@ -178,7 +178,7 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](26),
         r.getAs[Integer](27),
         r.getAs[Double](28)
-        // r.getAs[Double](29)
+        r.getAs[String](29)
       ))
 
     // Print new data to console
@@ -232,6 +232,7 @@ object BroConnStream extends StreamUtils {
                   doc.put("TBT",sc.TBT)
                   doc.put("APL",sc.APL)
                   doc.put("PPS",sc.PPS)
+                  doc.put("label",sc.label)
                   doc
                 }).asJava)
               })
