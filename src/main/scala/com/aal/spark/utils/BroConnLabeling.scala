@@ -39,8 +39,8 @@ object BroConnLabeling{
         ("192.168.50.34", "zeus")
     )
 
-    val labeling = udf((ip_src: Double) => {
-        var label = 0.0
+    val labeling = udf((ip_src: String) => {
+        var label = ""
         if((ip_botnet_app_host contains ip_src) == true){
              label  = "malicious"
         }else if((ip_normal_app_host contains ip_src) == true){
