@@ -17,7 +17,7 @@ import scala.collection.mutable
 import com.aal.spark.utils._
 
 import org.apache.spark.sql.functions.udf
-
+import scala.collection.mutable.HashMap
 
 object BroConnStream extends StreamUtils {
   case class ConnCountObj(
