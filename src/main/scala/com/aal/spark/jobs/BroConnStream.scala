@@ -78,17 +78,17 @@ object BroConnStream extends StreamUtils {
      noAggDF
       .writeStream
       .format("console")
-      .start()
+     .start()
 
     val schema : StructType = StructType(
       Seq(StructField
       ("conn", StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.orig_p", IntegerType, true),
-        StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", IntegerType, true),
+        StructField("id_orig_h", StringType, true),
+        StructField("id_orig_p", IntegerType, true),
+        StructField("id_resp_h", StringType, true),
+        StructField("id_resp_p", IntegerType, true),
         StructField("proto", StringType, true),
         StructField("service", StringType, true),
         StructField("duration", DoubleType, true),
@@ -109,37 +109,27 @@ object BroConnStream extends StreamUtils {
       )
     )
 
-    // val konversi = udf((row: String) => {
-    //   row.replaceAll("id.", "id_")
-    // })  
+    val konversi = udf((row: String) => {
+      row.replaceAll("id.", "id_")
+    })  
 
 
 
 
     // versi ando
-    // val parsedLogData = kafkaStreamDF
-    //   .select("value")
-    //   .withColumn("col", konversi(col("value").cast(StringType)))
-    //   .select(col("value")
-    //    .cast(StringType)        
-    //    .as("col")
-    //   //)
-    //   .select(from_json(col("col"), schema)
-    //     .getField("conn")
-    //     .alias("conn")
-    //   )
-    //   .select("conn.*")
-
     val parsedLogData = kafkaStreamDF
-    .select(col("value")
-      .cast(StringType)
-      .as("col")
-    )
-    .select(from_json(col("col"), schema)
-      .getField("conn")
-      .alias("conn")
-    )
-    .select("conn.*")
+      .select("value")
+      .withColumn("value", konversi(col("value").cast("string")))
+      .select(col("value")
+        .cast(StringType)        
+        .as("col")
+      )
+      .select(from_json(col("col"), schema)
+        .getField("conn")
+        .alias("conn")
+      )
+      .select("conn.*")
+
     //  versi alfian
     // Transform data stream to Dataframe
     // val parsedLog = kafkaStreamDF.selectExpr("CAST(value AS STRING)").as[(String)]
@@ -305,10 +295,10 @@ object BroConnStream extends StreamUtils {
                   var doc = new Document()                  
                   doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
-                  doc.put("id.orig_h", sc.idOrigH)
-                  doc.put("id.orig_p", sc.idOrigP)
-                  doc.put("id.resp_h", sc.idRespH)
-                  doc.put("id.resp_p", sc.idRespP)
+                  doc.put("id_orig_h", sc.idOrigH)
+                  doc.put("id_orig_p", sc.idOrigP)
+                  doc.put("id_resp_h", sc.idRespH)
+                  doc.put("id_resp_p", sc.idRespP)
                   doc.put("duration", sc.duration)
                   doc.put("history", sc.history)
                   doc.put("orig_pkts", sc.origPkts)
