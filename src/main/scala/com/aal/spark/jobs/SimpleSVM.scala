@@ -11,7 +11,7 @@ object SimpleSVM extends StreamUtils {
         // Load training data in LIBSVM format.
         val spark = getSparkContext(args)
         val data = MLUtils.loadLibSVMFile(spark, "/home/aal/bro-aal/sample_libsvm_data.txt")
-        
+
         // Split data into training (60%) and test (40%).
         val splits = data.randomSplit(Array(0.6, 0.4), seed = 11L)
         val training = splits(0).cache()
@@ -37,8 +37,8 @@ object SimpleSVM extends StreamUtils {
         println(s"Area under ROC = $auROC")
 
         // Save and load model
-        model.save(sc, "target/tmp/scalaSVMWithSGDModel")
-        val sameModel = SVMModel.load(sc, "target/tmp/scalaSVMWithSGDModel")
+        model.save(spark, "target/tmp/scalaSVMWithSGDModel")
+        val sameModel = SVMModel.load(spark, "target/tmp/scalaSVMWithSGDModel")
 
         println("hello")
     }
