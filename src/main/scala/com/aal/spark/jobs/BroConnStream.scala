@@ -275,14 +275,14 @@ object BroConnStream extends StreamUtils {
     //  .awaitTermination()
 
     // export to csv 
-    val parsedRawToCSV = connDf
-    .writeStream
-    .format("csv")        // can be "orc", "json", "csv", etc.
-    .option("checkpointLocation", "/home/aal/workspace/")
-    .option("path", "/home/aal/workspace/connlog.csv")
-    .start()
+    // val parsedRawToCSV = connDf
+    // .writeStream
+    // .format("csv")        // can be "orc", "json", "csv", etc.
+    // .option("checkpointLocation", "/home/aal/workspace/")
+    // .option("path", "/home/aal/workspace/connlog.csv")
+    // .start()
     
-    parsedRawToCSV.awaitTermination()
+    // parsedRawToCSV.awaitTermination()
 
     // start svm machine learning code
     // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
@@ -292,11 +292,11 @@ object BroConnStream extends StreamUtils {
     // end svm machine learning code
 
     // //Sink to Mongodb
-    // val ConnCountQuery = connDf
-    //   .writeStream
-    //   .format("console")
-    //   .outputMode("append")
-
+    val ConnCountQuery = connDf
+      .writeStream
+      .format("console")
+      .outputMode("append")
+      .start()
     //   .foreach(new ForeachWriter[ConnCountObj] {
 
     //       val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://127.0.0.1/bro.connlog"))
@@ -352,7 +352,7 @@ object BroConnStream extends StreamUtils {
     // }).start()
 
 
-    // ConnCountQuery.awaitTermination()
+    ConnCountQuery.awaitTermination()
   }
 }
 
