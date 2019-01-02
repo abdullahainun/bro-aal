@@ -276,7 +276,7 @@ object BroConnStream extends StreamUtils {
 
     // export to csv 
     connDf
-    writeStream
+    .writeStream
     .format("csv")        // can be "orc", "json", "csv", etc.
     .option("path", "/home/aal/workspace/connlog.csv")
     .start()
