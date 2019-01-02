@@ -40,6 +40,6 @@ object SimpleSVM extends StreamUtils {
         model.save(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
         val sameModel = SVMModel.load(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
 
-        spark.start()
+        spark.stop()
     }
 }
