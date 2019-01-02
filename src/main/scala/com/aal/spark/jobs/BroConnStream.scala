@@ -19,6 +19,12 @@ import com.aal.spark.utils._
 import org.apache.spark.sql.functions.udf
 import scala.collection.mutable.HashMap
 
+// svm package
+import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
+import org.apache.spark.mllib.util.MLUtils
+
+
 object BroConnStream extends StreamUtils {
   case class ConnCountObj(
                            timestamp: String,
@@ -268,65 +274,76 @@ object BroConnStream extends StreamUtils {
      .start()
      .awaitTermination()
 
-    //Sink to Mongodb
-    val ConnCountQuery = connDf
-      .writeStream
-      .format("console")
-      .outputMode("append")
+    // export to csv 
+    connDf.write.format("com.databricks.spark.csv").save("connlog.csv")
 
-      .foreach(new ForeachWriter[ConnCountObj] {
+    // start svm machine learning code
+    // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
+    // val df2 = assembler.transform(df).select("features")
+    // val kmeans = new KMeans().setK(2).setSeed(1L)
+    // val model = kmeans.fit(df2)
+    // end svm machine learning code
 
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://127.0.0.1/bro.connlog"))
-          var mongoConnector: MongoConnector = _
-          var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
-          override def process(value: ConnCountObj): Unit = {
-            ConnCounts.append(value)
-            println(ConnCounts)
-          }
+    // //Sink to Mongodb
+    // val ConnCountQuery = connDf
+    //   .writeStream
+    //   .format("console")
+    //   .outputMode("append")
 
-          override def close(errorOrNull: Throwable): Unit = {
-            if (ConnCounts.nonEmpty) {
-              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
-                collection.insertMany(ConnCounts.map(sc => {
-                  var doc = new Document()                  
-                  doc.put("ts", sc.timestamp)
-                  doc.put("uid", sc.uid)
-                  doc.put("id_orig_h", sc.idOrigH)
-                  doc.put("id_orig_p", sc.idOrigP)
-                  doc.put("id_resp_h", sc.idRespH)
-                  doc.put("id_resp_p", sc.idRespP)
-                  doc.put("duration", sc.duration)
-                  doc.put("history", sc.history)
-                  doc.put("orig_pkts", sc.origPkts)
-                  doc.put("orig_ip_bytes", sc.origIpBytes)
-                  doc.put("resp_bytes", sc.respPkts)
-                  doc.put("resp_ip_bytes", sc.respIpBytes)
-                  doc.put("PX", sc.PX)
-                  doc.put("NNP",sc.PX)
-                  doc.put("NSP",sc.NSP)
-                  doc.put("PSP",sc.PSP)
-                  doc.put("IOPR",sc.IOPR)
-                  doc.put("Reconnect",sc.Reconnect)
-                  doc.put("FPS",sc.FPS)
-                  doc.put("TBT",sc.TBT)
-                  doc.put("APL",sc.APL)
-                  doc.put("PPS",sc.PPS)
-                  doc.put("label",sc.label)
-                  doc
-                }).asJava)
-              })
-            }
-          }
+    //   .foreach(new ForeachWriter[ConnCountObj] {
 
-          override def open(partitionId: Long, version: Long): Boolean = {
-            mongoConnector = MongoConnector(writeConfig.asOptions)
-            println(mongoConnector)
-            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
-            true
-          }
+    //       val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://127.0.0.1/bro.connlog"))
+    //       var mongoConnector: MongoConnector = _
+    //       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
-    }).start()
+    //       override def process(value: ConnCountObj): Unit = {
+    //         ConnCounts.append(value)
+    //         println(ConnCounts)
+    //       }
+
+    //       override def close(errorOrNull: Throwable): Unit = {
+    //         if (ConnCounts.nonEmpty) {
+    //           mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+    //             collection.insertMany(ConnCounts.map(sc => {
+    //               var doc = new Document()                  
+    //               doc.put("ts", sc.timestamp)
+    //               doc.put("uid", sc.uid)
+    //               doc.put("id_orig_h", sc.idOrigH)
+    //               doc.put("id_orig_p", sc.idOrigP)
+    //               doc.put("id_resp_h", sc.idRespH)
+    //               doc.put("id_resp_p", sc.idRespP)
+    //               doc.put("duration", sc.duration)
+    //               doc.put("history", sc.history)
+    //               doc.put("orig_pkts", sc.origPkts)
+    //               doc.put("orig_ip_bytes", sc.origIpBytes)
+    //               doc.put("resp_bytes", sc.respPkts)
+    //               doc.put("resp_ip_bytes", sc.respIpBytes)
+    //               doc.put("PX", sc.PX)
+    //               doc.put("NNP",sc.PX)
+    //               doc.put("NSP",sc.NSP)
+    //               doc.put("PSP",sc.PSP)
+    //               doc.put("IOPR",sc.IOPR)
+    //               doc.put("Reconnect",sc.Reconnect)
+    //               doc.put("FPS",sc.FPS)
+    //               doc.put("TBT",sc.TBT)
+    //               doc.put("APL",sc.APL)
+    //               doc.put("PPS",sc.PPS)
+    //               doc.put("label",sc.label)
+    //               doc
+    //             }).asJava)
+    //           })
+    //         }
+    //       }
+
+    //       override def open(partitionId: Long, version: Long): Boolean = {
+    //         mongoConnector = MongoConnector(writeConfig.asOptions)
+    //         println(mongoConnector)
+    //         ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+    //         true
+    //       }
+
+    // }).start()
 
 
     ConnCountQuery.awaitTermination()
