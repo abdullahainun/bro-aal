@@ -85,10 +85,10 @@ object BroConnStream extends StreamUtils {
       ("conn", StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.orig_p", IntegerType, true),
-        StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", IntegerType, true),
+        StructField("id_orig_h", StringType, true),
+        StructField("id_orig_p", IntegerType, true),
+        StructField("id_resp_h", StringType, true),
+        StructField("id_resp_p", IntegerType, true),
         StructField("proto", StringType, true),
         StructField("service", StringType, true),
         StructField("duration", DoubleType, true),
@@ -109,10 +109,18 @@ object BroConnStream extends StreamUtils {
       )
     )
 
+    val konversi = udf((row: String) => {
+      row.replaceAll("id.", "id_")
+    })  
+
+
+
+
     // versi ando
     val parsedLogData = kafkaStreamDF
       .select(col("value")
         .cast(StringType)
+        .withColumn("value", konversi(col("value").cast("string")))
         .as("col")
       )
       .select(from_json(col("col"), schema)
@@ -205,8 +213,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("ip_add", col(`id.orig_h`))
-      .withColumn("label", labeling(col("ip_add").cast("string")))
+      .withColumn("label", labeling(col("id_orig_h").cast("string")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
