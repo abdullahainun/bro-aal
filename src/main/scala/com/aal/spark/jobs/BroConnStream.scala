@@ -18,6 +18,7 @@ import com.aal.spark.utils._
 
 import org.apache.spark.sql.functions.udf
 import scala.collection.mutable.HashMap
+import spark.implicits._  
 
 // svm package
 import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
