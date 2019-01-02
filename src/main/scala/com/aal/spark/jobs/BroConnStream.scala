@@ -81,10 +81,10 @@ object BroConnStream extends StreamUtils {
     val noAggDF = kafkaStreamDF.select("*")
 
     // Print new data to console
-     noAggDF
-      .writeStream
-      .format("console")
-     .start()
+    //  noAggDF
+    //   .writeStream
+    //   .format("console")
+    //  .start()
 
     val schema : StructType = StructType(
       Seq(StructField
@@ -268,11 +268,11 @@ object BroConnStream extends StreamUtils {
       ))
 
     // Print new data to console
-     newDF
-     .writeStream
-      .format("console")
-     .start()
-     .awaitTermination()
+    //  newDF
+    //  .writeStream
+    //   .format("console")
+    //  .start()
+    //  .awaitTermination()
 
     // export to csv 
     connDf.write.format("com.databricks.spark.csv").save("connlog.csv")
