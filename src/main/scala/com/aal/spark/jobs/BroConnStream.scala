@@ -50,7 +50,8 @@ object BroConnStream extends StreamUtils {
                            FPS:Integer,
                            TBT:Integer,
                            APL:Integer,
-                           PPS:Double
+                           PPS:Double,
+                           label:String
                          )
 
 
@@ -145,6 +146,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("label", BroConnLabeling.labeling(col("id.orig_h").cast("string")))
     
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
