@@ -346,7 +346,7 @@ object BroConnStream extends StreamUtils {
     // }).start()
 
 
-    ConnCountQuery.awaitTermination()
+    // ConnCountQuery.awaitTermination()
   }
 }
 
