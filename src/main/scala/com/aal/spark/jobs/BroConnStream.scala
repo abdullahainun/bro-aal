@@ -113,17 +113,14 @@ object BroConnStream extends StreamUtils {
       row.replaceAll("id.", "id_")
     })  
 
-
-
-
     // versi ando
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("value", konversi(col("value").cast("string")))
-      .select(col("value")
-        .cast(StringType)        
-        .as("col")
-      )
+      .withColumn("col", konversi(col("value").cast("string")))
+      //.select(col("value")
+      //  .cast(StringType)        
+      //  .as("col")
+     // )
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
@@ -141,12 +138,6 @@ object BroConnStream extends StreamUtils {
 
     // parsedLogData.printSchema
         // Print new data to console
-     parsedLogData
-     .writeStream
-      .format("console")
-     .start()
-     .awaitTermination()
-
 
     val ip_normal_app_host: HashMap[String, String] = HashMap(
         ("192.168.50.19", "dropbox" ),
