@@ -275,12 +275,13 @@ object BroConnStream extends StreamUtils {
     //  .awaitTermination()
 
     // export to csv 
-    connDf
+    val parsedRawToCSV = connDf
     .writeStream
     .format("csv")        // can be "orc", "json", "csv", etc.
     .option("path", "/home/aal/workspace/connlog.csv")
     .start()
-    .awaitTermination()
+    
+    parsedRawToCSV.awaitTermination()
 
     // start svm machine learning code
     // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
