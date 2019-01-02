@@ -61,18 +61,18 @@ object BroConnFeatureExtractionFormula{
         result
     })
 
-    // // rumus reconnect
-    // val reconnect = udf((history:String) => {
-    //     var result = 0
-    //     // rumus reconnect
-    //     var temp = history  contains "Sr" 
-    //     if (temp == true){
-    //         result = 1
-    //     }else{
-    //         result = 0
-    //     }
-    //     result.toString
-    // })
+    // rumus reconnect
+    val reconnect = udf((history:String) => {
+        var result = 0
+        // rumus reconnect
+        var temp = history  contains "Sr" 
+        if (temp == true){
+            result = 1
+        }else{
+            result = 0
+        }
+        result
+    })
 
     // rumus fps
     val fps = udf((origIpBytes:Int, origPkts:Int) => {
