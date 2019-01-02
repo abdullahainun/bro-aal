@@ -46,7 +46,7 @@ object BroConnStream extends StreamUtils {
                            NSP:Integer,
                            PSP:Integer,
                            IOPR:Integer,
-                           Reconnect:Integer,
+                          //  Reconnect:Integer,
                            FPS:Integer,
                            TBT:Integer,
                            APL:Integer,
@@ -140,7 +140,7 @@ object BroConnStream extends StreamUtils {
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
       .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
+      // .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
@@ -175,8 +175,8 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](25),
         r.getAs[Integer](26),
         r.getAs[Integer](27),
-        r.getAs[Integer](28),
-        r.getAs[Double](29)
+        r.getAs[Double](28)
+        // r.getAs[Double](29)
       ))
 
     // Print new data to console
@@ -225,7 +225,7 @@ object BroConnStream extends StreamUtils {
                   doc.put("NSP",sc.NSP)
                   doc.put("PSP",sc.PSP)
                   doc.put("IOPR",sc.IOPR)
-                  doc.put("Reconnect",sc.Reconnect)
+                  // doc.put("Reconnect",sc.Reconnect)
                   doc.put("FPS",sc.FPS)
                   doc.put("TBT",sc.TBT)
                   doc.put("APL",sc.APL)
