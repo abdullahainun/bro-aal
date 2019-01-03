@@ -20,29 +20,30 @@ object FileLogStream extends StreamUtils {
         //     StructField("amountPaid", StringType))
         // )
 
-        val mySchema = new StructType()
-
-            .add("ts", "string")
-            .add("uid", "string")
-            .add("id.orig_h", "string")
-            .add("id.orig_p", "string")
-            .add("id.resp_h", "string")
-            .add("id.resp_p", "string")
-            .add("proto", "string")
-            .add("service", "string")
-            .add("duration", "string")
-            .add("orig_bytes", "string")
-            .add("resp_bytes", "string")
-            .add("conn_state", "string")
-            .add("local_orig", "string")
-            .add("local_resp", "string")
-            .add("missed_bytes", "string")
-            .add("history", "string")
-            .add("orig_pkts", "string")
-            .add("orig_ip_bytes", "string")
-            .add("resp_pkts", "string")
-            .add("resp_ip_bytes", "string")
-            .add("tunnel_parents", "string")
+        val mySchema = new StructType() 
+            List(
+                StructField(("ts", StringTyp, true)
+                StructField("uid", StringType, true),
+                StructField("id.orig_h", StringType, true),
+                StructField("id.orig_p", StringType, true),
+                StructField("id.resp_h", StringType, true),
+                StructField("id.resp_p", StringType, true),
+                StructField("proto", StringType, true),
+                StructField("service", StringType, true),
+                StructField("duration", StringType, true),
+                StructField("orig_bytes", StringType, true),
+                StructField("resp_bytes", StringType, true),
+                StructField("conn_state", StringType, true),
+                StructField("local_orig", StringType, true),
+                StructField("local_resp", StringType, true),
+                StructField("missed_bytes", StringType, true),
+                StructField("history", StringType, true),
+                StructField("orig_pkts", StringType, true),
+                StructField("orig_ip_bytes", StringType, true),
+                StructField("resp_pkts", StringType, true),
+                StructField("resp_ip_bytes", StringType, true),
+                StructField("tunnel_parents", StringType, true)
+            )
 
         val fileStreamDf = sparkSession.readStream
             .option("header", "true")
