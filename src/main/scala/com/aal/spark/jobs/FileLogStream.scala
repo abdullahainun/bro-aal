@@ -20,7 +20,7 @@ object FileLogStream extends StreamUtils {
         //     StructField("amountPaid", StringType))
         // )
 
-        val mySchema = new StructType() 
+        val mySchema = new StructType( 
             List(
                 StructField(("ts", StringTyp, true)
                 StructField("uid", StringType, true),
@@ -44,6 +44,7 @@ object FileLogStream extends StreamUtils {
                 StructField("resp_ip_bytes", StringType, true),
                 StructField("tunnel_parents", StringType, true)
             )
+        )
 
         val fileStreamDf = sparkSession.readStream
             .option("header", "true")
