@@ -52,7 +52,7 @@ object FileLogStream extends StreamUtils {
         val fileStreamDf = sparkSession.readStream
             .option("header", "true")
             .option("sep", "\t")
-            .option("maxFilesPerTrigger",100)
+            .option("maxFilesPerTrigger",1)
             .schema(mySchema)
             .format("csv")
             .load("hdfs://10.252.108.22:9000/user/hduser/ainun/")
