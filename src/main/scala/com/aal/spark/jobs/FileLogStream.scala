@@ -1,3 +1,5 @@
+package com.aal.spark.jobs
+
 import java.util.concurrent.TimeUnit
 
 import org.apache.spark.sql.SparkSession
