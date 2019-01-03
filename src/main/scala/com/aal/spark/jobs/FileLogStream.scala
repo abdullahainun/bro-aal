@@ -13,18 +13,24 @@ object FileLogStream extends StreamUtils {
         val sparkSession = getSparkSession(args)
         import sparkSession.implicits._
 
-        val schema = StructType(
-            Array(StructField("transactionId", StringType),
-            StructField("customerId", StringType),
-            StructField("itemId", StringType),
-            StructField("amountPaid", StringType))
-        )
+        // val schema = StructType(
+        //     Array(StructField("transactionId", StringType),
+        //     StructField("customerId", StringType),
+        //     StructField("itemId", StringType),
+        //     StructField("amountPaid", StringType))
+        // )
+
+        val schema = new StructType()
+            .add("transactionId", "string")
+            .add("customerId", "string")
+            .add("itemId", "string")
+            .add("amountPaid", "string")
 
         val fileStreamDf = sparkSession.readStream
         .option("header", "true")
-        .option("delimiter", ",")
+        .option("sep", ",")
         .schema(schema)
-        .csv("/home/hduser/aal/bro-aal/src/main/resources/conn.log")
+        .csv("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
 
         val query = fileStreamDf
         .writeStream
