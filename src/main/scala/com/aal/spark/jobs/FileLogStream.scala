@@ -10,7 +10,7 @@ import com.aal.spark.utils._
 object FileLogStream extends StreamUtils {
     def main(args: Array[String]): Unit = {
         
-        val spark = getSparkContext(args)
+        val sparkSession = getSparkSession(args)
 
         val schema = StructType(
             Array(StructField("transactionId", StringType),
