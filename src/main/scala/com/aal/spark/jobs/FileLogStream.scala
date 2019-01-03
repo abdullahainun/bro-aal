@@ -22,7 +22,7 @@ object FileLogStream extends StreamUtils {
         val fileStreamDf = sparkSession.readStream
         .option("header", "true")
         .schema(schema)
-        .csv("sales.csv")
+        .csv("/home/aal/bro-aal/src/main/resources/sales.csv")
 
         val query = fileStreamDf.writeStream
         .format("console")
