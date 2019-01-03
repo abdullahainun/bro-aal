@@ -31,7 +31,7 @@ object FileLogStream extends StreamUtils {
             .option("sep", ",")
             .schema(mySchema)
             .format("csv")
-            .load("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
+            .load("/home/hduser/aal/bro-aal/src/main/resources/")
 
         fileStreamDf.printSchema
 
