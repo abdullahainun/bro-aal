@@ -22,6 +22,7 @@ object FileLogStream extends StreamUtils {
 
         val fileStreamDf = sparkSession.readStream
         .option("header", "true")
+        .option("delimiter", ",")
         .schema(schema)
         .csv("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
 
