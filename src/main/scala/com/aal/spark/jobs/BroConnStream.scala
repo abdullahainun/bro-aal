@@ -274,13 +274,13 @@ object BroConnStream extends StreamUtils {
     //  .start()
     //  .awaitTermination()
 
-    // export to csv 
-    // val parsedRawToCSV = connDf
-    // .writeStream
-    // .format("csv")        // can be "orc", "json", "csv", etc.
-    // .option("checkpointLocation", "/home/aal/workspace/")
-    // .option("path", "/home/aal/workspace/connlog.csv")
-    // .start()
+    // sink to csv 
+    val parsedRawToCSV = connDf
+    .writeStream
+    .format("csv")        // can be "orc", "json", "csv", etc.
+    .option("checkpointLocation", "hdfs://home/hduser/hadoop/dfs")
+    .option("path", "hdfs://home/hduser/hadoop/dfs/connlog.csv")
+    .start()
     
     // parsedRawToCSV.awaitTermination()
 
@@ -292,11 +292,11 @@ object BroConnStream extends StreamUtils {
     // end svm machine learning code
 
     // //Sink to Mongodb
-    val ConnCountQuery = connDf
-      .writeStream
-      .format("console")
-      .outputMode("append")
-      .start()
+    // val ConnCountQuery = connDf
+    //   .writeStream
+    //   .format("console")
+    //   .outputMode("append")
+    //   .start()
     //   .foreach(new ForeachWriter[ConnCountObj] {
 
     //       val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://127.0.0.1/bro.connlog"))
@@ -352,7 +352,7 @@ object BroConnStream extends StreamUtils {
     // }).start()
 
 
-    ConnCountQuery.awaitTermination()
+    // ConnCountQuery.awaitTermination()
   }
 }
 
