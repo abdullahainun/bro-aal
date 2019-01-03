@@ -24,7 +24,7 @@ object FileLogStream extends StreamUtils {
 
         val mySchema : StructType = StructType( 
             Seq(
-                StructField("ts", StringType, true),
+                StructField("ts", DoubleType, true),
                 StructField("uid", StringType, true),
                 StructField("id.orig_h", StringType, true),
                 StructField("id.orig_p", StringType, true),
@@ -33,8 +33,8 @@ object FileLogStream extends StreamUtils {
                 StructField("proto", StringType, true),
                 StructField("service", StringType, true),
                 StructField("duration", StringType, true),
-                StructField("orig_bytes", StringType, true),
-                StructField("resp_bytes", StringType, true),
+                StructField("orig_bytes", IntegerType, true),
+                StructField("resp_bytes", IntegerType, true),
                 StructField("conn_state", StringType, true),
                 StructField("local_orig", StringType, true),
                 StructField("local_resp", StringType, true),
@@ -55,11 +55,27 @@ object FileLogStream extends StreamUtils {
             .option("maxFilesPerTrigger",1)
             .schema(mySchema)
             .format("csv")
-            .load("hdfs://10.252.108.22:9000/user/hduser/ainun/")
+            .load("hdfs://10.252.108.22:9000/user/hduser/broconn/")
 
-        fileStreamDf.printSchema
+        val parsedRawDf = fileStreamDf
+            .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
 
-        val query = fileStreamDf
+        val newDF = parsedRawDf  
+            .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+            .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+            .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+            .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+            .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+            .withColumn("Reconnect", BroConnFeatureExtractionFormula.reconnect(col("history").cast("string")))
+            .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+            .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+            .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+            .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+            .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
+
+        newDF.printSchema
+
+        val query = newDF
         .writeStream
         .format("console")
         .outputMode("append")
