@@ -21,6 +21,7 @@ object FileLogStream extends StreamUtils {
         // )
 
         val mySchema = new StructType()
+
             .add("ts", "string")
             .add("uid", "string")
             .add("id.orig_h", "string")
@@ -42,12 +43,12 @@ object FileLogStream extends StreamUtils {
             .add("resp_pkts", "string")
             .add("resp_ip_bytes", "string")
             .add("tunnel_parents", "string")
-            
+
         val fileStreamDf = sparkSession.readStream
             .option("header", "true")
             .option("sep", " ")
             .schema(mySchema)
-            .format("text")
+            .format("csv")
             .load("hdfs://10.252.108.22:9000/user/hduser/ainun/")
 
         fileStreamDf.printSchema
