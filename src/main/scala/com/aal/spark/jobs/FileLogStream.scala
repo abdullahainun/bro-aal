@@ -45,7 +45,7 @@ object FileLogStream extends StreamUtils {
                 StructField("resp_pkts", StringType, true),
                 StructField("resp_ip_bytes", StringType, true),
                 StructField("tunnel_parents", StringType, true)
-            )
+            
             )
         )
 
