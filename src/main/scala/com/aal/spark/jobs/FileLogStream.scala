@@ -29,7 +29,7 @@ object FileLogStream extends StreamUtils {
         val fileStreamDf = sparkSession.readStream
             .option("header", "true")
             .option("sep", ",")
-            .schema(mySschema)
+            .schema(mySchema)
             .format("csv")
             .load("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
 
