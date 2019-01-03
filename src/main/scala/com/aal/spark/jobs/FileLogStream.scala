@@ -28,5 +28,7 @@ object FileLogStream extends StreamUtils {
         val query = fileStreamDf.writeStream
         .format("console")
         .outputMode(OutputMode.Append()).start()
+
+        query.awaitTermination()
     }
 }
