@@ -11,6 +11,7 @@ object FileLogStream extends StreamUtils {
     def main(args: Array[String]): Unit = {
         
         val sparkSession = getSparkSession(args)
+        import spark.implicits._
 
         val schema = StructType(
             Array(StructField("transactionId", StringType),
