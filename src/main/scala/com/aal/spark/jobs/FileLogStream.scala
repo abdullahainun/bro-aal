@@ -22,7 +22,7 @@ object FileLogStream extends StreamUtils {
 
         val mySchema = new StructType( 
             List(
-                StructField("ts", StringTyp, true),
+                StructField("ts", StringType, true),
                 StructField("uid", StringType, true),
                 StructField("id.orig_h", StringType, true),
                 StructField("id.orig_p", StringType, true),
