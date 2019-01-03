@@ -24,9 +24,10 @@ object FileLogStream extends StreamUtils {
         .option("header", "true")
         .option("delimiter", ",")
         .schema(schema)
-        .csv("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
+        .csv("/home/hduser/aal/bro-aal/src/main/resources/conn.log")
 
-        val query = fileStreamDf.writeStream
+        val query = fileStreamDf
+        .writeStream
         .format("console")
         .outputMode("complete").start()
 
