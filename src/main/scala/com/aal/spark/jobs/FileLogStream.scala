@@ -20,22 +20,26 @@ object FileLogStream extends StreamUtils {
         //     StructField("amountPaid", StringType))
         // )
 
-        val schema = new StructType()
+        val mySchema = new StructType()
             .add("transactionId", "string")
             .add("customerId", "string")
             .add("itemId", "string")
             .add("amountPaid", "string")
 
         val fileStreamDf = sparkSession.readStream
-        .option("header", "true")
-        .option("sep", ",")
-        .schema(schema)
-        .csv("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
+            .option("header", "true")
+            .option("sep", ",")
+            .schema(mySschema)
+            .format("csv")
+            .load("/home/hduser/aal/bro-aal/src/main/resources/sales.csv")
+
+        fileStreamDf.printSchema
 
         val query = fileStreamDf
         .writeStream
         .format("console")
-        .outputMode("complete").start()
+        .outputMode("append")
+        .start()
 
         query.awaitTermination()
     }
