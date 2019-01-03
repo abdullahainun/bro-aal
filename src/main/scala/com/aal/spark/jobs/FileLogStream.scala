@@ -7,6 +7,8 @@ import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
 import com.aal.spark.utils._
+import org.apache.spark.sql.types._
+
 object FileLogStream extends StreamUtils {
     def main(args: Array[String]): Unit = {
         
@@ -21,7 +23,7 @@ object FileLogStream extends StreamUtils {
         // )
 
         val mySchema = new StructType( 
-            List(
+            Seq((
                 StructField("ts", StringType, true),
                 StructField("uid", StringType, true),
                 StructField("id.orig_h", StringType, true),
