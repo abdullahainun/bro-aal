@@ -2,6 +2,7 @@ package com.aal.spark.jobs
 
 import java.util.concurrent.TimeUnit
 
+import org.apache.spark.sql._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
