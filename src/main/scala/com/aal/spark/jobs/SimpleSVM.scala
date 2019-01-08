@@ -10,7 +10,7 @@ object SimpleSVM extends StreamUtils {
     def main(args: Array[String]): Unit = {
         // Load training data in LIBSVM format.
         val spark = getSparkContext(args)
-        val data = MLUtils.loadLibSVMFile(spark, "hdfs://10.252.108.22:9000/user/hduser/ainun/without_normalization.data")
+        val data = MLUtils.loadLibSVMFile(spark, "hdfs://10.252.108.22:9000/user/hduser/ainun/test.data")
 
         // Split data into training (60%) and test (40%).
         val splits = data.randomSplit(Array(0.8, 0.2), seed = 11L)
