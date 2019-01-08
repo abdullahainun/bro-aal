@@ -16,7 +16,10 @@ object SimpleDT extends StreamUtils {
 
         // $example on$
         // Load and parse the data file.
-        val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/sample_libsvm_data.txt")
+        val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
+
+        // load data streaming
+
         val labelIndexer = new StringIndexer()
         .setInputCol("label")
         .setOutputCol("indexedLabel")
@@ -50,6 +53,8 @@ object SimpleDT extends StreamUtils {
         // Train model. This also runs the indexers.
         val model = pipeline.fit(trainingData)
 
+        // Now we can optionally save the fitted pipeline to disk
+        model.write.overwrite().save("hdfs://10.252.108.22:9000/user/hduser/ainun/tmp/isot-dt-model")
         // Make predictions.
         val predictions = model.transform(testData)
 
