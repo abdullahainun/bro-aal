@@ -18,7 +18,7 @@ object SimpleDT extends StreamUtils {
         // Load and parse the data file.
         val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
         val labelIndexer = new StringIndexer()
-        .setInputCol("label2")
+        .setInputCol("label")
         .setOutputCol("indexedLabel")
         .fit(data)
 
