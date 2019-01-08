@@ -45,5 +45,6 @@ object SimpleDT extends StreamUtils {
         // $example off$
 
         sc.stop()  
+        sameModel.awaitTermination()
     }
 }
