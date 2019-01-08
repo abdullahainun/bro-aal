@@ -12,7 +12,7 @@ import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 
 object SimpleDT extends StreamUtils {
     def main(args: Array[String]): Unit = {        
-        val sc = getSparkContext(args)
+        val spark = getSparkSession(args)
 
         // $example on$
         // Load and parse the data file.
