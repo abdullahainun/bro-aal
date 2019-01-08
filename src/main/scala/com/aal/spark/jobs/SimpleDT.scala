@@ -8,6 +8,8 @@ import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 
 object SimpleDT extends StreamUtils {
     def main(args: Array[String]): Unit = {        
+        val spark = getSparkContext(args)
+
         // Load the data stored in LIBSVM format as a DataFrame.
         val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
 
