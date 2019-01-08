@@ -17,3 +17,4 @@ object SimpleDT extends StreamUtils {
 
         sc.stop()
     }
+}    
