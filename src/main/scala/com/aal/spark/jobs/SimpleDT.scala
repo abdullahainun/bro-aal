@@ -44,6 +44,6 @@ object SimpleDT extends StreamUtils {
         // val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
         // $example off$
 
-        sc.stop()  
+        sc.stop()
     }
 }
