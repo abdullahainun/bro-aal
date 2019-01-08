@@ -8,7 +8,7 @@ import org.apache.spark.mllib.tree.model.DecisionTreeModel
 import org.apache.spark.mllib.util.MLUtils
 // $example off$
 
-object SimpleDT extends StreamUtils {
+object StreamAnalysis extends StreamUtils {
     def main(args: Array[String]): Unit = {  
         val spark = getSparkSession(args)
 
