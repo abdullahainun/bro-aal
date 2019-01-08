@@ -16,7 +16,7 @@ object SimpleDT extends StreamUtils {
 
         // $example on$
         // Load and parse the data file.
-        val data = MLUtils.loadLibSVMFile(sc, "hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
+        val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
         val labelIndexer = new StringIndexer()
         .setInputCol("label2")
         .setOutputCol("indexedLabel")
