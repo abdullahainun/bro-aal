@@ -1,4 +1,5 @@
 package com.aal.spark.jobs
+import com.aal.spark.utils._
 
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.DecisionTreeClassificationModel
