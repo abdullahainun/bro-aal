@@ -40,9 +40,9 @@ object SimpleDT extends StreamUtils {
         println(s"Learned classification tree model:\n ${model.toDebugString}")
 
         // Save and load model
-        // model.save(sc, "target/tmp/myDecisionTreeClassificationModel")
-        // val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
-        // $example off$
+        model.save(sc, "target/tmp/myDecisionTreeClassificationModel")
+        val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
+        $example off$
 
         sc.stop()  
     }
