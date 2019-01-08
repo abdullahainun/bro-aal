@@ -15,6 +15,6 @@ object SimpleDT extends StreamUtils {
         val data = spark.read.parquet("hdfs://10.252.108.22:9000/user/hduser/ainun/tmp/myDecisionTreeClassificationModel")
         data.printSchema()
 
-        sc.stop()
+        spark.stop()
     }
 }    
