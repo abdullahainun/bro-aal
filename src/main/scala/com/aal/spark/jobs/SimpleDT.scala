@@ -9,60 +9,40 @@ import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 
 object SimpleDT extends StreamUtils {
     def main(args: Array[String]): Unit = {        
-        val spark = getSparkSession(args)
+        val sc = getSparkContext(args)
 
-        // Load the data stored in LIBSVM format as a DataFrame.
-        val data = spark.read.format("libsvm").load("hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
+        // $example on$
+        // Load and parse the data file.
+        val data = MLUtils.loadLibSVMFile(sc, "hdfs://10.252.108.22:9000/user/hduser/ainun/dataset_isot.data")
+        // Split the data into training and test sets (30% held out for testing)
+        val splits = data.randomSplit(Array(0.7, 0.3))
+        val (trainingData, testData) = (splits(0), splits(1))
 
-        // // Index labels, adding metadata to the label column.
-        // // Fit on whole dataset to include all labels in index.
-        // val labelIndexer = new StringIndexer()
-        // .setInputCol("label")
-        // .setOutputCol("indexedLabel")
-        // .fit(data)
-        // // Automatically identify categorical features, and index them.
-        // val featureIndexer = new VectorIndexer()
-        // .setInputCol("features")
-        // .setOutputCol("indexedFeatures")
-        // .setMaxCategories(4) // features with > 4 distinct values are treated as continuous.
-        // .fit(data)
+        // Train a DecisionTree model.
+        //  Empty categoricalFeaturesInfo indicates all features are continuous.
+        val numClasses = 2
+        val categoricalFeaturesInfo = Map[Int, Int]()
+        val impurity = "gini"
+        val maxDepth = 5
+        val maxBins = 32
 
-        // // Split the data into training and test sets (30% held out for testing).
-        // val Array(trainingData, testData) = data.randomSplit(Array(0.7, 0.3))
+        val model = DecisionTree.trainClassifier(trainingData, numClasses, categoricalFeaturesInfo,
+        impurity, maxDepth, maxBins)
 
-        // // Train a DecisionTree model.
-        // val dt = new DecisionTreeClassifier()
-        // .setLabelCol("indexedLabel")
-        // .setFeaturesCol("indexedFeatures")
+        // Evaluate model on test instances and compute test error
+        val labelAndPreds = testData.map { point =>
+        val prediction = model.predict(point.features)
+        (point.label, prediction)
+        }
+        val testErr = labelAndPreds.filter(r => r._1 != r._2).count().toDouble / testData.count()
+        println(s"Test Error = $testErr")
+        println(s"Learned classification tree model:\n ${model.toDebugString}")
 
-        // // Convert indexed labels back to original labels.
-        // val labelConverter = new IndexToString()
-        // .setInputCol("prediction")
-        // .setOutputCol("predictedLabel")
-        // .setLabels(labelIndexer.labels)
+        // Save and load model
+        // model.save(sc, "target/tmp/myDecisionTreeClassificationModel")
+        // val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
+        // $example off$
 
-        // // Chain indexers and tree in a Pipeline.
-        // val pipeline = new Pipeline()
-        // .setStages(Array(labelIndexer, featureIndexer, dt, labelConverter))
-
-        // // Train model. This also runs the indexers.
-        // val model = pipeline.fit(trainingData)
-
-        // // Make predictions.
-        // val predictions = model.transform(testData)
-
-        // // Select example rows to display.
-        // predictions.select("predictedLabel", "label", "features").show(5)
-
-        // // Select (prediction, true label) and compute test error.
-        // val evaluator = new MulticlassClassificationEvaluator()
-        // .setLabelCol("indexedLabel")
-        // .setPredictionCol("prediction")
-        // .setMetricName("accuracy")
-        // val accuracy = evaluator.evaluate(predictions)
-        // println(s"Test Error = ${(1.0 - accuracy)}")
-
-        // val treeModel = model.stages(2).asInstanceOf[DecisionTreeClassificationModel]
-        // println(s"Learned classification tree model:\n ${treeModel.toDebugString}")       
+        sc.stop()  
     }
 }
