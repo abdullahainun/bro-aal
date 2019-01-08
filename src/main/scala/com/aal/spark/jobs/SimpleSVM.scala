@@ -37,8 +37,8 @@ object SimpleSVM extends StreamUtils {
         println(s"Area under ROC = $auROC")
 
         // Save and load model
-        model.save(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
-        val sameModel = SVMModel.load(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
+        model.save(spark, "/home/hduser/aal/bro-aal/target/tmp/scalaSVMWithSGDModel")
+        val sameModel = SVMModel.load(spark, "/home/hduser/aal/bro-aal/target/tmp/scalaSVMWithSGDModel")
 
         spark.stop()
     }
