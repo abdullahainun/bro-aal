@@ -62,6 +62,7 @@ object SimpleDT extends StreamUtils {
         .setPredictionCol("prediction")
         .setMetricName("accuracy")
         val accuracy = evaluator.evaluate(predictions)
+        println(s"akurasi = ${(accuracy)}")
         println(s"Test Error = ${(1.0 - accuracy)}")
 
         val treeModel = model.stages(2).asInstanceOf[DecisionTreeClassificationModel]
