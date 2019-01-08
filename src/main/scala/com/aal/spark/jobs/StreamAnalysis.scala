@@ -10,7 +10,7 @@ import org.apache.spark.mllib.util.MLUtils
 
 object SimpleDT extends StreamUtils {
     def main(args: Array[String]): Unit = {  
-        val sc = getSparkSession(args)
+        val spark = getSparkSession(args)
 
         val data = spark.read.parquet("hdfs://10.252.108.22:9000/user/hduser/ainun/tmp/myDecisionTreeClassificationModel")
         data.printSchema()
