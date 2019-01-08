@@ -22,6 +22,6 @@ object SimpleDT extends StreamUtils {
         .setOutputCol("indexedLabel")
         .fit(data)
 
-        sc.stop()
+        spark.stop()
     }
 }
