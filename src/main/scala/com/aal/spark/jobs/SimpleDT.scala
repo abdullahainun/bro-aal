@@ -41,10 +41,9 @@ object SimpleDT extends StreamUtils {
 
         // Save and load model
         model.save(sc, "target/tmp/myDecisionTreeClassificationModel")
-        val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
+        // val sameModel = DecisionTreeModel.load(sc, "target/tmp/myDecisionTreeClassificationModel")
         // $example off$
 
         sc.stop()  
-        sameModel.awaitTermination()
     }
 }
