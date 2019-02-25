@@ -10,7 +10,7 @@ object SimpleSVM extends StreamUtils {
     def main(args: Array[String]): Unit = {
         // Load training data in LIBSVM format.
         val spark = getSparkContext(args)
-        val data = MLUtils.loadLibSVMFile(spark, "/home/aal/workspace/bro-aal/sample_libsvm_data.txt")
+        val data = MLUtils.loadLibSVMFile(spark, "hdfs://127.0.0.1:9000/user/hduser/aal/dataset_isot.data")
 
         // Split data into training (60%) and test (40%).
         val splits = data.randomSplit(Array(0.6, 0.4), seed = 11L)
@@ -37,8 +37,8 @@ object SimpleSVM extends StreamUtils {
         println(s"Area under ROC = $auROC")
 
         // Save and load model
-        model.save(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
-        val sameModel = SVMModel.load(spark, "/home/aal/workspace/bro-aal/target/tmp/scalaSVMWithSGDModel")
+        model.save(spark, "hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-svm-model")
+        val sameModel = SVMModel.load(spark, "hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
 
         spark.stop()
     }
