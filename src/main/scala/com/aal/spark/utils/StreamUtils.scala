@@ -19,8 +19,8 @@ private[spark] trait StreamUtils {
 
     val conf = new SparkConf()
       .setMaster ("spark://localhost:7077")
-      .setAppName("StreamProtocolCountToMongo")
-      .set("spark.app.id", "StreamProtocolCountToMongo")
+      .setAppName("AnalisaTrafficDNS")
+      .set("spark.app.id", "AnalisaTrafficDNS")
       .set("spark.mongodb.input.uri", uri)
       .set("spark.mongodb.output.uri", uri)
 
