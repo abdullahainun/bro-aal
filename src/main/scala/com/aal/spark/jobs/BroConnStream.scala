@@ -282,7 +282,7 @@ object BroConnStream extends StreamUtils {
     .option("path", "hdfs://127.0.0.1:9000/user/hduser/aal/dfs/connlog.csv")
     .start()
     
-    // parsedRawToCSV.awaitTermination()
+    parsedRawToCSV.awaitTermination()
 
     // start svm machine learning code
     // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
