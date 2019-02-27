@@ -41,7 +41,7 @@ object BroDnsStream extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "kafka:9092"
+    val kafkaUrl = "10.130.122.127:9092"
     // val shemaRegistryURL = "http://localhost:8081"
     val topic ="brodns"
 

@@ -62,7 +62,7 @@ object BroConnStream extends StreamUtils {
 
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.148.0.3:9092"
+    val kafkaUrl = "10.130.122.127:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 
@@ -278,8 +278,8 @@ object BroConnStream extends StreamUtils {
     val parsedRawToCSV = connDf
     .writeStream
     .format("csv")        // can be "orc", "json", "csv", etc.
-    .option("checkpointLocation", "hdfs://master-1:9000/hduser/hadoop/dfs")
-    .option("path", "hdfs://master-1:9000/hduser/hadoop/dfs/connlog.csv")
+    .option("checkpointLocation", "hdfs://BigData:9000/hduser/aal/dfs")
+    .option("path", "hdfs://BigData:9000/hduser/aal/dfs/connlog.csv")
     .start()
     
     // parsedRawToCSV.awaitTermination()
