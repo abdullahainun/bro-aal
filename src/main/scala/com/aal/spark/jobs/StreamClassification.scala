@@ -19,10 +19,13 @@ import com.aal.spark.utils._
 import org.apache.spark.sql.functions.udf
 import scala.collection.mutable.HashMap
 
-// svm package
-import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
-import org.apache.spark.mllib.util.MLUtils
+// machine learning load package
+import org.apache.spark.ml._
+import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.DecisionTreeClassificationModel
+import org.apache.spark.ml.classification.DecisionTreeClassifier
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 
 
 object StreamClassification extends StreamUtils {
@@ -69,6 +72,9 @@ object StreamClassification extends StreamUtils {
     val spark = getSparkSession(args)
     import spark.implicits._
 
+// loading model
+    val pipelineModel = PipelineModel.read.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
+    
     spark.sparkContext.setLogLevel("ERROR")
  //   spark.sparkContext.setLogLevel("INFO")
     val kafkaStreamDF = spark.readStream
