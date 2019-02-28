@@ -236,11 +236,11 @@ object StreamClassification extends StreamUtils {
     //   ))
 
     // Print new data to console
-     connDf
-     .writeStream
-      .format("console")
-     .start()
-     .awaitTermination()
+    //  connDf
+    //  .writeStream
+    //   .format("console")
+    //  .start()
+    //  .awaitTermination()
   }
 }
 
