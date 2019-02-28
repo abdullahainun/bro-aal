@@ -250,7 +250,10 @@ object StreamClassification extends StreamUtils {
     //   ))
 
     // Print new data to console
-     newDF
+     
+    
+    
+    newDF
      .writeStream
       .format("console")
      .start()
