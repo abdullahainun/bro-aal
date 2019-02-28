@@ -235,13 +235,13 @@ object StreamClassification extends StreamUtils {
       ))
 
     // Print new data to console
-     newDF
+     connDf
      .writeStream
       .format("console")
      .start()
      .awaitTermination()
 
-    ConnCountQuery.awaitTermination()
+    connDf.awaitTermination()
   }
 }
 
