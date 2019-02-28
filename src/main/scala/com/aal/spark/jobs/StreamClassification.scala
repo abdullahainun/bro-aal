@@ -240,8 +240,6 @@ object StreamClassification extends StreamUtils {
       .format("console")
      .start()
      .awaitTermination()
-
-    connDf.awaitTermination()
   }
 }
 
