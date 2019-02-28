@@ -214,6 +214,8 @@ object StreamClassification extends StreamUtils {
       .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
+    newDF.show()
+
     val connDf = newDF
       .map((r:Row) => ConnCountObj(r.getAs[String](0),
         r.getAs[String](1),
