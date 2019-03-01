@@ -103,8 +103,7 @@ object StreamClassification extends StreamUtils {
     //  .awaitTermination()
 
     val schema : StructType = StructType(
-      Seq(StructField
-      ("conn", StructType(Seq(
+      Seq(StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
         StructField("id_orig_h", StringType, true),
@@ -125,8 +124,7 @@ object StreamClassification extends StreamUtils {
         StructField("orig_ip_bytes", StringType, true),
         StructField("resp_pkts", StringType, true),
         StructField("resp_ip_bytes", StringType, true)
-      )
-      )
+      )      
       )
       )
     )
@@ -141,7 +139,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("col", konversi(col("value").cast("string")))
 
       .select(from_json(col("col"), schema)
-        .getField("conn")
+        .getField("*")
         .alias("conn")
       )
       .select("conn.*")
@@ -251,10 +249,7 @@ object StreamClassification extends StreamUtils {
         r.getAs[String](30)
       ))
 
-    // Print new data to console
-     
-    
-    
+    // Print new data to console             
     newDF
      .writeStream
       .format("console")
