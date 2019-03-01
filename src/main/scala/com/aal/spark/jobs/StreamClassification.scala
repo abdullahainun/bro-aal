@@ -136,8 +136,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("col", konversi(col("value").cast("string")))
 
       .select(from_json(col("col"), schema)
-        .getField("*")
-        .alias("conn")
+        .as("conn")
       )
       .select("conn.*")
 
