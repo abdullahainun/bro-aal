@@ -17,6 +17,7 @@ import scala.collection.mutable
 import com.aal.spark.utils._
 
 import org.apache.spark.sql.functions.udf
+import org.apache.spark.sql.functions.{lit, max, row_number}
 import scala.collection.mutable.HashMap
 
 // machine learning load package
@@ -26,6 +27,7 @@ import org.apache.spark.ml.classification.DecisionTreeClassificationModel
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
+
 
 
 object StreamClassification extends StreamUtils {
@@ -207,7 +209,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
       .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", lit(0))
+      .withColumn("Reconnect", lit('0'))
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
