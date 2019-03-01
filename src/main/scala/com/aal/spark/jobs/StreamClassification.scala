@@ -102,8 +102,7 @@ object StreamClassification extends StreamUtils {
     //  .start()
     //  .awaitTermination()
 
-    val schema : StructType = StructType(
-      Seq(StructType(Seq(
+    val schema : StructType = StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
         StructField("id_orig_h", StringType, true),
@@ -125,8 +124,6 @@ object StreamClassification extends StreamUtils {
         StructField("resp_pkts", StringType, true),
         StructField("resp_ip_bytes", StringType, true)
       )      
-      )
-      )
     )
 
     val konversi = udf((row: String) => {
