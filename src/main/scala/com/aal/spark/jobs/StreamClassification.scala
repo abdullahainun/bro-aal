@@ -207,7 +207,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
       .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", reconnect(col("history").cast("string")))
+      .withColumn("Reconnect", lit(0))
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
@@ -215,39 +215,39 @@ object StreamClassification extends StreamUtils {
       .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     // newDF.show()
 
-    // val connDf = newDF
-    //   .map((r:Row) => ConnCountObj(r.getAs[String](0),
-    //     r.getAs[String](1),
-    //     r.getAs[String](2),
-    //     r.getAs[Integer](3),
-    //     r.getAs[String](4),
-    //     r.getAs[Integer](5),
-    //     r.getAs[String](6),
-    //     r.getAs[String](7),
-    //     r.getAs[Double](8),
-    //     r.getAs[Integer](9),
-    //     r.getAs[Integer](10),
-    //     r.getAs[String](11),
-    //     r.getAs[Boolean](12),
-    //     r.getAs[Boolean](13),
-    //     r.getAs[Integer](14),
-    //     r.getAs[String](15),
-    //     r.getAs[Integer](16),
-    //     r.getAs[Integer](17),
-    //     r.getAs[Integer](18),
-    //     r.getAs[Integer](19),
-    //     r.getAs[Integer](20),
-    //     r.getAs[Integer](21),
-    //     r.getAs[Integer](22),
-    //     r.getAs[Integer](23),
-    //     r.getAs[Integer](24),
-    //     r.getAs[Integer](25),
-    //     r.getAs[Integer](26),
-    //     r.getAs[Integer](27),
-    //     r.getAs[Integer](28),
-    //     r.getAs[Double](29),
-    //     r.getAs[String](30)
-    //   ))
+    val connDf = newDF
+      .map((r:Row) => ConnCountObj(r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6),
+        r.getAs[String](7),
+        r.getAs[Double](8),
+        r.getAs[Integer](9),
+        r.getAs[Integer](10),
+        r.getAs[String](11),
+        r.getAs[Boolean](12),
+        r.getAs[Boolean](13),
+        r.getAs[Integer](14),
+        r.getAs[String](15),
+        r.getAs[Integer](16),
+        r.getAs[Integer](17),
+        r.getAs[Integer](18),
+        r.getAs[Integer](19),
+        r.getAs[Integer](20),
+        r.getAs[Integer](21),
+        r.getAs[Integer](22),
+        r.getAs[Integer](23),
+        r.getAs[Integer](24),
+        r.getAs[Integer](25),
+        r.getAs[Integer](26),
+        r.getAs[Integer](27),
+        r.getAs[Integer](28),
+        r.getAs[Double](29),
+        r.getAs[String](30)
+      ))
 
     // Print new data to console
      
