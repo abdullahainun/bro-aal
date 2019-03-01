@@ -67,7 +67,7 @@ object StreamClassification extends StreamUtils {
 
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.130.122.127:9092"
+    val kafkaUrl = "103.24.56.244:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 
@@ -102,7 +102,9 @@ object StreamClassification extends StreamUtils {
     //  .start()
     //  .awaitTermination()
 
-    val schema : StructType = StructType(Seq(
+    val schema : StructType =  StructType(
+      Seq(StructField
+      ("conn", StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
         StructField("id_orig_h", StringType, true),
@@ -124,6 +126,9 @@ object StreamClassification extends StreamUtils {
         StructField("resp_pkts", StringType, true),
         StructField("resp_ip_bytes", StringType, true)
       )      
+      )
+      )
+      )
     )
 
     val konversi = udf((row: String) => {
