@@ -9,7 +9,7 @@ import org.apache.spark.sql.types.{DataTypes, StructType}
 
 object SimpleStream{
   def main(args: Array[String]): Unit = {
-    new StreamsProcessor("localhost:9092").process()
+    new SimpleStream("localhost:9092").process()
   }
 }
 
@@ -39,7 +39,7 @@ class SimpleStream(brokers: String) {
 
     val personFlattenedDf = personNestedDf.selectExpr("person.firstName", "person.lastName")
 
-   val consoleOutput = processedDf.writeStream
+   val consoleOutput = personFlattenedDf.writeStream
      .outputMode("append")
      .format("console")
      .start()
