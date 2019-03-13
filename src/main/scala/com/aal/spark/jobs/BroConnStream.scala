@@ -75,7 +75,7 @@ object BroConnStream extends StreamUtils {
       .format("kafka")
       .option("kafka.bootstrap.servers",kafkaUrl)
       .option("subscribe", topic)
-      .option("startingOffsets","earliest")
+      .option("startingOffsets","latest")
       .load()
     // ========== DF with no aggregations ==========
     val noAggDF = kafkaStreamDF.select("*")
