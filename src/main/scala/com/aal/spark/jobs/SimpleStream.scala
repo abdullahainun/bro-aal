@@ -7,13 +7,13 @@ import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DataTypes, StructType}
 
-object StreamsProcessor{
+object SimpleStream{
   def main(args: Array[String]): Unit = {
     new StreamsProcessor("localhost:9092").process()
   }
 }
 
-class StreamsProcessor(brokers: String) {
+class SimpleStream(brokers: String) {
 
   def process(): Unit = {
 
