@@ -62,7 +62,7 @@ object BroConnStream extends StreamUtils {
 
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.130.122.127:9092"
+    val kafkaUrl = "157.230.241.208:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 

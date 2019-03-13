@@ -67,7 +67,7 @@ object StreamClassification extends StreamUtils {
 
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "103.24.56.244:9092"
+    val kafkaUrl = "157.230.241.208:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 
