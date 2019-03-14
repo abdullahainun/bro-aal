@@ -92,12 +92,12 @@ object BroConnStream extends StreamUtils {
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
         StructField("id_orig_h", StringType, true),
-        StructField("id.orig_p", StringType, true),
+        StructField("id.orig_p", IntegerType, true),
         StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", StringType, true),
+        StructField("id.resp_p", IntegerType, true),
         StructField("proto", StringType, true),
         StructField("service", StringType, true),
-        StructField("duration", StringType, true),
+        StructField("duration", DoubleType, true),
         StructField("orig_bytes", IntegerType, true),
         StructField("resp_bytes", IntegerType, true),
         StructField("conn_state", StringType, true),
@@ -105,10 +105,10 @@ object BroConnStream extends StreamUtils {
         StructField("local_resp", StringType, true),
         StructField("missed_bytes", StringType, true),
         StructField("history", StringType, true),
-        StructField("orig_pkts", StringType, true),
-        StructField("orig_ip_bytes", StringType, true),
-        StructField("resp_pkts", StringType, true),
-        StructField("resp_ip_bytes", StringType, true)
+        StructField("orig_pkts", IntegerType, true),
+        StructField("orig_ip_bytes", IntegerType, true),
+        StructField("resp_pkts", IntegerType, true),
+        StructField("resp_ip_bytes", IntegerType, true)
       )
       )
       )
