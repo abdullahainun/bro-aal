@@ -52,11 +52,11 @@ object BroConnFeatureExtractionFormula{
 
     // rumus iopr
     val iopr = udf((origPkts:Int, respPkts:Int) => {
-        var result = 0
+        var result = 0.0
         if(respPkts != 0){
             result = origPkts / respPkts;
         }else{
-            result = 0
+            result = 0.0
         }
         result
     })

@@ -36,11 +36,11 @@ object StreamClassification extends StreamUtils {
                            origIpBytes: Integer,
                            respPkts: Integer,
                            respIpBytes: Integer,
-                           PX:Integer
-                          //  NNP:Integer,
-                          //  NSP:Integer,
-                          //  PSP:Integer,
-                          //  IOPR:Integer
+                           PX:Integer,
+                           NNP:Integer,
+                           NSP:Integer,
+                           PSP:Double,
+                           IOPR:Double
                           //  Reconnect:Integer,
                           //  FPS:Integer,
                           //  TBT:Integer,
@@ -122,10 +122,10 @@ object StreamClassification extends StreamUtils {
 
     val newDF = parsedLogData  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
-      // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
-      // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
-      // .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("Reconnect", reconnect(col("history").cast("string")))
       // .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
@@ -143,7 +143,11 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](6),
         r.getAs[Integer](7),
         r.getAs[Integer](8),
-        r.getAs[Integer](9)
+        r.getAs[Integer](9),
+        r.getAs[Integer](10),
+        r.getAs[Integer](11),
+        r.getAs[Double](12),
+        r.getAs[Double](13)
       ))
 
     // Print new data to console
