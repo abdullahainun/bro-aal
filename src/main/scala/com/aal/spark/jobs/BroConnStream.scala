@@ -268,21 +268,20 @@ object BroConnStream extends StreamUtils {
       ))
 
     // Print new data to console
-    //  newDF
-    //  .writeStream
-    //   .format("console")
-    //  .start()
-    //  .awaitTermination()
+     connDf
+     .writeStream
+      .format("console")
+     .start()
 
     // sink to csv 
-    val parsedRawToCSV = connDf
-    .writeStream
-    .format("csv")        // can be "orc", "json", "csv", etc.
-    .option("checkpointLocation", "hdfs://127.0.0.1:9000/user/hduser/aal/dfs")
-    .option("path", "hdfs://127.0.0.1:9000/user/hduser/aal/dfs/connlog.csv")
-    .start()
+    // val parsedRawToCSV = connDf
+    // .writeStream
+    // .format("csv")        // can be "orc", "json", "csv", etc.
+    // .option("checkpointLocation", "hdfs://127.0.0.1:9000/user/hduser/aal/dfs")
+    // .option("path", "hdfs://127.0.0.1:9000/user/hduser/aal/dfs/connlog.csv")
+    // .start()
     
-    parsedRawToCSV.awaitTermination()
+    spark.streams.awaitAnyTermination()
 
     // start svm machine learning code
     // val assembler = new VectorAssembler().setInputCols(Array("ip", "status")).setOutputCol("features")
