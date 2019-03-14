@@ -89,7 +89,7 @@ object BroConnStream extends StreamUtils {
       ("conn", StructType(Seq(
         StructField("ts",DoubleType,true),
         StructField("uid", StringType, true),
-        StructField("id_orig_h", StringType, true),
+        StructField("id.orig_h", StringType, true),
         StructField("id.orig_p", IntegerType, true),
         StructField("id.resp_h", StringType, true),
         StructField("id.resp_p", IntegerType, true),
