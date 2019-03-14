@@ -25,7 +25,7 @@ import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.mllib.util.MLUtils
 
 
-object BroConnStream extends StreamUtils {
+object StreamClassification extends StreamUtils {
   case class ConnCountObj(
                            idOrigP: Integer,
                            idRespP: Integer,
