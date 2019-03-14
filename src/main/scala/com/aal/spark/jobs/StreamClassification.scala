@@ -152,7 +152,7 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](15),
         r.getAs[Integer](16),
         r.getAs[Integer](17),
-        r.getAs[Double](18),
+        r.getAs[Double](18)
       ))
 
     // Print new data to console
