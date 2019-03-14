@@ -270,14 +270,14 @@ object BroConnStream extends StreamUtils {
         r.getAs[Integer](21),
         r.getAs[Integer](22),
         r.getAs[Integer](23),
-        r.getAs[Integer](24),
+        r.getAs[Integer](24)
     //     r.getAs[Integer](25),
     //     r.getAs[Integer](26),
     //     r.getAs[Integer](27),
     //     r.getAs[Integer](28),
     //     r.getAs[Double](29),
     //     r.getAs[String](30)
-    //   ))
+      ))
 
     // Print new data to console
      connDf
