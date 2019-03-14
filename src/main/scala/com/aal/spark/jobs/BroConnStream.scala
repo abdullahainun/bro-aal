@@ -51,13 +51,13 @@ object BroConnStream extends StreamUtils {
                            NNP:Integer,
                            NSP:Integer,
                            PSP:Integer,
-                           IOPR:Integer,
-                           Reconnect:Integer,
-                           FPS:Integer,
-                           TBT:Integer,
-                           APL:Integer,
-                           PPS:Double,
-                           label:String
+                           IOPR:Integer
+                          //  Reconnect:Integer,
+                          //  FPS:Integer,
+                          //  TBT:Integer,
+                          //  APL:Integer,
+                          //  PPS:Double,
+                          //  label:String
                          )
 
 
