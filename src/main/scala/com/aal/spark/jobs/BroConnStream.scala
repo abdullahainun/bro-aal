@@ -45,11 +45,11 @@ object BroConnStream extends StreamUtils {
                            origIpBytes: Integer,
                            respPkts: Integer,
                            respIpBytes: Integer,
-                           PX:Integer,
-                           NNP:Integer,
-                           NSP:Integer,
-                           PSP:Integer,
-                           IOPR:Integer
+                           PX:Integer
+                          //  NNP:Integer,
+                          //  NSP:Integer,
+                          //  PSP:Integer,
+                          //  IOPR:Integer
                           //  Reconnect:Integer,
                           //  FPS:Integer,
                           //  TBT:Integer,
@@ -230,10 +230,10 @@ object BroConnStream extends StreamUtils {
 
     val newDF = parsedRawDf  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
-      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
-      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
-      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+      // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+      // .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+      // .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("Reconnect", reconnect(col("history").cast("string")))
       // .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
