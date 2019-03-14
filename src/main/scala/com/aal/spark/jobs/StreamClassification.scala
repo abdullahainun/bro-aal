@@ -119,17 +119,8 @@ object StreamClassification extends StreamUtils {
       .outputMode("append")
       .start()
 
-    val parsedRawDf = parsedLogData
-      .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
-    
-    parsedRawDf
-      .writeStream
-      .format("console")
-      .outputMode("append")
-      .start()
 
-
-    val newDF = parsedRawDf  
+    val newDF = parsedLogData  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
       // .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
