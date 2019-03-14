@@ -64,7 +64,7 @@ object BroConnFeatureExtractionFormula{
     // rumus reconnect
     val reconnect = udf((history:String) => {
         var result = 0
-        // rumus reconnect
+        rumus reconnect
         var temp = history.take(2)
         if (temp == "Sr"){
             result = 1

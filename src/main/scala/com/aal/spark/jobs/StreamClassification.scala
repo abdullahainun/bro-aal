@@ -8,7 +8,7 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.spark.MongoConnector
 import com.mongodb.spark.config.WriteConfig
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp}
+import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit}
 import org.apache.spark.sql.types._
 import org.bson._
 
@@ -40,13 +40,12 @@ object StreamClassification extends StreamUtils {
                            NNP:Integer,
                            NSP:Integer,
                            PSP:Double,
-                           IOPR:Double
-                          //  Reconnect:Integer,
-                          //  FPS:Integer,
-                          //  TBT:Integer,
-                          //  APL:Integer,
-                          //  PPS:Double,
-                          //  label:String
+                           IOPR:Double,
+                           Reconnect:Integer,
+                           FPS:Integer,
+                           TBT:Integer,
+                           APL:Integer,
+                           PPS:Double
                          )
 
 
@@ -80,6 +79,7 @@ object StreamClassification extends StreamUtils {
       ("conn", StructType(Seq(
         StructField("id.orig_p", IntegerType, true),
         StructField("id.resp_p", IntegerType, true),
+        StructField("duration", DoubleType, true),
         StructField("orig_bytes", IntegerType, true),
         StructField("resp_bytes", IntegerType, true),
         StructField("missed_bytes", IntegerType, true),
@@ -126,11 +126,11 @@ object StreamClassification extends StreamUtils {
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
       .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
       .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("Reconnect", reconnect(col("history").cast("string")))
-      // .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      // .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      // .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      // .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("Reconnect", lit(0))
+      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
     val connDf = newDF
@@ -147,7 +147,12 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](10),
         r.getAs[Integer](11),
         r.getAs[Double](12),
-        r.getAs[Double](13)
+        r.getAs[Double](13),
+        r.getAs[Integer](14),
+        r.getAs[Integer](15),
+        r.getAs[Integer](16),
+        r.getAs[Integer](17),
+        r.getAs[Double](18),
       ))
 
     // Print new data to console
