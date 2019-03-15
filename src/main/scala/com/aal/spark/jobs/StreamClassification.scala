@@ -196,23 +196,24 @@ object StreamClassification extends StreamUtils {
           ))
         .setOutputCol("features")
 
-    val output = assembler.transform(connDf)
+    // val output = assembler.transform(connDf)
     // Make predictions on test documents.
-    val testing = connModel.transform(output)
+    // val testing = connModel.transform(output)
  
-    testing.select("features", "predictedLabel")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // testing.select("features", "predictedLabel")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
 //  machine learning model $off
 
-// // Print new data to console
-//      connDf
-//      .writeStream
-//       .format("console")
-//      .start()
+// Print new data to console
+     connDf
+      .writeStream
+      .outputMode("append")
+      .format("console")
+     .start()
     
     spark.streams.awaitAnyTermination()
   }
