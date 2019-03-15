@@ -192,7 +192,14 @@ object StreamClassification extends StreamUtils {
 
     //  cek ukuran dataframe
 
-    println(connDf.columns.size)
+    // println(connDf.columns.size)
+    // // Print new data to console
+     connDf
+     .columns
+     .size
+     .writeStream
+     .format("console")
+     .start()
     // val output = assembler.transform(connDf)
     // Make predictions on test documents.
     // val testing = connModel.transform(output)
