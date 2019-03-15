@@ -44,8 +44,8 @@ object StreamClassification extends StreamUtils {
                            Reconnect:Integer,
                            FPS:Integer,
                            TBT:Integer,
-                           APL:Integer,
-                           PPS:Double
+                           APL:Integer
+                          //  PPS:Double
                          )
 
 
