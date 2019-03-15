@@ -164,9 +164,9 @@ object StreamClassification extends StreamUtils {
       ))
 
     connDf
-      .withColumn("orig_bytes", when(col("orig_bytes").cast("string").isNull, 0))
-      .withColumn("resp_bytes", when(col("resp_bytes").cast("string").isNull, 0))
-      .withColumn("resp_ip_bytes", when(col("resp_ip_bytes").cast("string").isNull, 0))
+      .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, 0))
+      .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, 0))
+      .withColumn("resp_ip_bytes", when(col("resp_ip_bytes").cast("integer").isNull, 0))
 
 //  machine learning model $on
 // Load and parse the data
