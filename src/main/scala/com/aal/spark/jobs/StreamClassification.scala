@@ -93,8 +93,7 @@ object StreamClassification extends StreamUtils {
         StructField("orig_pkts", IntegerType, true),
         StructField("orig_ip_bytes", IntegerType, true),
         StructField("resp_pkts", IntegerType, true),
-        StructField("resp_ip_bytes", IntegerType, true),
-        StructField("duration", DoubleType, true)
+        StructField("resp_ip_bytes", IntegerType, true)
       )
       )
       )
