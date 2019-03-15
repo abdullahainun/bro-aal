@@ -190,15 +190,23 @@ object StreamClassification extends StreamUtils {
           ))
         .setOutputCol("features")
 
-    val output = assembler.transform(connDf)
-    // Make predictions on test documents.
-    val testing = connModel.transform(output)
- 
-    testing.select("features", "predictedLabel")
+    //  cek ukuran dataframe
+
+    connDf
     .writeStream
     .outputMode("append")
     .format("console")
+    .columns.size
     .start()
+    // val output = assembler.transform(connDf)
+    // Make predictions on test documents.
+    // val testing = connModel.transform(output)
+ 
+    // testing.select("features", "predictedLabel")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
 //  machine learning model $off
 
