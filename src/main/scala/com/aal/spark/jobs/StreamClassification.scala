@@ -118,13 +118,13 @@ object StreamClassification extends StreamUtils {
       )
       .select("conn.*")
 
-    parsedLogData.printSchema
+    // parsedLogData.printSchema
         // Print new data to console
-    parsedLogData
-      .writeStream
-      .format("console")
-      .outputMode("append")
-      .start()
+    // parsedLogData
+    //   .writeStream
+    //   .format("console")
+    //   .outputMode("append")
+    //   .start()
 
 
     val newDF = parsedLogData  
@@ -162,6 +162,11 @@ object StreamClassification extends StreamUtils {
         r.getAs[Double](18)
       ))
 
+    connDf
+      .withColumn("orig_bytes", when($"orig_bytes".isNull, 0)
+      .withColumn("resp_bytes", when($"resp_bytes".isNull, 0)
+      .withColumn("resp_ip_bytes", when($"resp_ip_bytes".isNull, 0)
+
 //  machine learning model $on
 // Load and parse the data
     val connModel = PipelineModel.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
@@ -190,25 +195,15 @@ object StreamClassification extends StreamUtils {
           ))
         .setOutputCol("features")
 
-    //  cek ukuran dataframe
-
-    // println(connDf.columns.size)
-    // // Print new data to console
-     connDf
-     .columns
-     .size
-     .writeStream
-     .format("console")
-     .start()
-    // val output = assembler.transform(connDf)
+    val output = assembler.transform(connDf)
     // Make predictions on test documents.
-    // val testing = connModel.transform(output)
+    val testing = connModel.transform(output)
  
-    // testing.select("features", "predictedLabel")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
+    testing.select("features", "predictedLabel")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
 //  machine learning model $off
 
