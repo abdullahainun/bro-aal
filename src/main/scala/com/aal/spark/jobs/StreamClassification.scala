@@ -141,11 +141,11 @@ object StreamClassification extends StreamUtils {
       .withColumn("PPS", lit(0.0))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
-    val filterDf = calcDF
-      .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, lit(0)))
-      .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, lit(0)))
+    // val filterDf = calcDF
+    //   .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, lit(0)))
+    //   .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, lit(0)))
 
-    val connDf = filterDf
+    val connDf = calcDF
       .map((r:Row) => ConnCountObj(r.getAs[Integer](0),
         r.getAs[Integer](1),
         r.getAs[Integer](2),
