@@ -19,10 +19,16 @@ import com.aal.spark.utils._
 import org.apache.spark.sql.functions.udf
 import scala.collection.mutable.HashMap
 
-// svm package
-import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
-import org.apache.spark.mllib.util.MLUtils
+// pipeline package
+import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.PipelineModel
+import org.apache.spark.ml.classification.DecisionTreeClassificationModel
+import org.apache.spark.ml.classification.DecisionTreeClassifier
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
+import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.linalg.Vectors
 
 
 object StreamClassification extends StreamUtils {
@@ -36,7 +42,7 @@ object StreamClassification extends StreamUtils {
                            origIpBytes: Integer,
                            respPkts: Integer,
                            respIpBytes: Integer,
-                           PX:Double,
+                           PX:Integer,
                            NNP:Integer,
                            NSP:Integer,
                            PSP:Double,
@@ -59,6 +65,8 @@ object StreamClassification extends StreamUtils {
 
     spark.sparkContext.setLogLevel("ERROR")
  //   spark.sparkContext.setLogLevel("INFO")
+
+// streaming on
     val kafkaStreamDF = spark.readStream
       .format("kafka")
       .option("kafka.bootstrap.servers",kafkaUrl)
@@ -130,7 +138,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double")))
+      .withColumn("PPS", lit(0.0))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
     val connDf = newDF
@@ -143,7 +151,7 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](6),
         r.getAs[Integer](7),
         r.getAs[Integer](8),
-        r.getAs[Double](9),
+        r.getAs[Integer](9),
         r.getAs[Integer](10),
         r.getAs[Integer](11),
         r.getAs[Double](12),
@@ -155,11 +163,51 @@ object StreamClassification extends StreamUtils {
         r.getAs[Double](18)
       ))
 
-    // Print new data to console
-     connDf
-     .writeStream
-      .format("console")
-     .start()
+//  machine learning model $on
+// Load and parse the data
+    val connModel = PipelineModel.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
+
+    val assembler = new VectorAssembler()
+        .setInputCols(Array(
+            "idOrigP",
+            "idRespP",
+            "orig_bytes",,
+            "resp_bytes",
+            "missedBytes",
+            "origPkts",
+            "origIpBytes",
+            "respPkts",
+            "respIpBytes",
+            "PX",
+            "NNP",
+            "NSP",
+            "PSP",
+            "IOPR",
+            "Reconnect",
+            "FPS",
+            "TBT",
+            "APL",
+            "PPS"
+          ))
+        .setOutputCol("features")
+
+    val output = assembler.transform(connDf)
+    // Make predictions on test documents.
+    val testing = connModel.transform(output)
+ 
+    testing.select("features", "predictedLabel")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+
+//  machine learning model $off
+
+// // Print new data to console
+//      connDf
+//      .writeStream
+//       .format("console")
+//      .start()
     
     spark.streams.awaitAnyTermination()
   }
