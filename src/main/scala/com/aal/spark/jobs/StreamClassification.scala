@@ -128,7 +128,7 @@ object StreamClassification extends StreamUtils {
     //   .start()
 
 
-    val newDF = parsedLogData  
+    val calcDF = parsedLogData  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
@@ -141,7 +141,11 @@ object StreamClassification extends StreamUtils {
       .withColumn("PPS", lit(0.0))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
-    val connDf = newDF
+    val filterDf = calcDF
+      .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, lit(0)))
+      .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, lit(0)))
+
+    val connDf = filterDf
       .map((r:Row) => ConnCountObj(r.getAs[Integer](0),
         r.getAs[Integer](1),
         r.getAs[Integer](2),
@@ -162,11 +166,6 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](17),
         r.getAs[Double](18)
       ))
-
-    connDf
-      .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, lit(0)))
-      .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, lit(0)))
-      .withColumn("respIpBytes", when(col("respIpBytes").cast("integer").isNull, li(0)))
 
 //  machine learning model $on
 // Load and parse the data
@@ -196,24 +195,24 @@ object StreamClassification extends StreamUtils {
           ))
         .setOutputCol("features")
 
-    // val output = assembler.transform(connDf)
+    val output = assembler.transform(connDf)
     // Make predictions on test documents.
-    // val testing = connModel.transform(output)
+    val testing = connModel.transform(output)
  
-    // testing.select("features", "predictedLabel")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
+    testing.select("features", "predictedLabel")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
 //  machine learning model $off
 
 // Print new data to console
-     connDf
-      .writeStream
-      .outputMode("append")
-      .format("console")
-     .start()
+    //  connDf
+      // .writeStream
+      // .outputMode("append")
+      // .format("console")
+    //  .start()
     
     spark.streams.awaitAnyTermination()
   }
