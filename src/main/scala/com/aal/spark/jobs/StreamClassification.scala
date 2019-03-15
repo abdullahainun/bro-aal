@@ -130,7 +130,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double")))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
     val connDf = newDF
