@@ -8,7 +8,8 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.spark.MongoConnector
 import com.mongodb.spark.config.WriteConfig
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit}
+import org.apache.spark.sql.functions._
+// import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit}
 import org.apache.spark.sql.types._
 import org.bson._
 
