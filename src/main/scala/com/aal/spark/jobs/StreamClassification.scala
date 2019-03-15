@@ -171,7 +171,7 @@ object StreamClassification extends StreamUtils {
         .setInputCols(Array(
             "idOrigP",
             "idRespP",
-            "orig_bytes",,
+            "orig_bytes",
             "resp_bytes",
             "missedBytes",
             "origPkts",
