@@ -79,7 +79,6 @@ object StreamClassification extends StreamUtils {
       ("conn", StructType(Seq(
         StructField("id.orig_p", IntegerType, true),
         StructField("id.resp_p", IntegerType, true),
-        StructField("duration", DoubleType, true),
         StructField("orig_bytes", IntegerType, true),
         StructField("resp_bytes", IntegerType, true),
         StructField("missed_bytes", IntegerType, true),
@@ -130,7 +129,7 @@ object StreamClassification extends StreamUtils {
       .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      // .withColumn("PPS", BroConnFeatureExtractionFormula.pps(col("duration").cast("double"), col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
     
     val connDf = newDF
@@ -151,8 +150,8 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](14),
         r.getAs[Integer](15),
         r.getAs[Integer](16),
-        r.getAs[Integer](17),
-        r.getAs[Double](18)
+        r.getAs[Integer](17)
+        // r.getAs[Double](18)
       ))
 
     // Print new data to console
