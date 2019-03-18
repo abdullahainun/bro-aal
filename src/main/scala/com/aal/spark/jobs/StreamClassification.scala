@@ -175,6 +175,13 @@ object StreamClassification extends StreamUtils {
         r.getAs[String](2)
       ))
 
+    // Print new data to console
+     fullConnDf
+      .writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+
 //  machine learning model $on
 // Load and parse the data
     val connModel = PipelineModel.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
@@ -229,11 +236,7 @@ object StreamClassification extends StreamUtils {
     // Make predictions on test documents.
     val testing = connModel.transform(output)
 
-    val fullRow = testing
-        .withColumn("uid", col("uid").cast("string"))
-
-    val malware = fullRow.filter($"predictedLabel".contains("1.0"))
-
+    val malware = testing.filter($"predictedLabel".contains("1.0"))
     
     malware.select("features", "predictedLabel")
     .writeStream
