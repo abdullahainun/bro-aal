@@ -221,7 +221,9 @@ object StreamClassification extends StreamUtils {
     // Make predictions on test documents.
     val testing = connModel.transform(output)
 
-    val malware = testing.filter($"predictedLabel".contains("1.0"))
+    val fullRow = output.withColumn("uid", col("uid").cast("string"))
+    val malware = fullRow.filter($"predictedLabel".contains("1.0"))
+
  
     malware.select("features", "predictedLabel")
     .writeStream
