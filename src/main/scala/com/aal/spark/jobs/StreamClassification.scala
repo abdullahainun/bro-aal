@@ -220,8 +220,10 @@ object StreamClassification extends StreamUtils {
     val output = assembler.transform(filtered)
     // Make predictions on test documents.
     val testing = connModel.transform(output)
+
+    val malware = testing.filter("predictedLabel is 1.0")
  
-    testing.select("features", "predictedLabel")
+    malware.select("features", "predictedLabel")
     .writeStream
     .outputMode("append")
     .format("console")
