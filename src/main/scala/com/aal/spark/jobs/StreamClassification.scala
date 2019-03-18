@@ -210,7 +210,7 @@ object StreamClassification extends StreamUtils {
     val malware = testing.filter($"predictedLabel".contains("1.0"))
 
     
-    malware.select("features", "predictedLabel")
+    malware.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
