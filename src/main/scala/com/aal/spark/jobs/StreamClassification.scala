@@ -55,6 +55,11 @@ object StreamClassification extends StreamUtils {
                            PPS:Double
                          )
 
+    case class fullConnCountObj(
+                           uid: String,
+                           origH: String,
+                           respH: String
+                         )
 
   def main(args: Array[String]): Unit = {
     val kafkaUrl = "157.230.241.208:9092"
@@ -65,7 +70,6 @@ object StreamClassification extends StreamUtils {
     import spark.implicits._
 
     spark.sparkContext.setLogLevel("ERROR")
- //   spark.sparkContext.setLogLevel("INFO")
 
 // streaming on
     val kafkaStreamDF = spark.readStream
@@ -76,12 +80,6 @@ object StreamClassification extends StreamUtils {
       .load()
     // ========== DF with no aggregations ==========
     val noAggDF = kafkaStreamDF.select("*")
-
-    // Print new data to console
-    //  noAggDF
-    //   .writeStream
-    //   .format("console")
-    //  .start()
 
     val schema : StructType = StructType(
       Seq(StructField
@@ -101,32 +99,39 @@ object StreamClassification extends StreamUtils {
       )
     )
 
+    val fullSchema : StructType = StructType(
+      Seq(StructField
+      ("conn", StructType(Seq(
+        StructField("uid", StringType, true),
+        StructField("id.orig_h", StringType, true),
+        StructField("id.resp_h", StringType, true),
+      )
+      )
+      )
+      )
+    )
+
     val konversi = udf((row: String) => {
       row.replaceAll("id.orig_h", "id_orig_h")
     })
 
-    // versi ando
     val parsedLogData = kafkaStreamDF
       .select("value")
       .withColumn("col", konversi(col("value").cast("string")))
-      //.select(col("value")
-      //  .cast(StringType)        
-      //  .as("col")
-     // )
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
       )
       .select("conn.*")
 
-    // parsedLogData.printSchema
-        // Print new data to console
-    // parsedLogData
-    //   .writeStream
-    //   .format("console")
-    //   .outputMode("append")
-    //   .start()
-
+    val fullLog = kafkaStreamDF
+      .select("value")
+      .withColumn("col", konversi(col("value").cast("string")))
+      .select(from_json(col("col"), fullSchema)
+        .getField("conn")
+        .alias("conn")
+      )
+      .select("conn.*")
 
     val calcDF = parsedLogData  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
@@ -139,12 +144,8 @@ object StreamClassification extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
-      // .withColumn("label", BroConnLabeling.labeling(col("id_orig_h").cast("string")))
-    
-    // val filterDf = calcDF
-    //   .withColumn("orig_bytes", when(col("orig_bytes").cast("integer").isNull, lit(0)))
-    //   .withColumn("resp_bytes", when(col("resp_bytes").cast("integer").isNull, lit(0)))
 
+    
     val connDf = calcDF
       .map((r:Row) => ConnCountObj(r.getAs[Integer](0),
         r.getAs[Integer](1),
@@ -165,6 +166,13 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](16),
         r.getAs[Integer](17),
         r.getAs[Double](18)
+      ))
+
+    val fullConnDf = parsedLogData
+      .map((r:Row) => fullConnCountObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2)
       ))
 
 //  machine learning model $on
@@ -221,10 +229,12 @@ object StreamClassification extends StreamUtils {
     // Make predictions on test documents.
     val testing = connModel.transform(output)
 
-    val fullRow = output.withColumn("uid", col("uid").cast("string"))
+    val fullRow = testing
+        .withColumn("uid", col("uid").cast("string"))
+
     val malware = fullRow.filter($"predictedLabel".contains("1.0"))
 
- 
+    
     malware.select("features", "predictedLabel")
     .writeStream
     .outputMode("append")
