@@ -104,7 +104,7 @@ object StreamClassification extends StreamUtils {
       ("conn", StructType(Seq(
         StructField("uid", StringType, true),
         StructField("id.orig_h", StringType, true),
-        StructField("id.resp_h", StringType, true),
+        StructField("id.resp_h", StringType, true)
       )
       )
       )
