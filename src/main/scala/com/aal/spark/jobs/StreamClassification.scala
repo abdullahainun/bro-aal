@@ -101,7 +101,7 @@ object StreamClassification extends StreamUtils {
     )
 
     val konversi = udf((row: String) => {
-      row.replaceAll("id.orig_h", "id_orig_h"),
+      row.replaceAll("id.orig_h", "id_orig_h")
       row.replaceAll("id.resp_h", "id_resp_h")
     })
 
