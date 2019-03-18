@@ -34,6 +34,9 @@ import org.apache.spark.ml.linalg.Vectors
 
 object StreamClassification extends StreamUtils {
   case class ConnCountObj(
+                           uid: String,
+                           idorigH: String,
+                           idrespH: String,
                            idOrigP: Integer,
                            idRespP: Integer,
                            orig_bytes: Integer,
@@ -55,11 +58,6 @@ object StreamClassification extends StreamUtils {
                            PPS:Double
                          )
 
-    case class fullConnCountObj(
-                           uid: String,
-                           origH: String,
-                           respH: String
-                         )
 
   def main(args: Array[String]): Unit = {
     val kafkaUrl = "157.230.241.208:9092"
@@ -84,6 +82,9 @@ object StreamClassification extends StreamUtils {
     val schema : StructType = StructType(
       Seq(StructField
       ("conn", StructType(Seq(
+        StructField("uid", StringType, true),
+        StructField("id.orig_h", StringType, true),
+        StructField("id.resp_h", StringType, true),
         StructField("id.orig_p", IntegerType, true),
         StructField("id.resp_p", IntegerType, true),
         StructField("orig_bytes", IntegerType, true),
@@ -99,35 +100,15 @@ object StreamClassification extends StreamUtils {
       )
     )
 
-    val fullSchema : StructType = StructType(
-      Seq(StructField
-      ("conn", StructType(Seq(
-        StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.resp_h", StringType, true)
-      )
-      )
-      )
-      )
-    )
-
     val konversi = udf((row: String) => {
-      row.replaceAll("id.orig_h", "id_orig_h")
+      row.replaceAll("id.orig_h", "id_orig_h"),
+      row.replaceAll("id.resp_h", "id_resp_h")
     })
 
     val parsedLogData = kafkaStreamDF
       .select("value")
       .withColumn("col", konversi(col("value").cast("string")))
       .select(from_json(col("col"), schema)
-        .getField("conn")
-        .alias("conn")
-      )
-      .select("conn.*")
-
-    val fullLog = kafkaStreamDF
-      .select("value")
-      .withColumn("col", konversi(col("value").cast("string")))
-      .select(from_json(col("col"), fullSchema)
         .getField("conn")
         .alias("conn")
       )
@@ -147,9 +128,10 @@ object StreamClassification extends StreamUtils {
 
     
     val connDf = calcDF
-      .map((r:Row) => ConnCountObj(r.getAs[Integer](0),
-        r.getAs[Integer](1),
-        r.getAs[Integer](2),
+      .map((r:Row) => ConnCountObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
         r.getAs[Integer](3),
         r.getAs[Integer](4),
         r.getAs[Integer](5),
@@ -159,28 +141,17 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](9),
         r.getAs[Integer](10),
         r.getAs[Integer](11),
-        r.getAs[Double](12),
-        r.getAs[Double](13),
+        r.getAs[Integer](12),
+        r.getAs[Integer](13),
         r.getAs[Integer](14),
-        r.getAs[Integer](15),
-        r.getAs[Integer](16),
+        r.getAs[Double](15),
+        r.getAs[Double](16),
         r.getAs[Integer](17),
-        r.getAs[Double](18)
+        r.getAs[Integer](18),
+        r.getAs[Integer](19),
+        r.getAs[Integer](20),
+        r.getAs[Double](21)
       ))
-
-    val fullConnDf = parsedLogData
-      .map((r:Row) => fullConnCountObj(
-        r.getAs[String](0),
-        r.getAs[String](1),
-        r.getAs[String](2)
-      ))
-
-    // Print new data to console
-     fullConnDf
-      .writeStream
-      .outputMode("append")
-      .format("console")
-      .start()
 
 //  machine learning model $on
 // Load and parse the data
@@ -237,6 +208,7 @@ object StreamClassification extends StreamUtils {
     val testing = connModel.transform(output)
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
+
     
     malware.select("features", "predictedLabel")
     .writeStream
