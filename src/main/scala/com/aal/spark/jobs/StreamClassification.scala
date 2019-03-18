@@ -195,7 +195,29 @@ object StreamClassification extends StreamUtils {
           ))
         .setOutputCol("features")
 
-    val output = assembler.transform(connDf)
+    val filtered  = connDf.filter(
+      $"idOrigP".isNotNull &&
+      $"idRespP".isNotNull &&
+      $"orig_bytes".isNotNull &&
+      $"resp_bytes".isNotNull &&
+      $"missedBytes".isNotNull &&
+      $"origPkts".isNotNull &&
+      $"origIpBytes".isNotNull &&
+      $"respPkts".isNotNull &&
+      $"respIpBytes".isNotNull &&
+      $"PX".isNotNull &&
+      $"NNP".isNotNull &&
+      $"NSP".isNotNull &&
+      $"PSP".isNotNull &&
+      $"IOPR".isNotNull &&
+      $"Reconnect".isNotNull &&
+      $"FPS".isNotNull &&
+      $"TBT".isNotNull &&
+      $"APL".isNotNull &&
+      $"PPS".isNotNull
+    )
+
+    val output = assembler.transform(filtered)
     // Make predictions on test documents.
     val testing = connModel.transform(output)
  
