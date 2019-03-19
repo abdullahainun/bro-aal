@@ -36,7 +36,7 @@ object StreamClassification extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
                            idorigH: String,
-                           idRespP: String,
+                           idRespH: String,
                            idOrigP: Integer,
                            idRespP: Integer,
                            orig_bytes: Integer,
