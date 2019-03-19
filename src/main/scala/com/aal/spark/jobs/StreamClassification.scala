@@ -245,7 +245,7 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](2),
         r.getAs[String](3),
         r.getAs[Integer](4),
-        r.getAs[String](5),
+        r.getAs[String](5)
       ))    
 
     // testing.select("*")
