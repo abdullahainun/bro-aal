@@ -416,7 +416,7 @@ val DnsCountQuery = dnsDf
 
       override def close(errorOrNull: Throwable): Unit = {
         if (dnsConnCounts.nonEmpty) {
-          mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+          dnsmongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
             collection.insertMany(dnsConnCounts.map(sc => {
               var doc = new Document()
               doc.put("ts", sc.timestamp)
@@ -445,8 +445,8 @@ val DnsCountQuery = dnsDf
       }
 
       override def open(partitionId: Long, version: Long): Boolean = {
-            mongoConnector = MongoConnector(writeConfig.asOptions)
-            ConnCounts = new mutable.ArrayBuffer[ResultObj]()
+            dnsmongoConnector = MongoConnector(writeConfig.asOptions)
+            dnsConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
             true
           }
 
