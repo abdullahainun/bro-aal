@@ -30,6 +30,7 @@ import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.linalg.Vectors
+import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 
 object StreamClassification extends StreamUtils {
@@ -125,6 +126,39 @@ object StreamClassification extends StreamUtils {
       )
       )
     )
+
+    // val resSchema : StructType = StructType(
+    //   Seq(StructField
+    //   ("conn", StructType(Seq(
+    //     StructField("uid", StringType, true),
+    //     StructField("idOrigH", StringType, true),
+    //     StructField("idRespH", StringType, true),
+    //     StructField("idOrigP", IntegerType, true),
+    //     StructField("idRespP", IntegerType, true),
+    //     StructField("orig_bytes", IntegerType, true),
+    //     StructField("resp_bytes", IntegerType, true),
+    //     StructField("missedBytes", IntegerType, true),
+    //     StructField("origPkts", IntegerType, true),
+    //     StructField("origIpBytes", IntegerType, true),
+    //     StructField("respPkts", IntegerType, true),
+    //     StructField("respIpBytes", IntegerType, true),
+    //     StructField("PX", IntegerType, true),
+    //     StructField("NNP", IntegerType, true),
+    //     StructField("NSP", IntegerType, true),
+    //     StructField("PSP", DoubleType, true),
+    //     StructField("IOPR", DoubleType, true),
+    //     StructField("Reconnect", IntegerType, true),
+    //     StructField("FPS", IntegerType, true),
+    //     StructField("TBT", IntegerType, true),
+    //     StructField("APL", IntegerType, true),
+    //     StructField("PPS", DoubleType, true),
+    //     StructField("prediction", VectorType, true),
+    //     StructField("predictedLabel", VectorType, true)
+    //   )
+    //   )
+    //   )
+    //   )
+    // )
 
     val konversi = udf((row: String) => {
       row.replaceAll("id.orig_h", "id_orig_h")
@@ -261,9 +295,8 @@ object StreamClassification extends StreamUtils {
         r.getAs[Double](21),
         r.getAs[Vectors](22),
         r.getAs[Vectors](23)
-      ))
+      ))    
 
-    
     testing.select("*")
     .writeStream
     .outputMode("append")
