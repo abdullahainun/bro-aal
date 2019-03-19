@@ -35,7 +35,7 @@ import org.apache.spark.ml.linalg.Vectors
 object StreamClassification extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
-                           idorigH: String,
+                           idOrigH: String,
                            idRespH: String,
                            idOrigP: Integer,
                            idRespP: Integer,
@@ -242,6 +242,8 @@ object StreamClassification extends StreamUtils {
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
                   doc.put("uid", sc.uid)
+                  doc.put("orig_h", sc.idOrigH)
+                  doc.put("resp_h", sc.idRespH)
                   doc
                 }).asJava)
               })
