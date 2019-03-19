@@ -126,7 +126,13 @@ object StreamClassification extends StreamUtils {
         .alias("conn")
       )
       .select("conn.*")
-
+    
+    parsedLogData
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+    
     val calcDF = parsedLogData  
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
