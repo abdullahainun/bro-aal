@@ -306,7 +306,7 @@ object StreamClassification extends StreamUtils {
 
           override def open(partitionId: Long, version: Long): Boolean = {
             mongoConnector = MongoConnector(writeConfig.asOptions)
-            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+            ConnCounts = new mutable.ArrayBuffer[ResultObj]()
             true
           }
 
