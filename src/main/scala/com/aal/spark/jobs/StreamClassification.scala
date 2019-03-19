@@ -238,15 +238,15 @@ object StreamClassification extends StreamUtils {
     .format("console")
     .start()
 
-    // val resultDf = testing
-    //   .map((r:Row) => ResultObj(
-    //     r.getAs[String](0),
-    //     r.getAs[String](1),
-    //     r.getAs[Integer](2),
-    //     r.getAs[String](3),
-    //     r.getAs[Integer](4),
-    //     r.getAs[String](5),
-    //   ))    
+    val resultDf = testing2
+      .map((r:Row) => ResultObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[Integer](2),
+        r.getAs[String](3),
+        r.getAs[Integer](4),
+        r.getAs[String](5),
+      ))    
 
     // testing.select("*")
     // .writeStream
@@ -256,7 +256,7 @@ object StreamClassification extends StreamUtils {
 
 //  machine learning model $off
 // Sink to Mongodb
-      val ConnCountQuery = testing2
+      val ConnCountQuery = resultDf
           .writeStream
           .format("console")
 //        .option("truncate", "false")
