@@ -176,9 +176,7 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](18),
         r.getAs[Integer](19),
         r.getAs[Integer](20),
-        r.getAs[Double](21),
-        r.getAs[Double](22),
-        r.getAs[Double](23)
+        r.getAs[Double](21)
       ))
 
 //  machine learning model $on
@@ -260,7 +258,9 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](18),
         r.getAs[Integer](19),
         r.getAs[Integer](20),
-        r.getAs[Double](21)
+        r.getAs[Double](21),
+        r.getAs[Double](22),
+        r.getAs[Double](23)
       ))
 
     
