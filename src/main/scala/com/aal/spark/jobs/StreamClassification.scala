@@ -80,8 +80,8 @@ object StreamClassification extends StreamUtils {
                           TBT: Integer,
                           APL: Integer,
                           PPS: Double,
-                          prediction: Double,
-                          predictedLabel: Double
+                          prediction: Vectors,
+                          predictedLabel: Vectors
                          )
 
 
@@ -259,8 +259,8 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](19),
         r.getAs[Integer](20),
         r.getAs[Double](21),
-        r.getAs[Double](22),
-        r.getAs[Double](23)
+        r.getAs[Vectors](22),
+        r.getAs[Vectors](23)
       ))
 
     
