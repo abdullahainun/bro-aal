@@ -81,8 +81,8 @@ object StreamClassification extends StreamUtils {
                           TBT: Integer,
                           APL: Integer,
                           PPS: Double,
-                          prediction: Vectors,
-                          predictedLabel: Vectors
+                          prediction: Double,
+                          predictedLabel: Double
                          )
 
 
@@ -269,7 +269,7 @@ object StreamClassification extends StreamUtils {
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
-    
+
     val resultDf = testing
       .map((r:Row) => ResultObj(
         r.getAs[String](0),
@@ -294,8 +294,8 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](19),
         r.getAs[Integer](20),
         r.getAs[Double](21),
-        r.getAs[Vectors](22),
-        r.getAs[Vectors](23)
+        r.getAs[Double](22),
+        r.getAs[Double](23)
       ))    
 
     // testing.select("*")
