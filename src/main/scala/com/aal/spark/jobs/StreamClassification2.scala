@@ -33,7 +33,7 @@ import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 
-object StreamClassification extends StreamUtils {
+object StreamClassification2 extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
                            idOrigH: String,
@@ -66,7 +66,27 @@ object StreamClassification extends StreamUtils {
                           idRespP: Integer,
                           predictedLabel: String
                          )
-
+  case class DnsCountObj(
+                           timestamp: String,
+                           uid: String,
+                           idOrigH: String,
+                           idOrigP: Integer,
+                           idRespH: String,
+                           idRespP: Integer,
+                           proto: String,
+                           transId: Integer,
+                           query: String,
+                           rcode: Integer,
+                           rcodeName: String,
+                           AA: Boolean,
+                           TC: Boolean,
+                           RD: Boolean,
+                           RA: Boolean,
+                           Z:Integer,
+                           answers:String,
+                           TTLs:Integer,
+                           rejected: Boolean
+                         )
 
   def main(args: Array[String]): Unit = {
     val kafkaUrl = "157.230.241.208:9092"
@@ -315,7 +335,115 @@ object StreamClassification extends StreamUtils {
     // ConnCountQuery.awaitTermination()
 
 // classification $off
-    // dns log
+// dns log $on
+val dnsSchema : StructType = StructType(
+      Seq(StructField
+      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
+        StructField("uid", StringType, true),
+        StructField("id.orig_h", StringType, true),
+        StructField("id.orig_p", IntegerType, true),
+        StructField("id.resp_h", StringType, true),
+        StructField("id.resp_p", IntegerType, true),
+        StructField("proto", StringType, true),
+        StructField("trans_id", IntegerType, true),
+        StructField("query", StringType, true),
+        StructField("rcode", IntegerType, true),
+        StructField("rcode_name", StringType, true),
+        StructField("AA", BooleanType, true),
+        StructField("TC", BooleanType, true),
+        StructField("RD", BooleanType, true),
+        StructField("RA", BooleanType, true),
+        StructField("Z", IntegerType, true),
+        StructField("answers", ArrayType(StringType, true)),
+        StructField("TTLs", ArrayType(IntegerType, true)),
+        StructField("rejected", BooleanType, true)
+      )
+      )
+      )
+      )
+    )
+
+val dnsParsendLogData = kafkaStreamDF
+      .select(col("value")
+        .cast(StringType)
+        .as("col")
+      )
+      .select(from_json(col("col"), schema)
+        .getField("dns")
+        .alias("dns")
+      )
+
+val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_utc_timestamp(
+      from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
+val dnsDf = dnsParsedRawDf
+      .map((r:Row) => DnsCountObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6),
+        r.getAs[Integer](7),
+        r.getAs[String](8),
+        r.getAs[Integer](9),
+        r.getAs[String](10),
+        r.getAs[Boolean](11),
+        r.getAs[Boolean](12),
+        r.getAs[Boolean](13),
+        r.getAs[Boolean](14),
+        r.getAs[Integer](15),
+        r.getAs[String](16),
+        r.getAs[Integer](17),
+        r.getAs[Boolean](18)
+      ))
+
+ //Sink to Mongodb
+val DnsCountQuery = dnsDf
+      .writeStream
+//      .format("console")
+      .outputMode("append")
+
+      .foreach(new ForeachWriter[DnsCountObj] {
+
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/aal.dns"))
+      var dnsmongoConnector: MongoConnector = _
+      var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
+
+      override def process(value: DnsCountObj): Unit = {
+        dnsConnCounts.append(value)
+      }
+
+      override def close(errorOrNull: Throwable): Unit = {
+        if (dnsConnCounts.nonEmpty) {
+          mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+            collection.insertMany(dnsConnCounts.map(sc => {
+              var doc = new Document()
+              doc.put("ts", sc.timestamp)
+              doc.put("uid", sc.uid)
+              doc.put("id_orig_h", sc.idOrigH)
+              doc.put("id_orig_p", sc.idOrigP)
+              doc.put("id_resp_h", sc.idRespH)
+              doc.put("id_resp_p", sc.idRespP)
+              doc.put("proto", sc.proto)
+              doc.put("trans_id", sc.transId)
+              doc.put("query", sc.query)
+              doc.put("rcode", sc.rcode)
+              doc.put("rcode_name", sc.rcodeName)
+              doc.put("AA", sc.AA)
+              doc.put("TC", sc.TC)
+              doc.put("RD", sc.RD)
+              doc.put("RA", sc.RA)
+              doc.put("Z", sc.Z)
+              doc.put("answers", sc.answers)
+              doc.put("TTLs", sc.TTLs)
+              doc.put("rejected", sc.rejected)
+              doc
+            }).asJava)
+          })
+        }
+      }
+// dns lof $off
 
     
 
