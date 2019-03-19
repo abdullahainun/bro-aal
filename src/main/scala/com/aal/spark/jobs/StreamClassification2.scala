@@ -406,7 +406,7 @@ val DnsCountQuery = dnsDf
 
       .foreach(new ForeachWriter[DnsCountObj] {
 
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/aal.dns"))
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.dns?replicaSet=rs0&authSource=admin"))
       var dnsmongoConnector: MongoConnector = _
       var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
@@ -453,8 +453,7 @@ val DnsCountQuery = dnsDf
     }).start()
 // dns lof $off
 
-    
-
+  
     spark.streams.awaitAnyTermination()
   }
 }
