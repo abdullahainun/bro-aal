@@ -57,6 +57,32 @@ object StreamClassification extends StreamUtils {
                            APL:Integer,
                            PPS:Double
                          )
+   case class ResultObj(
+                          uid: String,
+                          idOrigH: String,
+                          idRespH: String,
+                          idOrigP: Integer,
+                          idRespP: Integer,
+                          orig_bytes: Integer,
+                          resp_bytes: Integer,
+                          missedBytes: Integer,
+                          origPkts: Integer,
+                          origIpBytes: Integer,
+                          respPkts: Integer,
+                          respIpBytes: Integer,
+                          PX: Integer,
+                          NNP: Integer,
+                          NSP: Integer,
+                          PSP: Double,
+                          IOPR: Double,
+                          Reconnect: Integer,
+                          FPS: Integer,
+                          TBT: Integer,
+                          APL: Integer,
+                          PPS: Double,
+                          prediction: Double,
+                          predictedLabel: Double
+                         )
 
 
   def main(args: Array[String]): Unit = {
@@ -150,7 +176,9 @@ object StreamClassification extends StreamUtils {
         r.getAs[Integer](18),
         r.getAs[Integer](19),
         r.getAs[Integer](20),
-        r.getAs[Double](21)
+        r.getAs[Double](21),
+        r.getAs[Double](22),
+        r.getAs[Double](23)
       ))
 
 //  machine learning model $on
@@ -209,6 +237,32 @@ object StreamClassification extends StreamUtils {
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
 
+    val resultDf = testing
+      .map((r:Row) => ResultObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[Integer](4),
+        r.getAs[Integer](5),
+        r.getAs[Integer](6),
+        r.getAs[Integer](7),
+        r.getAs[Integer](8),
+        r.getAs[Integer](9),
+        r.getAs[Integer](10),
+        r.getAs[Integer](11),
+        r.getAs[Integer](12),
+        r.getAs[Integer](13),
+        r.getAs[Integer](14),
+        r.getAs[Double](15),
+        r.getAs[Double](16),
+        r.getAs[Integer](17),
+        r.getAs[Integer](18),
+        r.getAs[Integer](19),
+        r.getAs[Integer](20),
+        r.getAs[Double](21)
+      ))
+
     
     testing.select("*")
     .writeStream
@@ -217,46 +271,46 @@ object StreamClassification extends StreamUtils {
     .start()
 
 //  machine learning model $off
-//Sink to Mongodb
-//       val ConnCountQuery = connDf
-//           .writeStream
-//           .format("console")
-// //        .option("truncate", "false")
-//           .outputMode("append")
-// //        .start()
-// //        .awaitTermination()
+// Sink to Mongodb
+      val ConnCountQuery = resultDf
+          .writeStream
+          .format("console")
+//        .option("truncate", "false")
+          .outputMode("append")
+//        .start()
+//        .awaitTermination()
 
-//         .foreach(new ForeachWriter[ConnCountObj] {
+        .foreach(new ForeachWriter[ResultObj] {
 
-//           val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin"))
-//           var mongoConnector: MongoConnector = _
-//           var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin"))
+          var mongoConnector: MongoConnector = _
+          var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
 
-//           override def process(value: ConnCountObj): Unit = {
-//             ConnCounts.append(value)
-//           }
+          override def process(value: ResultObj): Unit = {
+            ConnCounts.append(value)
+          }
 
-//           override def close(errorOrNull: Throwable): Unit = {
-//             if (ConnCounts.nonEmpty) {
-//               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
-//                 collection.insertMany(ConnCounts.map(sc => {
-//                   var doc = new Document()
-//                   doc.put("uid", sc.uid)
-//                   doc.put("orig_h", sc.idOrigH)
-//                   doc.put("resp_h", sc.idRespH)
-//                   doc
-//                 }).asJava)
-//               })
-//             }
-//           }
+          override def close(errorOrNull: Throwable): Unit = {
+            if (ConnCounts.nonEmpty) {
+              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+                collection.insertMany(ConnCounts.map(sc => {
+                  var doc = new Document()
+                  doc.put("uid", sc.uid)
+                  doc.put("orig_h", sc.idOrigH)
+                  doc.put("resp_h", sc.idRespH)
+                  doc
+                }).asJava)
+              })
+            }
+          }
 
-//           override def open(partitionId: Long, version: Long): Boolean = {
-//             mongoConnector = MongoConnector(writeConfig.asOptions)
-//             ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
-//             true
-//           }
+          override def open(partitionId: Long, version: Long): Boolean = {
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+            true
+          }
 
-//         }).start()
+        }).start()
 
 // Print new data to console
     //  connDf
@@ -264,8 +318,8 @@ object StreamClassification extends StreamUtils {
       // .outputMode("append")
       // .format("console")
     //  .start()
-    // ConnCountQuery.awaitTermination()
-    spark.streams.awaitAnyTermination()
+    ConnCountQuery.awaitTermination()
+    // spark.streams.awaitAnyTermination()
   }
 }
 
