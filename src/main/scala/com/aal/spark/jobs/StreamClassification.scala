@@ -265,8 +265,8 @@ object StreamClassification extends StreamUtils {
       // .outputMode("append")
       // .format("console")
     //  .start()
-    
-    spark.streams.awaitAnyTermination()
+    ConnCountQuery.awaitTermination()
+    // spark.streams.awaitAnyTermination()
   }
 }
 
