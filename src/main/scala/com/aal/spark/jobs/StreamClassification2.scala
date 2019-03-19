@@ -443,6 +443,14 @@ val DnsCountQuery = dnsDf
           })
         }
       }
+
+      override def open(partitionId: Long, version: Long): Boolean = {
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[ResultObj]()
+            true
+          }
+
+    }).start()
 // dns lof $off
 
     
