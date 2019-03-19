@@ -61,28 +61,10 @@ object StreamClassification extends StreamUtils {
    case class ResultObj(
                           uid: String,
                           idOrigH: String,
-                          idRespH: String,
                           idOrigP: Integer,
+                          idRespH: String,
                           idRespP: Integer,
-                          orig_bytes: Integer,
-                          resp_bytes: Integer,
-                          missedBytes: Integer,
-                          origPkts: Integer,
-                          origIpBytes: Integer,
-                          respPkts: Integer,
-                          respIpBytes: Integer,
-                          PX: Integer,
-                          NNP: Integer,
-                          NSP: Integer,
-                          PSP: Double,
-                          IOPR: Double,
-                          Reconnect: Integer,
-                          FPS: Integer,
-                          TBT: Integer,
-                          APL: Integer,
-                          PPS: Double,
-                          prediction: Double,
-                          predictedLabel: Double
+                          predictedLabel: String
                          )
 
 
@@ -127,47 +109,18 @@ object StreamClassification extends StreamUtils {
       )
     )
 
-    // val resSchema : StructType = StructType(
-    //   Seq(StructField
-    //   ("conn", StructType(Seq(
-    //     StructField("uid", StringType, true),
-    //     StructField("idOrigH", StringType, true),
-    //     StructField("idRespH", StringType, true),
-    //     StructField("idOrigP", IntegerType, true),
-    //     StructField("idRespP", IntegerType, true),
-    //     StructField("orig_bytes", IntegerType, true),
-    //     StructField("resp_bytes", IntegerType, true),
-    //     StructField("missedBytes", IntegerType, true),
-    //     StructField("origPkts", IntegerType, true),
-    //     StructField("origIpBytes", IntegerType, true),
-    //     StructField("respPkts", IntegerType, true),
-    //     StructField("respIpBytes", IntegerType, true),
-    //     StructField("PX", IntegerType, true),
-    //     StructField("NNP", IntegerType, true),
-    //     StructField("NSP", IntegerType, true),
-    //     StructField("PSP", DoubleType, true),
-    //     StructField("IOPR", DoubleType, true),
-    //     StructField("Reconnect", IntegerType, true),
-    //     StructField("FPS", IntegerType, true),
-    //     StructField("TBT", IntegerType, true),
-    //     StructField("APL", IntegerType, true),
-    //     StructField("PPS", DoubleType, true),
-    //     StructField("prediction", VectorType, true),
-    //     StructField("predictedLabel", VectorType, true)
-    //   )
-    //   )
-    //   )
-    //   )
-    // )
-
-    val konversi = udf((row: String) => {
+ 
+    val konversi_orig_h = udf((row: String) => {
       row.replaceAll("id.orig_h", "id_orig_h")
+    })
+    val konversi_resp_h = udf((row: String) => {
       row.replaceAll("id.resp_h", "id_resp_h")
     })
 
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("col", konversi(col("value").cast("string")))
+      .withColumn("col", konversi_orig_h(col("value").cast("string")))
+      .withColumn("col", konversi_resp_h(col("value").cast("string")))
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
@@ -285,33 +238,15 @@ object StreamClassification extends StreamUtils {
     .format("console")
     .start()
 
-    val resultDf = testing
-      .map((r:Row) => ResultObj(
-        r.getAs[String](0),
-        r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
-        r.getAs[Integer](4),
-        r.getAs[Integer](5),
-        r.getAs[Integer](6),
-        r.getAs[Integer](7),
-        r.getAs[Integer](8),
-        r.getAs[Integer](9),
-        r.getAs[Integer](10),
-        r.getAs[Integer](11),
-        r.getAs[Integer](12),
-        r.getAs[Integer](13),
-        r.getAs[Integer](14),
-        r.getAs[Double](15),
-        r.getAs[Double](16),
-        r.getAs[Integer](17),
-        r.getAs[Integer](18),
-        r.getAs[Integer](19),
-        r.getAs[Integer](20),
-        r.getAs[Double](21),
-        r.getAs[Double](22),
-        r.getAs[Double](23)
-      ))    
+    // val resultDf = testing
+    //   .map((r:Row) => ResultObj(
+    //     r.getAs[String](0),
+    //     r.getAs[String](1),
+    //     r.getAs[Integer](2),
+    //     r.getAs[String](3),
+    //     r.getAs[Integer](4),
+    //     r.getAs[String](5),
+    //   ))    
 
     // testing.select("*")
     // .writeStream
