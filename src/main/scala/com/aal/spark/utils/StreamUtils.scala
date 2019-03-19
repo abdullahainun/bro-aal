@@ -15,7 +15,7 @@ private[spark] trait StreamUtils {
   }
 
   def getSparkSession(args: Array[String]): SparkSession = {
-    val uri: String = args.headOption.getOrElse("mongodb://admin:jarkoM@157.230.241.208:27017/bro.connlog?replicaSet=rs0&authSource=admin")
+    val uri: String = args.headOption.getOrElse("mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin")
 
     val conf = new SparkConf()
       .setMaster ("spark://BigData:7077")

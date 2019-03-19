@@ -36,7 +36,7 @@ object StreamClassification extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
                            idorigH: String,
-                           idrespH: String,
+                           idRespP: String,
                            idOrigP: Integer,
                            idRespP: Integer,
                            orig_bytes: Integer,
@@ -210,13 +210,54 @@ object StreamClassification extends StreamUtils {
     val malware = testing.filter($"predictedLabel".contains("1.0"))
 
     
-    malware.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // malware.select("*")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
 //  machine learning model $off
+//Sink to Mongodb
+      val ConnCountQuery = malware
+          .writeStream
+//        .format("console")
+//        .option("truncate", "false")
+          .outputMode("append")
+//        .start()
+//        .awaitTermination()
+
+        .foreach(new ForeachWriter[ConnCountObj] {
+
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin"))
+          var mongoConnector: MongoConnector = _
+          var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
+
+          override def process(value: ConnCountObj): Unit = {
+            ConnCounts.append(value)
+          }
+
+          override def close(errorOrNull: Throwable): Unit = {
+            if (ConnCounts.nonEmpty) {
+              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+                collection.insertMany(ConnCounts.map(sc => {
+                  var doc = new Document()
+                  doc.put("uid", sc.uid)
+                  doc.put("id_orig_h", sc.idOrigH)
+                  doc.put("id_resp_h", sc.idRespP)
+                  doc.put("label", sc.predictedLabel)
+                  doc
+                }).asJava)
+              })
+            }
+          }
+
+          override def open(partitionId: Long, version: Long): Boolean = {
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+            true
+          }
+
+        }).start()
 
 // Print new data to console
     //  connDf
