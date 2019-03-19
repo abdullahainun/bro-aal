@@ -218,7 +218,7 @@ object StreamClassification extends StreamUtils {
 
 //  machine learning model $off
 //Sink to Mongodb
-      val ConnCountQuery = malware
+      val ConnCountQuery = connDf
           .writeStream
 //        .format("console")
 //        .option("truncate", "false")
@@ -242,9 +242,6 @@ object StreamClassification extends StreamUtils {
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
                   doc.put("uid", sc.uid)
-                  doc.put("id_orig_h", sc.idOrigH)
-                  doc.put("id_resp_h", sc.idRespP)
-                  doc.put("label", sc.predictedLabel)
                   doc
                 }).asJava)
               })
