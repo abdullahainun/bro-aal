@@ -256,52 +256,55 @@ object StreamClassification extends StreamUtils {
 
 //  machine learning model $off
 // Sink to Mongodb
-//       val ConnCountQuery = resultDf
-//           .writeStream
-//           .format("console")
-// //        .option("truncate", "false")
-//           .outputMode("append")
-// //        .start()
-// //        .awaitTermination()
+      val ConnCountQuery = testing2
+          .writeStream
+          .format("console")
+//        .option("truncate", "false")
+          .outputMode("append")
+//        .start()
+//        .awaitTermination()
 
-//         .foreach(new ForeachWriter[ResultObj] {
+        .foreach(new ForeachWriter[ResultObj] {
 
-//           val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin"))
-//           var mongoConnector: MongoConnector = _
-//           var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin"))
+          var mongoConnector: MongoConnector = _
+          var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
 
-//           override def process(value: ResultObj): Unit = {
-//             ConnCounts.append(value)
-//           }
+          override def process(value: ResultObj): Unit = {
+            ConnCounts.append(value)
+          }
 
-//           override def close(errorOrNull: Throwable): Unit = {
-//             if (ConnCounts.nonEmpty) {
-//               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
-//                 collection.insertMany(ConnCounts.map(sc => {
-//                   var doc = new Document()
-//                   doc.put("uid", sc.uid)
-//                   doc.put("orig_h", sc.idOrigH)
-//                   doc.put("resp_h", sc.idRespH)
-//                   doc
-//                 }).asJava)
-//               })
-//             }
-//           }
+          override def close(errorOrNull: Throwable): Unit = {
+            if (ConnCounts.nonEmpty) {
+              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+                collection.insertMany(ConnCounts.map(sc => {
+                  var doc = new Document()
+                  doc.put("uid", sc.uid)
+                  doc.put("orig_h", sc.idOrigH)
+                  doc.put("orig_p", sc.idOrigP)
+                  doc.put("resp_h", sc.idRespH)
+                  doc.put("resp_p", sc.idRespP)
+                  doc.put("label", sc.predictedLabel)
+                  doc
+                }).asJava)
+              })
+            }
+          }
 
-//           override def open(partitionId: Long, version: Long): Boolean = {
-//             mongoConnector = MongoConnector(writeConfig.asOptions)
-//             ConnCounts = new mutable.ArrayBuffer[ResultObj]()
-//             true
-//           }
+          override def open(partitionId: Long, version: Long): Boolean = {
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[ResultObj]()
+            true
+          }
 
-//         }).start()
+        }).start()
 
 // Print new data to console
-    //  connDf
-      // .writeStream
-      // .outputMode("append")
-      // .format("console")
-    //  .start()
+//      connDf
+//       .writeStream
+//       .outputMode("append")
+//       .format("console")
+//      .start()
     // ConnCountQuery.awaitTermination()
     spark.streams.awaitAnyTermination()
   }
