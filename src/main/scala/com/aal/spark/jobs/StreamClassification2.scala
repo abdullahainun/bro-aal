@@ -368,7 +368,7 @@ val dnsParsendLogData = kafkaStreamDF
         .cast(StringType)
         .as("col")
       )
-      .select(from_json(col("col"), schema)
+      .select(from_json(col("col"), dnsSchema)
         .getField("dns")
         .alias("dns")
       )
