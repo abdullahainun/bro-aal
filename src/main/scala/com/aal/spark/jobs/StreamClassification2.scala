@@ -252,7 +252,7 @@ object StreamClassification2 extends StreamUtils {
     val testing = connModel.transform(output)
 
     val result = testing
-     .withColumn("col", konversi_label(col("predictedLabel").cast("string")))
+     .withColumn("label", konversi_label(col("predictedLabel").cast("string")))
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
@@ -282,11 +282,11 @@ object StreamClassification2 extends StreamUtils {
         r.getAs[String](5)
       ))    
 
-    // testing.select("*")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
+    resultDf.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
 //  machine learning model $off
 // Sink to Mongodb
