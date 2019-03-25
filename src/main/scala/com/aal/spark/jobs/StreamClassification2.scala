@@ -260,24 +260,24 @@ object StreamClassification2 extends StreamUtils {
                     .select(
                       col("uid"),
                       col("idOrigH"),
-                      col("idOrigP"),
                       col("idRespH"),
+                      col("idOrigP"),
                       col("idRespP"),
                       col("predictedLabel")
                     )
-    // testing2.printSchema()    
+    // result.printSchema()    
     // testing2.select("*")
     // .writeStream
     // .outputMode("append")
     // .format("console")
     // .start()
 
-    val resultDf = result
+    val resultDf = testing2
       .map((r:Row) => ResultObj(
         r.getAs[String](0),
         r.getAs[String](1),
-        r.getAs[Integer](2),
-        r.getAs[String](3),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
         r.getAs[Integer](4),
         r.getAs[String](5)
       ))    
