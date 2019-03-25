@@ -37,8 +37,8 @@ object StreamClassification2 extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
                            idOrigH: String,
-                           idOrigP: Integer,
                            idRespH: String,
+                           idOrigP: Integer,
                            idRespP: Integer,
                            orig_bytes: Integer,
                            resp_bytes: Integer,
@@ -137,13 +137,10 @@ object StreamClassification2 extends StreamUtils {
     val konversi_resp_h = udf((row: String) => {
       row.replaceAll("id.resp_h", "id_resp_h")
     })
-    val konversi_label = udf((row: String) => {
-      row.replaceAll("1.0", "malicious")
-      row.replaceAll("0.0", "normal")
-    })
 
     val parsedLogData = kafkaStreamDF
       .select("value")
+      .withColumn("col", konversi_orig_h(col("value").cast("string")))
       .withColumn("col", konversi_resp_h(col("value").cast("string")))
       .select(from_json(col("col"), schema)
         .getField("conn")
@@ -169,20 +166,13 @@ object StreamClassification2 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
 
-    println("debugging calcDf")
-    calcDF
-    .select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
-
+    
     val connDf = calcDF
       .map((r:Row) => ConnCountObj(
         r.getAs[String](0),
         r.getAs[String](1),
-        r.getAs[Integer](2),
-        r.getAs[String](3),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
         r.getAs[Integer](4),
         r.getAs[Integer](5),
         r.getAs[Integer](6),
@@ -257,12 +247,9 @@ object StreamClassification2 extends StreamUtils {
     // Make predictions on test documents.
     val testing = connModel.transform(output)
 
-    val result = testing
-     .withColumn("label", konversi_label(col("predictedLabel").cast("string")))
-
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
-    val testing2 = testing
+    val testing2 = malware
                     .select(
                       col("uid"),
                       col("idOrigH"),
@@ -271,7 +258,7 @@ object StreamClassification2 extends StreamUtils {
                       col("idRespP"),
                       col("predictedLabel")
                     )
-    // result.printSchema()    
+    // testing2.printSchema()    
     // testing2.select("*")
     // .writeStream
     // .outputMode("append")
@@ -288,11 +275,11 @@ object StreamClassification2 extends StreamUtils {
         r.getAs[String](5)
       ))    
 
-    resultDf.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // testing.select("*")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
 //  machine learning model $off
 // Sink to Mongodb
