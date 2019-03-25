@@ -37,8 +37,8 @@ object StreamClassification2 extends StreamUtils {
   case class ConnCountObj(
                            uid: String,
                            idOrigH: String,
-                           idRespH: String,
                            idOrigP: Integer,
+                           idRespH: String,
                            idRespP: Integer,
                            orig_bytes: Integer,
                            resp_bytes: Integer,
@@ -175,8 +175,8 @@ object StreamClassification2 extends StreamUtils {
       .map((r:Row) => ConnCountObj(
         r.getAs[String](0),
         r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
+        r.getAs[Integer](2),
+        r.getAs[String](3),
         r.getAs[Integer](4),
         r.getAs[Integer](5),
         r.getAs[Integer](6),
