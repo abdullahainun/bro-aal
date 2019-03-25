@@ -144,7 +144,6 @@ object StreamClassification2 extends StreamUtils {
 
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("col", konversi_orig_h(col("value").cast("string")))
       .withColumn("col", konversi_resp_h(col("value").cast("string")))
       .select(from_json(col("col"), schema)
         .getField("conn")
