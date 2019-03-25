@@ -398,34 +398,15 @@ val dnsDf = dnsParsedRawDf
         r.getAs[Boolean](18)
       ))
 
-
-  dnsDf
+  val dnsFiltered  = dnsDf.filter(
+      $"timestamp".isNotNull
+    )
+  
+  dnsFiltered
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
-
-  // val dnsFiltered  = dnsDf.filter(
-  //     $"idOrigP".isNotNull &&
-  //     $"idRespP".isNotNull &&
-  //     $"orig_bytes".isNotNull &&
-  //     $"resp_bytes".isNotNull &&
-  //     $"missedBytes".isNotNull &&
-  //     $"origPkts".isNotNull &&
-  //     $"origIpBytes".isNotNull &&
-  //     $"respPkts".isNotNull &&
-  //     $"respIpBytes".isNotNull &&
-  //     $"PX".isNotNull &&
-  //     $"NNP".isNotNull &&
-  //     $"NSP".isNotNull &&
-  //     $"PSP".isNotNull &&
-  //     $"IOPR".isNotNull &&
-  //     $"Reconnect".isNotNull &&
-  //     $"FPS".isNotNull &&
-  //     $"TBT".isNotNull &&
-  //     $"APL".isNotNull &&
-  //     $"PPS".isNotNull
-  //   )
 
  //Sink to Mongodb
 // val DnsCountQuery = dnsDf
