@@ -137,6 +137,10 @@ object StreamClassification2 extends StreamUtils {
     val konversi_resp_h = udf((row: String) => {
       row.replaceAll("id.resp_h", "id_resp_h")
     })
+    val konversi_label = udf((row: String) => {
+      row.replaceAll("1.0", "malicious")
+      row.replaceAll("0.0", "normal")
+    })
 
     val parsedLogData = kafkaStreamDF
       .select("value")
@@ -247,9 +251,12 @@ object StreamClassification2 extends StreamUtils {
     // Make predictions on test documents.
     val testing = connModel.transform(output)
 
+    val result = testing
+     .withColumn("col", konversi_label(col("value").cast("string")))
+
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
-    val testing2 = malware
+    val testing2 = testing
                     .select(
                       col("uid"),
                       col("idOrigH"),
@@ -265,7 +272,7 @@ object StreamClassification2 extends StreamUtils {
     // .format("console")
     // .start()
 
-    val resultDf = testing2
+    val resultDf = result
       .map((r:Row) => ResultObj(
         r.getAs[String](0),
         r.getAs[String](1),
