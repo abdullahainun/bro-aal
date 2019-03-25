@@ -398,59 +398,88 @@ val dnsDf = dnsParsedRawDf
         r.getAs[Boolean](18)
       ))
 
+
+  dnsDf
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+
+  // val dnsFiltered  = dnsDf.filter(
+  //     $"idOrigP".isNotNull &&
+  //     $"idRespP".isNotNull &&
+  //     $"orig_bytes".isNotNull &&
+  //     $"resp_bytes".isNotNull &&
+  //     $"missedBytes".isNotNull &&
+  //     $"origPkts".isNotNull &&
+  //     $"origIpBytes".isNotNull &&
+  //     $"respPkts".isNotNull &&
+  //     $"respIpBytes".isNotNull &&
+  //     $"PX".isNotNull &&
+  //     $"NNP".isNotNull &&
+  //     $"NSP".isNotNull &&
+  //     $"PSP".isNotNull &&
+  //     $"IOPR".isNotNull &&
+  //     $"Reconnect".isNotNull &&
+  //     $"FPS".isNotNull &&
+  //     $"TBT".isNotNull &&
+  //     $"APL".isNotNull &&
+  //     $"PPS".isNotNull
+  //   )
+
  //Sink to Mongodb
-val DnsCountQuery = dnsDf
-      .writeStream
-//      .format("console")
-      .outputMode("append")
+// val DnsCountQuery = dnsDf
+//       .writeStream
+// //      .format("console")
+//       .outputMode("append")
 
-      .foreach(new ForeachWriter[DnsCountObj] {
+//       .foreach(new ForeachWriter[DnsCountObj] {
 
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.dns?replicaSet=rs0&authSource=admin"))
-      var dnsmongoConnector: MongoConnector = _
-      var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
+//       val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@157.230.241.208:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+//       var dnsmongoConnector: MongoConnector = _
+//       var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
-      override def process(value: DnsCountObj): Unit = {
-        dnsConnCounts.append(value)
-      }
+//       override def process(value: DnsCountObj): Unit = {
+//         dnsConnCounts.append(value)
+//       }
 
-      override def close(errorOrNull: Throwable): Unit = {
-        if (dnsConnCounts.nonEmpty) {
-          dnsmongoConnector.withCollectionDo(dnswriteConfig, { collection: MongoCollection[Document] =>
-            collection.insertMany(dnsConnCounts.map(sc => {
-              var doc = new Document()
-              doc.put("ts", sc.timestamp)
-              doc.put("uid", sc.uid)
-              doc.put("id_orig_h", sc.idOrigH)
-              doc.put("id_orig_p", sc.idOrigP)
-              doc.put("id_resp_h", sc.idRespH)
-              doc.put("id_resp_p", sc.idRespP)
-              doc.put("proto", sc.proto)
-              doc.put("trans_id", sc.transId)
-              doc.put("query", sc.query)
-              doc.put("rcode", sc.rcode)
-              doc.put("rcode_name", sc.rcodeName)
-              doc.put("AA", sc.AA)
-              doc.put("TC", sc.TC)
-              doc.put("RD", sc.RD)
-              doc.put("RA", sc.RA)
-              doc.put("Z", sc.Z)
-              doc.put("answers", sc.answers)
-              doc.put("TTLs", sc.TTLs)
-              doc.put("rejected", sc.rejected)
-              doc
-            }).asJava)
-          })
-        }
-      }
+//       override def close(errorOrNull: Throwable): Unit = {
+//         if (dnsConnCounts.nonEmpty) {
+//           dnsmongoConnector.withCollectionDo(dnswriteConfig, { collection: MongoCollection[Document] =>
+//             collection.insertMany(dnsConnCounts.map(sc => {
+//               var doc = new Document()
+//               doc.put("ts", sc.timestamp)
+//               doc.put("uid", sc.uid)
+//               doc.put("id_orig_h", sc.idOrigH)
+//               doc.put("id_orig_p", sc.idOrigP)
+//               doc.put("id_resp_h", sc.idRespH)
+//               doc.put("id_resp_p", sc.idRespP)
+//               doc.put("proto", sc.proto)
+//               doc.put("trans_id", sc.transId)
+//               doc.put("query", sc.query)
+//               doc.put("rcode", sc.rcode)
+//               doc.put("rcode_name", sc.rcodeName)
+//               doc.put("AA", sc.AA)
+//               doc.put("TC", sc.TC)
+//               doc.put("RD", sc.RD)
+//               doc.put("RA", sc.RA)
+//               doc.put("Z", sc.Z)
+//               doc.put("answers", sc.answers)
+//               doc.put("TTLs", sc.TTLs)
+//               doc.put("rejected", sc.rejected)
+//               doc
+//             }).asJava)
+//           })
+//         }
+//       }
 
-      override def open(partitionId: Long, version: Long): Boolean = {
-            dnsmongoConnector = MongoConnector(dnswriteConfig.asOptions)
-            dnsConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
-            true
-          }
+//       override def open(partitionId: Long, version: Long): Boolean = {
+//             dnsmongoConnector = MongoConnector(dnswriteConfig.asOptions)
+//             dnsConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
+//             true
+//           }
 
-    }).start()
+//     }).start()
 // dns lof $off
 
   
