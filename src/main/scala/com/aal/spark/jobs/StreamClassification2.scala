@@ -170,7 +170,14 @@ object StreamClassification2 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
 
-    
+    println("debugging calcDf")
+    calcDF
+    .select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+
     val connDf = calcDF
       .map((r:Row) => ConnCountObj(
         r.getAs[String](0),
