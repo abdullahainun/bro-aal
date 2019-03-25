@@ -252,7 +252,7 @@ object StreamClassification2 extends StreamUtils {
     val testing = connModel.transform(output)
 
     val result = testing
-     .withColumn("col", konversi_label(col("value").cast("string")))
+     .withColumn("col", konversi_label(col("predictedLabel").cast("string")))
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
