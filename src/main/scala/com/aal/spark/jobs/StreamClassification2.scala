@@ -249,7 +249,7 @@ object StreamClassification2 extends StreamUtils {
 
     val malware = testing.filter($"predictedLabel".contains("1.0"))
     testing.printSchema()
-    val testing2 = malware
+    val testing2 = testing
                     .select(
                       col("uid"),
                       col("idOrigH"),
