@@ -374,7 +374,7 @@ val dnsParsendLogData = kafkaStreamDF
       )
 
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
-      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
+      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(java.sql.Timestamp))
 val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
         r.getAs[Timestamp](0),
