@@ -9,7 +9,7 @@ import com.mongodb.spark.MongoConnector
 import com.mongodb.spark.config.WriteConfig
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
-// import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit}
+import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit, to_timestamp}
 import org.apache.spark.sql.types._
 import org.bson._
 
@@ -67,7 +67,7 @@ object StreamClassification2 extends StreamUtils {
                           predictedLabel: String
                          )
   case class DnsCountObj(
-                           timestamp: String,
+                           timestamp: Date,
                            uid: String,
                            idOrigH: String,
                            idOrigP: Integer,
@@ -373,11 +373,11 @@ val dnsParsendLogData = kafkaStreamDF
         .alias("dns")
       )
 
-val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_utc_timestamp(
-      from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
+val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
+      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(DateType))
 val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
-        r.getAs[String](0),
+        r.getAs[Date](0),
         r.getAs[String](1),
         r.getAs[String](2),
         r.getAs[Integer](3),
