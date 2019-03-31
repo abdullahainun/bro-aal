@@ -67,7 +67,7 @@ object StreamClassification2 extends StreamUtils {
                           predictedLabel: String
                          )
   case class DnsCountObj(
-                           timestamp: Date,
+                           timestamp: Timestamp,
                            uid: String,
                            idOrigH: String,
                            idOrigP: Integer,
@@ -374,10 +374,10 @@ val dnsParsendLogData = kafkaStreamDF
       )
 
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
-      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(DateType))
+      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
 val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
-        r.getAs[Date](0),
+        r.getAs[Timestamp](0),
         r.getAs[String](1),
         r.getAs[String](2),
         r.getAs[Integer](3),
