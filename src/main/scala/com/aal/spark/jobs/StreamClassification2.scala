@@ -12,6 +12,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.functions.{col, from_json, from_unixtime, to_utc_timestamp, lit, to_timestamp}
 import org.apache.spark.sql.types._
 import org.bson._
+import java.sql.Timestamp
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
