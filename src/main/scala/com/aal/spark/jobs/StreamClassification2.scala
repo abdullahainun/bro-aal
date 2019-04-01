@@ -270,12 +270,12 @@ object StreamClassification2 extends StreamUtils {
                       col("idRespP"),
                       col("predictedLabel")
                     )
-    // testing2.printSchema()    
-    // testing2.select("*")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
+    testing2.printSchema()    
+    testing2.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
     val resultDf = testing2
       .map((r:Row) => ResultObj(
