@@ -36,10 +36,11 @@ import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 object StreamClassification2 extends StreamUtils {
   case class ConnCountObj(
+                           timestamp: String,
                            uid: String,
                            idOrigH: String,
-                           idRespH: String,
                            idOrigP: Integer,
+                           idRespH: String,
                            idRespP: Integer,
                            orig_bytes: Integer,
                            resp_bytes: Integer,
@@ -60,6 +61,7 @@ object StreamClassification2 extends StreamUtils {
                            PPS:Double
                          )
    case class ResultObj(
+                          timestamp: String,
                           uid: String,
                           idOrigH: String,
                           idOrigP: Integer,
@@ -113,6 +115,7 @@ object StreamClassification2 extends StreamUtils {
     val schema : StructType = StructType(
       Seq(StructField
       ("conn", StructType(Seq(
+        StructField("ts", StringType, true),
         StructField("uid", StringType, true),
         StructField("id.orig_h", StringType, true),
         StructField("id.resp_h", StringType, true),
@@ -174,7 +177,7 @@ object StreamClassification2 extends StreamUtils {
         r.getAs[String](1),
         r.getAs[String](2),
         r.getAs[Integer](3),
-        r.getAs[Integer](4),
+        r.getAs[String]4),
         r.getAs[Integer](5),
         r.getAs[Integer](6),
         r.getAs[Integer](7),
@@ -185,13 +188,14 @@ object StreamClassification2 extends StreamUtils {
         r.getAs[Integer](12),
         r.getAs[Integer](13),
         r.getAs[Integer](14),
-        r.getAs[Double](15),
+        r.getAs[Integer](15),
         r.getAs[Double](16),
-        r.getAs[Integer](17),
+        r.getAs[Double](17),
         r.getAs[Integer](18),
         r.getAs[Integer](19),
         r.getAs[Integer](20),
-        r.getAs[Double](21)
+        r.getAs[Integer](21),
+        r.getAs[Double](22)
       ))
 
 //  machine learning model $on
