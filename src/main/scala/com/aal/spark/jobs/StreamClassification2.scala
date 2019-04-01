@@ -263,6 +263,7 @@ object StreamClassification2 extends StreamUtils {
     testing.printSchema()
     val testing2 = testing
                     .select(
+                      col("ts"),
                       col("uid"),
                       col("idOrigH"),
                       col("idOrigP"),
