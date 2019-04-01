@@ -274,10 +274,11 @@ object StreamClassification2 extends StreamUtils {
       .map((r:Row) => ResultObj(
         r.getAs[String](0),
         r.getAs[String](1),
-        r.getAs[Integer](2),
-        r.getAs[String](3),
-        r.getAs[Integer](4),
-        r.getAs[String](5)
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6)
       ))    
 
     // testing.select("*")
