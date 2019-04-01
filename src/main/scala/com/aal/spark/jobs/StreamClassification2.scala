@@ -320,6 +320,7 @@ object StreamClassification2 extends StreamUtils {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
+                  doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("orig_h", sc.idOrigH)
                   doc.put("orig_p", sc.idOrigP)
