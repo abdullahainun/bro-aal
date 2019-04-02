@@ -151,6 +151,7 @@ object StreamClassification3 extends StreamUtils {
         )
       )
 
+      // conn kafka stream
       val parsedLogData = kafkaStreamDF
         .select(col("value")
           .cast(StringType)
@@ -159,7 +160,9 @@ object StreamClassification3 extends StreamUtils {
         .select(from_json(col("col"), connSchema)
           .getField("conn")
           .alias("conn")
-        )      
+        ) 
+
+      // dns kafka stream
 
       // add formula column
     val calcDF = parsedLogData.select("conn.*")
@@ -175,7 +178,7 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
     
-      val connDf = parsedRawDf
+      val connDf = parsedLogData
         .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
           r.getAs[String](1),
           r.getAs[String](2),
@@ -198,8 +201,8 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
 
-      val classificationDf = ClassificationObj
-      .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
+      val classificationDf = calcDF
+      .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
         r.getAs[String](1),
         r.getAs[String](2),
         r.getAs[Integer](3),
