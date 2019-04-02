@@ -178,6 +178,7 @@ object StreamClassification2 extends StreamUtils {
     .outputMode("append")
     .format("console")
     .start()
+    
     val connDf = calcDF
       .map((r:Row) => ConnCountObj(
         r.getAs[String](0),

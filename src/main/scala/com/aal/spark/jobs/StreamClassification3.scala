@@ -35,28 +35,77 @@ import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 
 object StreamClassification3 extends StreamUtils {  
-        case class ConnCountObj(
-                   timestamp: Timestamp,
-                   uid: String,
-                   idOrigH: String,
-                   idOrigP: Integer,
-                   idRespH: String,
-                   idRespP: Integer,
-                   proto: String,
-                   service: String,
-                   duration: Double,
-                   orig_bytes: Integer,
-                   resp_bytes: Integer,
-                   connState: String,
-                   localOrig: Boolean,
-                   localResp: Boolean,
-                   missedBytes: Integer,
-                   history: String,
-                   origPkts: Integer,
-                   origIpBytes: Integer,
-                   respPkts: Integer,
-                   respIpBytes: Integer
-                   )
+    case class ConnCountObj(
+        timestamp: Timestamp,
+        uid: String,
+        idOrigH: String,
+        idOrigP: Integer,
+        idRespH: String,
+        idRespP: Integer,
+        proto: String,
+        service: String,
+        duration: Double,
+        orig_bytes: Integer,
+        resp_bytes: Integer,
+        connState: String,
+        localOrig: Boolean,
+        localResp: Boolean,
+        missedBytes: Integer,
+        history: String,
+        origPkts: Integer,
+        origIpBytes: Integer,
+        respPkts: Integer,
+        respIpBytes: Integer
+    )
+
+    case class ClassificationObj(
+        timestamp: Timestamp,
+        uid: String,
+        idOrigH: String,
+        idOrigP: Integer,
+        idRespH: String,
+        idRespP: Integer,
+        orig_bytes: Integer,
+        resp_bytes: Integer,
+        missedBytes: Integer,
+        origPkts: Integer,
+        origIpBytes: Integer,
+        respPkts: Integer,
+        respIpBytes: Integer,
+        PX:Integer,
+        NNP:Integer,
+        NSP:Integer,
+        PSP:Double,
+        IOPR:Double,
+        Reconnect:Integer,
+        FPS:Integer,
+        TBT:Integer,
+        APL:Integer,
+        PPS:Double,
+        predictedLabel: String
+    )
+
+    case class DnsCountObj(
+        timestamp: Timestamp,
+        uid: String,
+        idOrigH: String,
+        idOrigP: Integer,
+        idRespH: String,
+        idRespP: Integer,
+        proto: String,
+        transId: Integer,
+        query: String,
+        rcode: Integer,
+        rcodeName: String,
+        AA: Boolean,
+        TC: Boolean,
+        RD: Boolean,
+        RA: Boolean,
+        Z:Integer,
+        answers:String,
+        TTLs:Integer,
+        rejected: Boolean
+    )
 
     def main(args: Array[String]): Unit = {
       val kafkaUrl = "localhost:9092"      
@@ -73,7 +122,7 @@ object StreamClassification3 extends StreamUtils {
         .option("startingOffsets","latest")
         .load()
 
-      val schema : StructType = StructType(
+      val connSchema : StructType = StructType(
         Seq(StructField
         ("conn", StructType(Seq(
           StructField("ts",DoubleType,true),
@@ -107,99 +156,32 @@ object StreamClassification3 extends StreamUtils {
           .cast(StringType)
           .as("col")
         )
-        .select(from_json(col("col"), schema)
+        .select(from_json(col("col"), connSchema)
           .getField("conn")
           .alias("conn")
-        )
+        )      
 
-      val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
-        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+      // add formula column
+    val calcDF = parsedLogData
+      .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("Reconnect", lit(0))
+      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", lit(0.0))
 
-      val connDf = parsedRawDf
-        .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
-          r.getAs[String](1),
-          r.getAs[String](2),
-          r.getAs[Integer](3),
-          r.getAs[String](4),
-          r.getAs[Integer](5),
-          r.getAs[String](6),
-          r.getAs[String](7),
-          r.getAs[Double](8),
-          r.getAs[Integer](9),
-          r.getAs[Integer](10),
-          r.getAs[String](11),
-          r.getAs[Boolean](12),
-          r.getAs[Boolean](13),
-          r.getAs[Integer](14),
-          r.getAs[String](15),
-          r.getAs[Integer](16),
-          r.getAs[Integer](17),
-          r.getAs[Integer](18),
-          r.getAs[Integer](19)
-        ))
-
-    connDf.select("*")
+    calcDF.printSchema()    
+    calcDF.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
 
-    //Sink to Mongodb
-      val ConnCountQuery = connDf
-          .writeStream
-//        .format("console")
-//        .option("truncate", "false")
-          .outputMode("append")
-//        .start()
-//        .awaitTermination()
-
-        .foreach(new ForeachWriter[ConnCountObj] {
-
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@10.8.0.2:27017/aal.conn?replicaSet=rs0&authSource=admin"))
-          var mongoConnector: MongoConnector = _
-          var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
-
-          override def process(value: ConnCountObj): Unit = {
-            ConnCounts.append(value)
-          }
-
-          override def close(errorOrNull: Throwable): Unit = {
-            if (ConnCounts.nonEmpty) {
-              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
-                collection.insertMany(ConnCounts.map(sc => {
-                  var doc = new Document()
-                  doc.put("ts", sc.timestamp)
-                  doc.put("uid", sc.uid)
-                  doc.put("id_orig_h", sc.idOrigH)
-                  doc.put("id_orig_p", sc.idOrigP)
-                  doc.put("id_resp_h", sc.idRespH)
-                  doc.put("id_resp_p", sc.idRespP)
-                  doc.put("proto", sc.proto)
-                  doc.put("service", sc.service)
-                  doc.put("duration", sc.duration)
-                  doc.put("orig_bytes", sc.orig_bytes)
-                  doc.put("conn_state", sc.connState)
-                  doc.put("local_orig", sc.localOrig)
-                  doc.put("local_resp", sc.localResp)
-                  doc.put("missed_bytes", sc.missedBytes)
-                  doc.put("history", sc.history)
-                  doc.put("orig_pkts", sc.origPkts)
-                  doc.put("orig_ip_bytes", sc.origIpBytes)
-                  doc.put("resp_bytes", sc.respPkts)
-                  doc.put("resp_ip_bytes", sc.respIpBytes)
-                  doc
-                }).asJava)
-              })
-            }
-          }
-
-          override def open(partitionId: Long, version: Long): Boolean = {
-            mongoConnector = MongoConnector(writeConfig.asOptions)
-            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
-            true
-          }
-
-        }).start()
     spark.streams.awaitAnyTermination()
   }
 }
