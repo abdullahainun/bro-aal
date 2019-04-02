@@ -133,10 +133,17 @@ object StreamClassification3 extends StreamUtils {
       )
       )
     )
-
+ 
+    val konversi_orig_h = udf((row: String) => {
+      row.replaceAll("id.orig_h", "id_orig_h")
+    })
+    val konversi_resp_h = udf((row: String) => {
+      row.replaceAll("id.resp_h", "id_resp_h")
+    })
 
     val parsedLogData = kafkaStreamDF
       .select("value")
+      .withColumn("col", konversi_resp_h(col("value").cast("string")))
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
