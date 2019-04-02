@@ -160,22 +160,7 @@ object StreamClassification3 extends StreamUtils {
         .select(from_json(col("col"), connSchema)
           .getField("conn")
           .alias("conn")
-        )     
-
-      // add formula column
-    val calcDF = parsedLogData.select("conn.*")
-      .withColumn("timestamp",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
-      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
-      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
-      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
-      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", lit(0))
-      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", lit(0.0))
-    
+        )         
     // convert double to timestamp
     val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
         from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
@@ -203,35 +188,51 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
 
-      val classificationDf = calcDF
-      .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
-        r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
-        r.getAs[String](4),
-        r.getAs[Integer](5),
-        r.getAs[Integer](6),
-        r.getAs[Integer](7),
-        r.getAs[Integer](8),
-        r.getAs[Integer](9),
-        r.getAs[Integer](10),
-        r.getAs[Integer](11),
-        r.getAs[Integer](12),
-        r.getAs[Integer](13),
-        r.getAs[Integer](14),
-        r.getAs[Integer](15),
-        r.getAs[Double](16),
-        r.getAs[Double](17),
-        r.getAs[Integer](18),
-        r.getAs[Integer](19),
-        r.getAs[Integer](20),
-        r.getAs[Integer](21),
-        r.getAs[Double](22),
-        r.getAs[String](23)
-      ))      
+    // classification datafame  
+    // add formula column
+    val calcDF = parsedLogData.select("conn.*")
+      .withColumn("timestamp",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
+      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
+      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
+      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("Reconnect", lit(0))
+      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
+      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
+      .withColumn("PPS", lit(0.0))
+    
+    calcDF.printSchema()
+    // val classificationDf = calcDF
+    //   .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
+    //     r.getAs[String](1),
+    //     r.getAs[String](2),
+    //     r.getAs[Integer](3),
+    //     r.getAs[String](4),
+    //     r.getAs[Integer](5),
+    //     r.getAs[Integer](6),
+    //     r.getAs[Integer](7),
+    //     r.getAs[Integer](8),
+    //     r.getAs[Integer](9),
+    //     r.getAs[Integer](10),
+    //     r.getAs[Integer](11),
+    //     r.getAs[Integer](12),
+    //     r.getAs[Integer](13),
+    //     r.getAs[Integer](14),
+    //     r.getAs[Integer](15),
+    //     r.getAs[Double](16),
+    //     r.getAs[Double](17),
+    //     r.getAs[Integer](18),
+    //     r.getAs[Integer](19),
+    //     r.getAs[Integer](20),
+    //     r.getAs[Integer](21),
+    //     r.getAs[Double](22),
+    //     r.getAs[String](23)
+    //   ))
 
-    classificationDf.printSchema()    
-    classificationDf.select("timestamp, id.orig_h, id.resp_h")
+    classificationDf.printSchema()
+    classificationDf.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
