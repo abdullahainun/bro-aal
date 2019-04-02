@@ -162,7 +162,7 @@ object StreamClassification3 extends StreamUtils {
         )      
 
       // add formula column
-    val calcDF = parsedLogData
+    val calcDF = parsedLogData.select("conn.*")
       .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
