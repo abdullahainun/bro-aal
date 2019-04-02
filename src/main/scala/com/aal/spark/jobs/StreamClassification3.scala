@@ -248,39 +248,12 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    val output = assembler.transform(filtered)
-    // Make predictions on test documents.
-    val testing = connModel.transform(output)
-
-    val malware = testing.filter($"predictedLabel".contains("1.0"))
-    testing.printSchema()
-    val testing2 = testing
-                    .select(
-                      col("timestamp"),
-                      col("uid"),
-                      col("idOrigH"),
-                      col("idOrigP"),
-                      col("idRespH"),
-                      col("idRespP"),
-                      col("predictedLabel")
-                    )
-    testing2.printSchema()    
-    testing2.select("*")
+    filtered.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
-
-    val resultDf = testing2
-      .map((r:Row) => ResultObj(
-        r.getAs[String](0),
-        r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
-        r.getAs[String](4),
-        r.getAs[Integer](5),
-        r.getAs[String](6)
-      ))  
+    
     spark.streams.awaitAnyTermination()
   }
 }
