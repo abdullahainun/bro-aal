@@ -204,7 +204,12 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
 
-      connDf.printSchema()
+      calcDF.printSchema()
+      calcDF.select("*")
+      .writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
 
     //   // convert double to timestamp
     //   val classificationDf = calcDF
