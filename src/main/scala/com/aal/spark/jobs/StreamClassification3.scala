@@ -204,6 +204,12 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("PPS", lit(0.0))
     
     calcDF.printSchema()
+    calcDF.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+
     // val classificationDf = calcDF
     //   .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
     //     r.getAs[String](1),
@@ -231,12 +237,12 @@ object StreamClassification3 extends StreamUtils {
     //     r.getAs[String](23)
     //   ))
 
-    classificationDf.printSchema()
-    classificationDf.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // classificationDf.printSchema()
+    // classificationDf.select("*")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
     //  machine learning model $on
 
 // // Load and parse the data
