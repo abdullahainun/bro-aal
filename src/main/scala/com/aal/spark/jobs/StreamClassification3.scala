@@ -203,7 +203,7 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
     
-    val classificationDf = calcDF.select("timestamp, uid")
+    val classificationDf = calcDF.select(col("timestamp"))
     // calcDF.printSchema()
     // calcDF.select("*")
     classificationDf
