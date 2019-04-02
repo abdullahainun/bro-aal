@@ -163,14 +163,12 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
 
-
-    calcDF.printSchema()
-
-    calcDF
+    calcDF.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
+
     val connDf = calcDF
       .map((r:Row) => ConnCountObj(
         r.getAs[String](0),
@@ -199,11 +197,6 @@ object StreamClassification3 extends StreamUtils {
       ))
 
 
-    connDf.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
     
 //  machine learning model $on
 // Load and parse the data
