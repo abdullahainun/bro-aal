@@ -163,7 +163,7 @@ object StreamClassification3 extends StreamUtils {
 
       // add formula column
     val calcDF = parsedLogData.select("conn.*")
-      .withColumn("ts",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+      .withColumn("timestamp",to_utc_timestamp(from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
       .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
       .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
       .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
@@ -174,13 +174,117 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
+    
+      val connDf = parsedRawDf
+        .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
+          r.getAs[String](1),
+          r.getAs[String](2),
+          r.getAs[Integer](3),
+          r.getAs[String](4),
+          r.getAs[Integer](5),
+          r.getAs[String](6),
+          r.getAs[String](7),
+          r.getAs[Double](8),
+          r.getAs[Integer](9),
+          r.getAs[Integer](10),
+          r.getAs[String](11),
+          r.getAs[Boolean](12),
+          r.getAs[Boolean](13),
+          r.getAs[Integer](14),
+          r.getAs[String](15),
+          r.getAs[Integer](16),
+          r.getAs[Integer](17),
+          r.getAs[Integer](18),
+          r.getAs[Integer](19)
+      ))
 
-    calcDF.printSchema()    
-    calcDF.select("*")
+      val classificationDf = ClassificationObj
+      .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[Integer](6),
+        r.getAs[Integer](7),
+        r.getAs[Integer](8),
+        r.getAs[Integer](9),
+        r.getAs[Integer](10),
+        r.getAs[Integer](11),
+        r.getAs[Integer](12),
+        r.getAs[Integer](13),
+        r.getAs[Integer](14),
+        r.getAs[Integer](15),
+        r.getAs[Double](16),
+        r.getAs[Double](17),
+        r.getAs[Integer](18),
+        r.getAs[Integer](19),
+        r.getAs[Integer](20),
+        r.getAs[Integer](21),
+        r.getAs[Double](22),
+        r.getAs[String](23)
+      ))      
+
+    classificationDf.printSchema()    
+    classificationDf.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
+    //  machine learning model $on
+
+// // Load and parse the data
+//     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
+
+//     val assembler = new VectorAssembler()
+//         .setInputCols(Array(
+//             "idOrigP",
+//             "idRespP",
+//             "orig_bytes",
+//             "resp_bytes",
+//             "missedBytes",
+//             "origPkts",
+//             "origIpBytes",
+//             "respPkts",
+//             "respIpBytes",
+//             "PX",
+//             "NNP",
+//             "NSP",
+//             "PSP",
+//             "IOPR",
+//             "Reconnect",
+//             "FPS",
+//             "TBT",
+//             "APL",
+//             "PPS"
+//           ))
+//         .setOutputCol("features")
+
+//     val filtered  = connDf.filter(
+//       $"idOrigP".isNotNull &&
+//       $"idRespP".isNotNull &&
+//       $"orig_bytes".isNotNull &&
+//       $"resp_bytes".isNotNull &&
+//       $"missedBytes".isNotNull &&
+//       $"origPkts".isNotNull &&
+//       $"origIpBytes".isNotNull &&
+//       $"respPkts".isNotNull &&
+//       $"respIpBytes".isNotNull &&
+//       $"PX".isNotNull &&
+//       $"NNP".isNotNull &&
+//       $"NSP".isNotNull &&
+//       $"PSP".isNotNull &&
+//       $"IOPR".isNotNull &&
+//       $"Reconnect".isNotNull &&
+//       $"FPS".isNotNull &&
+//       $"TBT".isNotNull &&
+//       $"APL".isNotNull &&
+//       $"PPS".isNotNull
+//     )
+
+//     val output = assembler.transform(filtered)
+//     // Make predictions on test documents.
+//     val testing = connModel.transform(output)
 
     spark.streams.awaitAnyTermination()
   }
