@@ -297,7 +297,7 @@ object StreamClassification2 extends StreamUtils {
 
 //  machine learning model $off
 // Sink to Mongodb
-      val ConnCountQuery = resultDf
+    val ConnCountQuery = resultDf
           .writeStream
           .format("console")
     //        .option("truncate", "false")
