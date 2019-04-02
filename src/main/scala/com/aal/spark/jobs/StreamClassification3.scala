@@ -231,7 +231,7 @@ object StreamClassification3 extends StreamUtils {
       ))      
 
     classificationDf.printSchema()    
-    classificationDf.select("*")
+    classificationDf.select("timestamp, id.orig_h, id.resp_h")
     .writeStream
     .outputMode("append")
     .format("console")
