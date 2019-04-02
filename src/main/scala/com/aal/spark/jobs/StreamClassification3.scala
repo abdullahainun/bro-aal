@@ -36,7 +36,7 @@ import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 object StreamClassification3 extends StreamUtils {  
         case class ConnCountObj(
-                   timestamp: String,
+                   timestamp: Timestamp,
                    uid: String,
                    idOrigH: String,
                    idOrigP: Integer,
@@ -113,11 +113,11 @@ object StreamClassification3 extends StreamUtils {
         )
 
       val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
-        from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
+        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
 
       val connDf = parsedRawDf
         .map((r:Row) => ConnCountObj(r.getAs[String](0),
-          r.getAs[String](1),
+          r.getAs[Timestamp](1),
           r.getAs[String](2),
           r.getAs[Integer](3),
           r.getAs[String](4),
