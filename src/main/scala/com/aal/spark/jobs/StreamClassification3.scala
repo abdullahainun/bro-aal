@@ -160,12 +160,7 @@ object StreamClassification3 extends StreamUtils {
         .select(from_json(col("col"), connSchema)
           .getField("conn")
           .alias("conn")
-        ) 
-
-      // convert double to timestamp
-      val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
-        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
-    
+        )     
 
       // add formula column
     val calcDF = parsedLogData.select("conn.*")
@@ -181,6 +176,10 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
     
+    // convert double to timestamp
+    val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
+        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+
       val connDf = parsedRawDf
         .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
           r.getAs[String](1),
@@ -204,47 +203,39 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
 
-      calcDF.printSchema()
-      calcDF.select("*")
-      .writeStream
-      .outputMode("append")
-      .format("console")
-      .start()
+      val classificationDf = calcDF
+      .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[Integer](6),
+        r.getAs[Integer](7),
+        r.getAs[Integer](8),
+        r.getAs[Integer](9),
+        r.getAs[Integer](10),
+        r.getAs[Integer](11),
+        r.getAs[Integer](12),
+        r.getAs[Integer](13),
+        r.getAs[Integer](14),
+        r.getAs[Integer](15),
+        r.getAs[Double](16),
+        r.getAs[Double](17),
+        r.getAs[Integer](18),
+        r.getAs[Integer](19),
+        r.getAs[Integer](20),
+        r.getAs[Integer](21),
+        r.getAs[Double](22),
+        r.getAs[String](23)
+      ))      
 
-    //   // convert double to timestamp
-    //   val classificationDf = calcDF
-    //   .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
-    //     r.getAs[String](1),
-    //     r.getAs[String](2),
-    //     r.getAs[Integer](3),
-    //     r.getAs[String](4),
-    //     r.getAs[Integer](5),
-    //     r.getAs[Integer](6),
-    //     r.getAs[Integer](7),
-    //     r.getAs[Integer](8),
-    //     r.getAs[Integer](9),
-    //     r.getAs[Integer](10),
-    //     r.getAs[Integer](11),
-    //     r.getAs[Integer](12),
-    //     r.getAs[Integer](13),
-    //     r.getAs[Integer](14),
-    //     r.getAs[Integer](15),
-    //     r.getAs[Double](16),
-    //     r.getAs[Double](17),
-    //     r.getAs[Integer](18),
-    //     r.getAs[Integer](19),
-    //     r.getAs[Integer](20),
-    //     r.getAs[Integer](21),
-    //     r.getAs[Double](22),
-    //     r.getAs[String](23)
-    //   ))      
-
-    // classificationDf.printSchema()    
-    // classificationDf.select("*")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
+    classificationDf.printSchema()    
+    classificationDf.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
     //  machine learning model $on
 
 // // Load and parse the data
