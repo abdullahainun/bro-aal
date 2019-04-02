@@ -133,18 +133,10 @@ object StreamClassification3 extends StreamUtils {
       )
       )
     )
- 
-    val konversi_orig_h = udf((row: String) => {
-      row.replaceAll("id.orig_h", "id_orig_h")
-    })
-    val konversi_resp_h = udf((row: String) => {
-      row.replaceAll("id.resp_h", "id_resp_h")
-    })
+
 
     val parsedLogData = kafkaStreamDF
       .select("value")
-      .withColumn("col", konversi_orig_h(col("value").cast("string")))
-      .withColumn("col", konversi_resp_h(col("value").cast("string")))
       .select(from_json(col("col"), schema)
         .getField("conn")
         .alias("conn")
@@ -157,98 +149,10 @@ object StreamClassification3 extends StreamUtils {
     .format("console")
     .start()
 
-    val calcDF = parsedLogData  
-      .withColumn("PX", BroConnFeatureExtractionFormula.px(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("NNP", BroConnFeatureExtractionFormula.nnp(col("PX").cast("int")))
-      .withColumn("NSP", BroConnFeatureExtractionFormula.nsp(col("PX").cast("int")))
-      .withColumn("PSP", BroConnFeatureExtractionFormula.psp(col("NSP").cast("double"), col("PX").cast("double")))
-      .withColumn("IOPR", BroConnFeatureExtractionFormula.iopr(col("orig_pkts").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("Reconnect", lit(0))
-      .withColumn("FPS", BroConnFeatureExtractionFormula.fps(col("orig_ip_bytes").cast("int"), col("resp_pkts").cast("int")))
-      .withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
-      .withColumn("PPS", lit(0.0))
-
-
-
-    val connDf = calcDF
-      .map((r:Row) => ConnCountObj(
-        r.getAs[String](0),
-        r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
-        r.getAs[String](4),
-        r.getAs[Integer](5),
-        r.getAs[Integer](6),
-        r.getAs[Integer](7),
-        r.getAs[Integer](8),
-        r.getAs[Integer](9),
-        r.getAs[Integer](10),
-        r.getAs[Integer](11),
-        r.getAs[Integer](12),
-        r.getAs[Integer](13),
-        r.getAs[Integer](14),
-        r.getAs[Integer](15),
-        r.getAs[Double](16),
-        r.getAs[Double](17),
-        r.getAs[Integer](18),
-        r.getAs[Integer](19),
-        r.getAs[Integer](20),
-        r.getAs[Integer](21),
-        r.getAs[Double](22)
-      ))
-
-
     
 //  machine learning model $on
 // Load and parse the data
-    val connModel = PipelineModel.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
-
-    val assembler = new VectorAssembler()
-        .setInputCols(Array(
-            "idOrigP",
-            "idRespP",
-            "orig_bytes",
-            "resp_bytes",
-            "missedBytes",
-            "origPkts",
-            "origIpBytes",
-            "respPkts",
-            "respIpBytes",
-            "PX",
-            "NNP",
-            "NSP",
-            "PSP",
-            "IOPR",
-            "Reconnect",
-            "FPS",
-            "TBT",
-            "APL",
-            "PPS"
-          ))
-        .setOutputCol("features")
-
-    val filtered  = connDf.filter(
-      $"idOrigP".isNotNull &&
-      $"idRespP".isNotNull &&
-      $"orig_bytes".isNotNull &&
-      $"resp_bytes".isNotNull &&
-      $"missedBytes".isNotNull &&
-      $"origPkts".isNotNull &&
-      $"origIpBytes".isNotNull &&
-      $"respPkts".isNotNull &&
-      $"respIpBytes".isNotNull &&
-      $"PX".isNotNull &&
-      $"NNP".isNotNull &&
-      $"NSP".isNotNull &&
-      $"PSP".isNotNull &&
-      $"IOPR".isNotNull &&
-      $"Reconnect".isNotNull &&
-      $"FPS".isNotNull &&
-      $"TBT".isNotNull &&
-      $"APL".isNotNull &&
-      $"PPS".isNotNull
-    )
+   
 
     spark.streams.awaitAnyTermination()
   }
