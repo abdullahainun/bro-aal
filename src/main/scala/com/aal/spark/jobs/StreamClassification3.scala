@@ -34,132 +34,116 @@ import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
 
-object StreamClassification3 extends StreamUtils {
-  case class ConnCountObj(
-                           timestamp: String,
-                           uid: String,
-                           idOrigH: String,
-                           idOrigP: Integer,
-                           idRespH: String,
-                           idRespP: Integer,
-                           orig_bytes: Integer,
-                           resp_bytes: Integer,
-                           missedBytes: Integer,
-                           origPkts: Integer,
-                           origIpBytes: Integer,
-                           respPkts: Integer,
-                           respIpBytes: Integer,
-                           PX:Integer,
-                           NNP:Integer,
-                           NSP:Integer,
-                           PSP:Double,
-                           IOPR:Double,
-                           Reconnect:Integer,
-                           FPS:Integer,
-                           TBT:Integer,
-                           APL:Integer,
-                           PPS:Double
-                         )
-   case class ResultObj(
-                          timestamp: String,
-                          uid: String,
-                          idOrigH: String,
-                          idOrigP: Integer,
-                          idRespH: String,
-                          idRespP: Integer,
-                          predictedLabel: String
-                         )
-  case class DnsCountObj(
-                           timestamp: Timestamp,
-                           uid: String,
-                           idOrigH: String,
-                           idOrigP: Integer,
-                           idRespH: String,
-                           idRespP: Integer,
-                           proto: String,
-                           transId: Integer,
-                           query: String,
-                           rcode: Integer,
-                           rcodeName: String,
-                           AA: Boolean,
-                           TC: Boolean,
-                           RD: Boolean,
-                           RA: Boolean,
-                           Z:Integer,
-                           answers:String,
-                           TTLs:Integer,
-                           rejected: Boolean
-                         )
+object StreamClassification3 extends StreamUtils {  
+        case class ConnCountObj(
+                   timestamp: String,
+                   uid: String,
+                   idOrigH: String,
+                   idOrigP: Integer,
+                   idRespH: String,
+                   idRespP: Integer,
+                   proto: String,
+                   service: String,
+                   duration: Double,
+                   orig_bytes: Integer,
+                   resp_bytes: Integer,
+                   connState: String,
+                   localOrig: Boolean,
+                   localResp: Boolean,
+                   missedBytes: Integer,
+                   history: String,
+                   origPkts: Integer,
+                   origIpBytes: Integer,
+                   respPkts: Integer,
+                   respIpBytes: Integer
+                   )
 
-  def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.8.0.2:9092"
-    //val shemaRegistryURL = "http://localhost:8081"
-    val topic ="broconn"
+    def main(args: Array[String]): Unit = {
+      val kafkaUrl = "localhost:9092"
+      val shemaRegistryURL = "http://10.252.108.232:8081"
+      val topic ="bro"
 
-    val spark = getSparkSession(args)
-    import spark.implicits._
+      val spark = getSparkSession(args)
+      import spark.implicits._
 
-    spark.sparkContext.setLogLevel("ERROR")
+      spark.sparkContext.setLogLevel("ERROR")
+      val kafkaStreamDF = spark.readStream
+        .format("kafka")
+        .option("kafka.bootstrap.servers",kafkaUrl)
+        .option("subscribe", topic)
+        .option("startingOffsets","latest")
+        .load()
 
-// streaming on
-    val kafkaStreamDF = spark.readStream
-      .format("kafka")
-      .option("kafka.bootstrap.servers",kafkaUrl)
-      .option("subscribe", topic)
-      .option("startingOffsets","latest")
-      .load()
-    // ========== DF with no aggregations ==========
-    val noAggDF = kafkaStreamDF.select("*")
-
-// classification $on
-    val schema : StructType = StructType(
-      Seq(StructField
-      ("conn", StructType(Seq(
-        StructField("ts", StringType, true),
-        StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.orig_p", IntegerType, true),
-        StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", IntegerType, true),
-        StructField("orig_bytes", IntegerType, true),
-        StructField("resp_bytes", IntegerType, true),
-        StructField("missed_bytes", IntegerType, true),
-        StructField("orig_pkts", IntegerType, true),
-        StructField("orig_ip_bytes", IntegerType, true),
-        StructField("resp_pkts", IntegerType, true),
-        StructField("resp_ip_bytes", IntegerType, true)
+      val schema : StructType = StructType(
+        Seq(StructField
+        ("conn", StructType(Seq(
+          StructField("ts",DoubleType,true),
+          StructField("uid", StringType, true),
+          StructField("id.orig_h", StringType, true),
+          StructField("id.orig_p", IntegerType, true),
+          StructField("id.resp_h", StringType, true),
+          StructField("id.resp_p", IntegerType, true),
+          StructField("proto", StringType, true),
+          StructField("service", StringType, true),
+          StructField("duration", DoubleType, true),
+          StructField("orig_bytes", IntegerType, true),
+          StructField("resp_bytes", IntegerType, true),
+          StructField("conn_state", StringType, true),
+          StructField("local_orig", BooleanType, true),
+          StructField("local_resp", BooleanType, true),
+          StructField("missed_bytes", IntegerType, true),
+          StructField("history", StringType, true),
+          StructField("orig_pkts", IntegerType, true),
+          StructField("orig_ip_bytes", IntegerType, true),
+          StructField("resp_pkts", IntegerType, true),
+          StructField("resp_ip_bytes", IntegerType, true),
+          StructField("tunnel_parents", ArrayType(StringType, true)))
+        )
+        )
+        )
       )
-      )
-      )
-      )
-    )
- 
-    val konversi_orig_h = udf((row: String) => {
-      row.replaceAll("id.orig_h", "id_orig_h")
-    })
-    val konversi_resp_h = udf((row: String) => {
-      row.replaceAll("id.resp_h", "id_resp_h")
-    })
 
-    val parsedLogData = kafkaStreamDF
-      .select("value")
-      .withColumn("col", konversi_resp_h(col("value").cast("string")))
-      .select(from_json(col("col"), schema)
-        .getField("conn")
-        .alias("conn")
-      )
-      .select("conn.*")
-    
-    parsedLogData.select("*")
+      val parsedLogData = kafkaStreamDF
+        .select(col("value")
+          .cast(StringType)
+          .as("col")
+        )
+        .select(from_json(col("col"), schema)
+          .getField("conn")
+          .alias("conn")
+        )
+
+      val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
+        from_unixtime(col("ts")),"GMT").alias("ts").cast(StringType))
+
+      val connDf = parsedRawDf
+        .map((r:Row) => ConnCountObj(r.getAs[String](0),
+          r.getAs[String](1),
+          r.getAs[String](2),
+          r.getAs[Integer](3),
+          r.getAs[String](4),
+          r.getAs[Integer](5),
+          r.getAs[String](6),
+          r.getAs[String](7),
+          r.getAs[Double](8),
+          r.getAs[Integer](9),
+          r.getAs[Integer](10),
+          r.getAs[String](11),
+          r.getAs[Boolean](12),
+          r.getAs[Boolean](13),
+          r.getAs[Integer](14),
+          r.getAs[String](15),
+          r.getAs[Integer](16),
+          r.getAs[Integer](17),
+          r.getAs[Integer](18),
+          r.getAs[Integer](19)
+        ))
+
+    connDf.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
     .start()
-
-    
-//  machine learning model $on
-// Load and parse the data
-   
 
     spark.streams.awaitAnyTermination()
   }
