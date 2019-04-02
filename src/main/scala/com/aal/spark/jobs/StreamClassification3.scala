@@ -162,7 +162,10 @@ object StreamClassification3 extends StreamUtils {
           .alias("conn")
         ) 
 
-      // dns kafka stream
+      // convert double to timestamp
+      val parsedRawDf = parsedLogData.select("conn.*").withColumn("ts",to_utc_timestamp(
+        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
+    
 
       // add formula column
     val calcDF = parsedLogData.select("conn.*")
@@ -178,7 +181,7 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("orig_ip_bytes").cast("int"), col("resp_ip_bytes").cast("int")))
       .withColumn("PPS", lit(0.0))
     
-      val connDf = parsedLogData
+      val connDf = parsedRawDf
         .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
           r.getAs[String](1),
           r.getAs[String](2),
@@ -201,6 +204,7 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
 
+      // convert double to timestamp
       val classificationDf = calcDF
       .map((r:Row) => ClassificationObj(r.getAs[Timestamp](0),
         r.getAs[String](1),
