@@ -198,6 +198,13 @@ object StreamClassification3 extends StreamUtils {
         r.getAs[Double](22)
       ))
 
+
+    connDf.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+    
 //  machine learning model $on
 // Load and parse the data
     val connModel = PipelineModel.load("hdfs://127.0.0.1:9000/user/hduser/aal/tmp/isot-dt-model")
@@ -248,12 +255,6 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    filtered.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
-    
     spark.streams.awaitAnyTermination()
   }
 }
