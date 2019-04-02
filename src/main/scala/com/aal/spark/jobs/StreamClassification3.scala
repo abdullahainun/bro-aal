@@ -204,7 +204,7 @@ object StreamClassification3 extends StreamUtils {
       .withColumn("PPS", lit(0.0))
     
     val classificationDf = calcDF.select(col("timestamp"))
-    // calcDF.printSchema()
+    classificationDf.printSchema()
     // calcDF.select("*")
     classificationDf
     .writeStream
