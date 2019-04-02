@@ -116,8 +116,8 @@ object StreamClassification3 extends StreamUtils {
         from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
 
       val connDf = parsedRawDf
-        .map((r:Row) => ConnCountObj(r.getAs[String](0),
-          r.getAs[Timestamp](1),
+        .map((r:Row) => ConnCountObj(r.getAs[Timestamp](0),
+          r.getAs[String](1),
           r.getAs[String](2),
           r.getAs[Integer](3),
           r.getAs[String](4),
