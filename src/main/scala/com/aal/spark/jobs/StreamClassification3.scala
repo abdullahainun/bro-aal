@@ -59,9 +59,8 @@ object StreamClassification3 extends StreamUtils {
                    )
 
     def main(args: Array[String]): Unit = {
-      val kafkaUrl = "localhost:9092"
-      val shemaRegistryURL = "http://10.252.108.232:8081"
-      val topic ="bro"
+      val kafkaUrl = "localhost:9092"      
+      val topic ="broconn"
 
       val spark = getSparkSession(args)
       import spark.implicits._
