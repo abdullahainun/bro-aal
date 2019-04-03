@@ -15,10 +15,10 @@ private[spark] trait StreamUtils {
   }
 
   def getSparkSession(args: Array[String]): SparkSession = {
-    val uri: String = args.headOption.getOrElse("mongodb://admin:jarkoM@10.8.0.2:27017/aal.classification?replicaSet=rs0&authSource=admin")
+    val uri: String = args.headOption.getOrElse("mongodb://admin:jarkoM@157.230.241.208:27017/aal.classification?replicaSet=rs0&authSource=admin")
 
     val conf = new SparkConf()
-      .setMaster ("spark://10.8.0.2:7077")
+      .setMaster ("spark://157.230.241.208:7077")
       .setAppName("AnalisaTrafficDNS")
       .set("spark.app.id", "AnalisaTrafficDNS")
       .set("spark.mongodb.input.uri", uri)
