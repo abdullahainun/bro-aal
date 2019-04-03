@@ -339,7 +339,7 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    if (filtered.isStreaming()) {
+    if (filtered.isStreaming {
       val output = assembler.transform(filtered)
       // // output.printSchema()
       // // Make predictions on test documents.
