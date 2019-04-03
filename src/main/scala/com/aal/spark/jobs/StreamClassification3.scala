@@ -465,7 +465,7 @@ val dnsDf = dnsParsedRawDf
       ))
 
   val dnsFiltered  = dnsDf.filter(
-      $"ts".isNotNull
+      $"timestamp".isNotNull
     )
   
   // dnsFiltered
