@@ -339,7 +339,7 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    // val output = assembler.transform(filtered)
+    val output = assembler.transform(filtered)
     // // output.printSchema()
     // // Make predictions on test documents.
     // val testing = connModel.transform(output)
@@ -438,7 +438,7 @@ val dnsParsendLogData = kafkaStreamDF
     .outputMode("append")
     .format("console")
     .start()
-    
+
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
 val dnsDf = dnsParsedRawDf
@@ -465,7 +465,7 @@ val dnsDf = dnsParsedRawDf
       ))
 
   val dnsFiltered  = dnsDf.filter(
-      $"timestamp".isNotNull
+      $"ts".isNotNull
     )
   
   // dnsFiltered
