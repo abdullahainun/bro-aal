@@ -146,11 +146,11 @@ object StreamClassification3 extends StreamUtils {
         )
       )                      
 
-    kafkaStreamDF.select("value")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // kafkaStreamDF.select("value")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
     // conn kafka stream
     val parsedLogData = kafkaStreamDF
@@ -162,9 +162,13 @@ object StreamClassification3 extends StreamUtils {
         .getField("conn")
         .alias("conn")
       )
-      .select("conn.*")           
-
- 
+      .select("conn.*")
+    
+    parsedLogData.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
     // convert double to timestamp
     val parsedRawDf = parsedLogData.withColumn("ts",to_utc_timestamp(
@@ -429,6 +433,12 @@ val dnsParsendLogData = kafkaStreamDF
         .alias("dns")
       )
 
+  dnsParsendLogData.select("dns.*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+    
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
 val dnsDf = dnsParsedRawDf
