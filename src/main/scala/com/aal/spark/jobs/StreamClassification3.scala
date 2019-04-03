@@ -339,20 +339,17 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    val output = assembler.transform(filtered)
-    // // output.printSchema()
-    // // Make predictions on test documents.
-    val testing = connModel.transform(output)
-
-    testing.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()  
-
-    // testing.printSchema()
-
-
+    if (filtered.nonEmpty) {
+      val output = assembler.transform(filtered)
+      // // output.printSchema()
+      // // Make predictions on test documents.
+      val testing = connModel.transform(output)
+      testing.select("*")
+      .writeStream
+      .outputMode("append")
+      .format("console")
+      .start()  
+    }
 
     //  machine learning model $off    
     // // Sink to Mongodb
@@ -487,7 +484,7 @@ val DnsCountQuery = dnsFiltered
 
       .foreach(new ForeachWriter[DnsCountObj] {
 
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@10.8.0.2:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
       var dnsmongoConnector: MongoConnector = _
       var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
