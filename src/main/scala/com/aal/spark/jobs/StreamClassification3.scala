@@ -164,11 +164,11 @@ object StreamClassification3 extends StreamUtils {
       )
       .select("conn.*")
     
-    parsedLogData.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // parsedLogData.select("*")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
 
     // convert double to timestamp
     val parsedRawDf = parsedLogData.withColumn("ts",to_utc_timestamp(
@@ -344,11 +344,15 @@ object StreamClassification3 extends StreamUtils {
       // // output.printSchema()
       // // Make predictions on test documents.
       val testing = connModel.transform(output)
-    }
-
-    //  machine learning model $off    
+      testing
+      .writeStream
+      .format("console")
+      .outputMode("append")
+      .start()
+      
+    // //  machine learning model $off    
     // // Sink to Mongodb
-    // val ConnCountQuery = resultDf
+    // val ClassificationsCountQuery = testing
     //       .writeStream
     //       .format("console")
     // //        .option("truncate", "false")
@@ -391,6 +395,7 @@ object StreamClassification3 extends StreamUtils {
     //       }
 
     //     }).start()
+    }
 
     // dns log $on
 val dnsSchema : StructType = StructType(
@@ -430,11 +435,11 @@ val dnsParsendLogData = kafkaStreamDF
         .alias("dns")
       )
 
-  dnsParsendLogData.select("dns.*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+  // dnsParsendLogData.select("dns.*")
+  //   .writeStream
+  //   .outputMode("append")
+  //   .format("console")
+  //   .start()
 
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
