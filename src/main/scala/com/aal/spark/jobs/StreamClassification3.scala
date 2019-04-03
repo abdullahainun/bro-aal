@@ -324,12 +324,12 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    // val output = assembler.transform(filtered)
+    val output = assembler.transform(filtered)
     // // output.printSchema()
     // // Make predictions on test documents.
-    // val testing = connModel.transform(output)
+    val testing = connModel.transform(output)
     // testing.printSchema()    
-    filtered.select("*")
+    testing.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
