@@ -344,11 +344,6 @@ object StreamClassification3 extends StreamUtils {
       // // output.printSchema()
       // // Make predictions on test documents.
       val testing = connModel.transform(output)
-      testing.select("*")
-      .writeStream
-      .outputMode("append")
-      .format("console")
-      .start()  
     }
 
     //  machine learning model $off    
