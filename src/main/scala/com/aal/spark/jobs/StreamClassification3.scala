@@ -58,38 +58,28 @@ object StreamClassification3 extends StreamUtils {
         respIpBytes: Integer
     )
     case class ClassificationObj(
-        timestamp: Timestamp,
-        uid: String,
-        idOrigH: String,
-        idOrigP: Integer,
-        idRespH: String,
-        idRespP: Integer,
-        proto: String,
-        service: String,
-        duration: Double,
-        origBytes: Integer,
-        respBytes: Integer,
-        connState: String,
-        localOrig: Boolean,
-        localResp: Boolean,
-        missedBytes: Integer,
-        history: String,
-        origPkts: Integer,
-        origIpBytes: Integer,
-        respPkts: Integer,
-        respIpBytes: Integer,
-        PX: Integer,
-        NNP: Integer,
-        NSP: Integer,
-        PSP: Double,
-        IOPR: Double,
-        Reconnect: Integer,
-        FPS: Integer,
-        TBT: Integer,
-        APL: Integer,
-        PPS: Double
+      idOrigP: Integer,
+      idRespP: Integer,
+      orig_bytes: Integer,
+      resp_bytes: Integer,
+      missedBytes: Integer,
+      origPkts: Integer,
+      origIpBytes: Integer,
+      respPkts: Integer,
+      respIpBytes: Integer,
+      PX: Integer,
+      NNP: Integer,
+      NSP: Integer,
+      PSP: Double,
+      IOPR: Double,
+      Reconnect: Integer,
+      FPS: Integer,
+      TBT: Integer,
+      APL: Integer,
+      PPS: Double,
+      predictedLabel: String
     )
-
+    
     case class DnsCountObj(
         timestamp: Timestamp,
         uid: String,
@@ -154,42 +144,7 @@ object StreamClassification3 extends StreamUtils {
         )
         )
         )
-      )      
-
-      val classificationSchema : StructType = StructType(
-        Seq(StructField("timestamp", TimestampType, true),
-          StructField("uid", IntegerType, true),
-          StructField("id.orig_h", IntegerType, true),
-          StructField("id.orig_p", IntegerType, true),
-          StructField("id.resp_h", IntegerType, true),
-          StructField("id.resp_p", IntegerType, true),
-          StructField("proto", StringType, true),
-          StructField("service", StringType, true),
-          StructField("duration", DoubleType, true),
-          StructField("orig_bytes", IntegerType, true),
-          StructField("resp_bytes", IntegerType, true),
-          StructField("conn_state", StringType, true),
-          StructField("local_orig", BooleanType, true),
-          StructField("local_resp", BooleanType, true),
-          StructField("missed_bytes", IntegerType, true),
-          StructField("history", StringType, true),
-          StructField("orig_pkts", IntegerType, true),
-          StructField("orig_ip_bytes", IntegerType, true),
-          StructField("resp_pkts", IntegerType, true),
-          StructField("resp_ip_bytes", IntegerType, true),
-          StructField("tunnel_parents", ArrayType(StringType, true)),
-          StructField("PX", IntegerType, true),
-          StructField("NNP", IntegerType, true),
-          StructField("NSP", IntegerType, true),
-          StructField("PSP", DoubleType, true),
-          StructField("IOPR", DoubleType, true),
-          StructField("Reconnect", IntegerType, true),
-          StructField("FPS", IntegerType, true),
-          StructField("TBT", IntegerType, true),
-          StructField("APL", IntegerType, true),
-          StructField("PPS", DoubleType, true)
-        )
-      )      
+      )                      
 
     // conn kafka stream
     val parsedLogData = kafkaStreamDF
@@ -203,11 +158,11 @@ object StreamClassification3 extends StreamUtils {
       )
       .select("conn.*")           
 
-    parsedLogData.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+    // parsedLogData.select("*")
+    // .writeStream
+    // .outputMode("append")
+    // .format("console")
+    // .start()
  
 
     // convert double to timestamp
@@ -236,6 +191,61 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](18),
           r.getAs[Integer](19)
       ))
+    
+      //Sink to Mongodb
+      val ConnCountQuery = connDf
+          .writeStream
+          .outputMode("append")
+//        .start()
+//        .awaitTermination()
+          .foreach(new ForeachWriter[ConnCountObj] {
+
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
+          var mongoConnector: MongoConnector = _
+          var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
+
+          override def process(value: ConnCountObj): Unit = {
+            ConnCounts.append(value)
+          }
+
+          override def close(errorOrNull: Throwable): Unit = {
+            if (ConnCounts.nonEmpty) {
+              mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+                collection.insertMany(ConnCounts.map(sc => {
+                  var doc = new Document()
+                  doc.put("ts", sc.timestamp)
+                  doc.put("uid", sc.uid)
+                  doc.put("id_orig_h", sc.idOrigH)
+                  doc.put("id_orig_p", sc.idOrigP)
+                  doc.put("id_resp_h", sc.idRespH)
+                  doc.put("id_resp_p", sc.idRespP)
+                  doc.put("proto", sc.proto)
+                  doc.put("service", sc.service)
+                  doc.put("duration", sc.duration)
+                  doc.put("orig_bytes", sc.orig_bytes)
+                  doc.put("conn_state", sc.connState)
+                  doc.put("local_orig", sc.localOrig)
+                  doc.put("local_resp", sc.localResp)
+                  doc.put("missed_bytes", sc.missedBytes)
+                  doc.put("history", sc.history)
+                  doc.put("orig_pkts", sc.origPkts)
+                  doc.put("orig_ip_bytes", sc.origIpBytes)
+                  doc.put("resp_bytes", sc.respPkts)
+                  doc.put("resp_ip_bytes", sc.respIpBytes)
+                  doc
+                }).asJava)
+              })
+            }
+          }
+
+          override def open(partitionId: Long, version: Long): Boolean = {
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[ConnCountObj]()
+            true
+          }
+
+        }).start()
+
     // connDf.printSchema()    
     // classification datafame  
     // add formula column
@@ -324,17 +334,190 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
 
-    val output = assembler.transform(filtered)
+    // val output = assembler.transform(filtered)
     // // output.printSchema()
     // // Make predictions on test documents.
-    val testing = connModel.transform(output)
-    // testing.printSchema()    
-    testing.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
- 
+    // val testing = connModel.transform(output)
+
+
+    // testing.printSchema()
+
+
+
+    //  machine learning model $off    
+    // // Sink to Mongodb
+    // val ConnCountQuery = resultDf
+    //       .writeStream
+    //       .format("console")
+    // //        .option("truncate", "false")
+    //       .outputMode("append")
+    // //        .start()
+    // //        .awaitTermination()
+
+    //     .foreach(new ForeachWriter[ResultObj] {
+
+    //       val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
+    //       var mongoConnector: MongoConnector = _
+    //       var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
+
+    //       override def process(value: ResultObj): Unit = {
+    //         ConnCounts.append(value)
+    //       }
+
+    //       override def close(errorOrNull: Throwable): Unit = {
+    //         if (ConnCounts.nonEmpty) {
+    //           mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+    //             collection.insertMany(ConnCounts.map(sc => {
+    //               var doc = new Document()
+    //               doc.put("ts", sc.timestamp)
+    //               doc.put("uid", sc.uid)
+    //               doc.put("orig_h", sc.idOrigH)
+    //               doc.put("orig_p", sc.idOrigP)
+    //               doc.put("resp_h", sc.idRespH)
+    //               doc.put("resp_p", sc.idRespP)
+    //               doc.put("label", sc.predictedLabel)
+    //               doc
+    //             }).asJava)
+    //           })
+    //         }
+    //       }
+
+    //       override def open(partitionId: Long, version: Long): Boolean = {
+    //         mongoConnector = MongoConnector(writeConfig.asOptions)
+    //         ConnCounts = new mutable.ArrayBuffer[ResultObj]()
+    //         true
+    //       }
+
+    //     }).start()
+
+    // dns log $on
+val dnsSchema : StructType = StructType(
+      Seq(StructField
+      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
+        StructField("uid", StringType, true),
+        StructField("id.orig_h", StringType, true),
+        StructField("id.orig_p", IntegerType, true),
+        StructField("id.resp_h", StringType, true),
+        StructField("id.resp_p", IntegerType, true),
+        StructField("proto", StringType, true),
+        StructField("trans_id", IntegerType, true),
+        StructField("query", StringType, true),
+        StructField("rcode", IntegerType, true),
+        StructField("rcode_name", StringType, true),
+        StructField("AA", BooleanType, true),
+        StructField("TC", BooleanType, true),
+        StructField("RD", BooleanType, true),
+        StructField("RA", BooleanType, true),
+        StructField("Z", IntegerType, true),
+        StructField("answers", ArrayType(StringType, true)),
+        StructField("TTLs", ArrayType(IntegerType, true)),
+        StructField("rejected", BooleanType, true)
+      )
+      )
+      )
+      )
+    )
+
+val dnsParsendLogData = kafkaStreamDF
+      .select(col("value")
+        .cast(StringType)
+        .as("col")
+      )
+      .select(from_json(col("col"), dnsSchema)
+        .getField("dns")
+        .alias("dns")
+      )
+
+val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
+      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
+val dnsDf = dnsParsedRawDf
+      .map((r:Row) => DnsCountObj(
+        r.getAs[Timestamp](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6),
+        r.getAs[Integer](7),
+        r.getAs[String](8),
+        r.getAs[Integer](9),
+        r.getAs[String](10),
+        r.getAs[Boolean](11),
+        r.getAs[Boolean](12),
+        r.getAs[Boolean](13),
+        r.getAs[Boolean](14),
+        r.getAs[Integer](15),
+        r.getAs[String](16),
+        r.getAs[Integer](17),
+        r.getAs[Boolean](18)
+      ))
+
+  val dnsFiltered  = dnsDf.filter(
+      $"timestamp".isNotNull
+    )
+  
+  // dnsFiltered
+  //   .writeStream
+  //   .outputMode("append")
+  //   .format("console")
+  //   .start()
+
+//  Sink to Mongodb
+val DnsCountQuery = dnsFiltered
+      .writeStream
+//      .format("console")
+      .outputMode("append")
+
+      .foreach(new ForeachWriter[DnsCountObj] {
+
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@10.8.0.2:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+      var dnsmongoConnector: MongoConnector = _
+      var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
+
+      override def process(value: DnsCountObj): Unit = {
+        dnsConnCounts.append(value)
+      }
+
+      override def close(errorOrNull: Throwable): Unit = {
+        if (dnsConnCounts.nonEmpty) {
+          dnsmongoConnector.withCollectionDo(dnswriteConfig, { collection: MongoCollection[Document] =>
+            collection.insertMany(dnsConnCounts.map(sc => {
+              var doc = new Document()
+              doc.put("ts", sc.timestamp)
+              doc.put("uid", sc.uid)
+              doc.put("id_orig_h", sc.idOrigH)
+              doc.put("id_orig_p", sc.idOrigP)
+              doc.put("id_resp_h", sc.idRespH)
+              doc.put("id_resp_p", sc.idRespP)
+              doc.put("proto", sc.proto)
+              doc.put("trans_id", sc.transId)
+              doc.put("query", sc.query)
+              doc.put("rcode", sc.rcode)
+              doc.put("rcode_name", sc.rcodeName)
+              doc.put("AA", sc.AA)
+              doc.put("TC", sc.TC)
+              doc.put("RD", sc.RD)
+              doc.put("RA", sc.RA)
+              doc.put("Z", sc.Z)
+              doc.put("answers", sc.answers)
+              doc.put("TTLs", sc.TTLs)
+              doc.put("rejected", sc.rejected)
+              doc
+            }).asJava)
+          })
+        }
+      }
+
+      override def open(partitionId: Long, version: Long): Boolean = {
+            dnsmongoConnector = MongoConnector(dnswriteConfig.asOptions)
+            dnsConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
+            true
+          }
+
+    }).start()
+// dns lof $off
+
 
     spark.streams.awaitAnyTermination()
   }
