@@ -146,6 +146,12 @@ object StreamClassification3 extends StreamUtils {
         )
       )                      
 
+    kafkaStreamDF.select("value")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+
     // conn kafka stream
     val parsedLogData = kafkaStreamDF
       .select(col("value")
@@ -158,11 +164,6 @@ object StreamClassification3 extends StreamUtils {
       )
       .select("conn.*")           
 
-    // parsedLogData.select("*")
-    // .writeStream
-    // .outputMode("append")
-    // .format("console")
-    // .start()
  
 
     // convert double to timestamp
@@ -200,7 +201,7 @@ object StreamClassification3 extends StreamUtils {
 //        .awaitTermination()
           .foreach(new ForeachWriter[ConnCountObj] {
 
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.conn?replicaSet=rs0&authSource=admin"))
           var mongoConnector: MongoConnector = _
           var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
