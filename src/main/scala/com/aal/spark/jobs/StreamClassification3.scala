@@ -203,6 +203,13 @@ object StreamClassification3 extends StreamUtils {
       )
       .select("conn.*")           
 
+    parsedLogData.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+ 
+
     // convert double to timestamp
     val parsedRawDf = parsedLogData.withColumn("ts",to_utc_timestamp(
         from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
@@ -245,7 +252,7 @@ object StreamClassification3 extends StreamUtils {
 
     val classificationDf = PPS  
 
-    classificationDf.printSchema()
+    // classificationDf.printSchema()
 // Load and parse the data
     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
 
