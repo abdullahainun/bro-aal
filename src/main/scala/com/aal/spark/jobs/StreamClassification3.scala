@@ -342,8 +342,13 @@ object StreamClassification3 extends StreamUtils {
     val output = assembler.transform(filtered)
     // // output.printSchema()
     // // Make predictions on test documents.
-    // val testing = connModel.transform(output)
+    val testing = connModel.transform(output)
 
+    testing.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()  
 
     // testing.printSchema()
 
