@@ -349,7 +349,7 @@ object StreamClassification3 extends StreamUtils {
         col("idOrigP"),
         col("idRespP")
       )
-      newtesting
+      newTesting
       .writeStream
       .format("console")
       .outputMode("append")
