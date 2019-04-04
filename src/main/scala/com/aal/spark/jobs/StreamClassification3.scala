@@ -120,7 +120,7 @@ object StreamClassification3 extends StreamUtils {
           StructField("conn_state", StringType, true),
           StructField("local_orig", BooleanType, true),
           StructField("local_resp", BooleanType, true),
-          StructField("missed_bytes", IntegerType, true),
+          StructField("missed_bytes", DoubleType, true),
           StructField("history", StringType, true),
           StructField("orig_pkts", IntegerType, true),
           StructField("orig_ip_bytes", IntegerType, true),
