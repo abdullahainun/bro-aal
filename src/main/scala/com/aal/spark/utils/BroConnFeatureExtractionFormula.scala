@@ -10,9 +10,12 @@ import org.apache.spark.sql.types._
 object BroConnFeatureExtractionFormula{
     val px = udf((origPkts: Int, respPkts: Int) => {
         var result = 0
-        result = origPkts + respPkts 
-
-        result
+        if(origPkts != 0 && respPkts != 0){
+            result = origPkts + respPkts 
+            result
+        }else{
+            result
+        }
     })
 
     // rumus nnp
