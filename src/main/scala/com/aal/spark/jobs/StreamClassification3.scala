@@ -337,27 +337,33 @@ object StreamClassification3 extends StreamUtils {
       $"TBT".isNotNull &&
       $"APL".isNotNull &&
       $"PPS".isNotNull
-    )
+    ).start()
+    
+    filtered
+    .writeStream
+    .format("console")
+    .outputMode("append")
+    .start()
 
-    if (filtered.isStreaming){
-      val output = assembler.transform(filtered)
-      // // output.printSchema()
-      // // Make predictions on test documents.
-      val testing = connModel.transform(output)
+    // if (filtered.isStreaming){
+    //   val output = assembler.transform(filtered)
+    //   // // output.printSchema()
+    //   // // Make predictions on test documents.
+    //   val testing = connModel.transform(output)
 
-      val newTesting = testing.select(
-        col("uid"),
-        col("idOrigH"),
-        col("idOrigP"),
-        col("idRespH"),
-        col("idRespP"),
-        col("predictedLabel").as("label")
-      )
-      newTesting
-      .writeStream
-      .format("console")
-      .outputMode("append")
-      .start()
+    //   val newTesting = testing.select(
+    //     col("uid"),
+    //     col("idOrigH"),
+    //     col("idOrigP"),
+    //     col("idRespH"),
+    //     col("idRespP"),
+    //     col("predictedLabel").as("label")
+    //   )
+    //   newTesting
+    //   .writeStream
+    //   .format("console")
+    //   .outputMode("append")
+    //   .start()
       
     // //  machine learning model $off    
     // // Sink to Mongodb
@@ -403,8 +409,8 @@ object StreamClassification3 extends StreamUtils {
     //         true
     //       }
 
-    //     }).start()
-    }
+    // //     }).start()
+    // }
 
     // dns log $on
 val dnsSchema : StructType = StructType(
