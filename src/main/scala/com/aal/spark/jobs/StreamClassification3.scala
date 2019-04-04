@@ -346,8 +346,12 @@ object StreamClassification3 extends StreamUtils {
       val testing = connModel.transform(output)
 
       val newTesting = testing.select(
+        col("uid"),
+        col("idOrigH"),
         col("idOrigP"),
-        col("idRespP")
+        col("idRespH"),
+        col("idRespP"),
+        col("predictedLabel").as("label")
       )
       newTesting
       .writeStream
