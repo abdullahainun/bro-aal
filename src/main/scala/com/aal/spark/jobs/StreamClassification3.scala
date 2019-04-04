@@ -294,30 +294,30 @@ object StreamClassification3 extends StreamUtils {
             "PPS"
           ))
         .setOutputCol("features")
-    val smallClassificationDf = classificationDf
-      .select(
-        col("idOrigP"),
-        col("idRespP"),
-        col("orig_bytes"),
-        col("resp_bytes"),
-        col("missedBytes"),
-        col("origPkts"),
-        col("origIpBytes"),
-        col("respPkts"),
-        col("respIpBytes"),
-        col("PX"),
-        col("NNP"),
-        col("NSP"),
-        col("PSP"),
-        col("IOPR"),
-        col("Reconnect"),
-        col("FPS"),
-        col("TBT"),
-        col("APL"),
-        col("PPS")
-      )
+    // val smallClassificationDf = classificationDf
+    //   .select(
+    //     col("idOrigP"),
+    //     col("idRespP"),
+    //     col("orig_bytes"),
+    //     col("resp_bytes"),
+    //     col("missedBytes"),
+    //     col("origPkts"),
+    //     col("origIpBytes"),
+    //     col("respPkts"),
+    //     col("respIpBytes"),
+    //     col("PX"),
+    //     col("NNP"),
+    //     col("NSP"),
+    //     col("PSP"),
+    //     col("IOPR"),
+    //     col("Reconnect"),
+    //     col("FPS"),
+    //     col("TBT"),
+    //     col("APL"),
+    //     col("PPS")
+    //   )
 
-    val filtered  = smallClassificationDf.filter(
+    val filtered  = classificationDf.filter(
       $"idOrigP".isNotNull &&
       $"idRespP".isNotNull &&
       $"orig_bytes".isNotNull &&
@@ -347,7 +347,8 @@ object StreamClassification3 extends StreamUtils {
 
       val newTesting = testing.select(
         col("idOrigP"),
-        col("idRespP")
+        col("idRespP"),
+
       )
       newTesting
       .writeStream
