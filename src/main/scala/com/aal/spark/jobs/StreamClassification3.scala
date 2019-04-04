@@ -339,11 +339,19 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
     
-    filtered
-    .writeStream
-    .format("console")
-    .outputMode("append")
-    .start()
+    // filtered
+    // .writeStream
+    // .format("console")
+    // .outputMode("append")
+    // .start()
+    val output = assembler.transform(filtered)
+    //   // // output.printSchema()
+    //   // // Make predictions on test documents.
+    val testing = connModel
+      .transform(output)
+      .getOrDefault()
+    
+
 
     // if (filtered.isStreaming){
     //   val output = assembler.transform(filtered)
@@ -351,19 +359,19 @@ object StreamClassification3 extends StreamUtils {
     //   // // Make predictions on test documents.
     //   val testing = connModel.transform(output)
 
-    //   val newTesting = testing.select(
-    //     col("uid"),
-    //     col("idOrigH"),
-    //     col("idOrigP"),
-    //     col("idRespH"),
-    //     col("idRespP"),
-    //     col("predictedLabel").as("label")
-    //   )
-    //   newTesting
-    //   .writeStream
-    //   .format("console")
-    //   .outputMode("append")
-    //   .start()
+      val newTesting = testing.select(
+        col("uid"),
+        col("idOrigH"),
+        col("idOrigP"),
+        col("idRespH"),
+        col("idRespP"),
+        col("predictedLabel").as("label")
+      )
+      newTesting
+      .writeStream
+      .format("console")
+      .outputMode("append")
+      .start()
       
     // //  machine learning model $off    
     // // Sink to Mongodb
