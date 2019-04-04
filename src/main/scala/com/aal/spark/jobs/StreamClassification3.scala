@@ -347,8 +347,7 @@ object StreamClassification3 extends StreamUtils {
 
       val newTesting = testing.select(
         col("idOrigP"),
-        col("idRespP"),
-
+        col("idRespP")
       )
       newTesting
       .writeStream
