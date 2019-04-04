@@ -272,6 +272,7 @@ object StreamClassification3 extends StreamUtils {
     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
 
     val assembler = new VectorAssembler()
+        .setHandleInvalid("skip")
         .setInputCols(Array(
             "idOrigP",
             "idRespP",
@@ -293,8 +294,7 @@ object StreamClassification3 extends StreamUtils {
             "APL",
             "PPS"
           ))
-        .setOutputCol("features")
-        .setHandleInvalid("skip")
+        .setOutputCol("features")        
     // val smallClassificationDf = classificationDf
     //   .select(
     //     col("idOrigP"),
