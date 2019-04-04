@@ -344,7 +344,12 @@ object StreamClassification3 extends StreamUtils {
       // // output.printSchema()
       // // Make predictions on test documents.
       val testing = connModel.transform(output)
-      testing
+
+      val newTesting = testing.select(
+        col("idOrigP"),
+        col("idRespP")
+      )
+      newtesting
       .writeStream
       .format("console")
       .outputMode("append")
