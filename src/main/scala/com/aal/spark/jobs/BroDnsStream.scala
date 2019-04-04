@@ -43,7 +43,7 @@ object BroDnsStream extends StreamUtils {
   def main(args: Array[String]): Unit = {
     val kafkaUrl = "157.230.241.208:9092"
     // val shemaRegistryURL = "http://localhost:8081"
-    val topic ="brodns"
+    val topic ="broconn"
 
     val spark = getSparkSession(args)
     import spark.implicits._
@@ -142,7 +142,7 @@ object BroDnsStream extends StreamUtils {
 
       .foreach(new ForeachWriter[ConnCountObj] {
 
-      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://10.148.0.4/bro.dnslog"))
+      val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
       var mongoConnector: MongoConnector = _
       var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
