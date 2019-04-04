@@ -215,7 +215,7 @@ object StreamClassification3 extends StreamUtils {
 //        .awaitTermination()
           .foreach(new ForeachWriter[ConnCountObj] {
 
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.conn?replicaSet=rs0&authSource=admin"))
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.conns?replicaSet=rs0&authSource=admin"))
           var mongoConnector: MongoConnector = _
           var ConnCounts: mutable.ArrayBuffer[ConnCountObj] = _
 
