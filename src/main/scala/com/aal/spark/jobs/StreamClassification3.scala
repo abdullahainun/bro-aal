@@ -171,7 +171,7 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[String](7),
           r.getAs[Double](8),
           r.getAs[Integer](9),
-          r.getAs[Integer](10),
+          r.getAs[Double](10),
           r.getAs[String](11),
           r.getAs[Boolean](12),
           r.getAs[Boolean](13),
