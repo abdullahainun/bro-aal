@@ -466,11 +466,11 @@ val dnsParsendLogData = kafkaStreamDF
         .alias("dns")
       )
 
-  // dnsParsendLogData.select("dns.*")
-  //   .writeStream
-  //   .outputMode("append")
-  //   .format("console")
-  //   .start()
+  dnsParsendLogData.select("dns.*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
 val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
