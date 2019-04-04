@@ -337,7 +337,7 @@ object StreamClassification3 extends StreamUtils {
       $"TBT".isNotNull &&
       $"APL".isNotNull &&
       $"PPS".isNotNull
-    ).start()
+    )
     
     filtered
     .writeStream
