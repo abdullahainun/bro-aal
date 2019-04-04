@@ -341,10 +341,20 @@ object StreamClassification3 extends StreamUtils {
       .format("console")
       .outputMode("append")
       .start()
+    val resultDf = newTesting
+      .map((r:Row) => ClassificationObj(
+        r.getAs[String](0),
+        r.getAs[String](1),
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6)
+      ))  
       
     //  machine learning model $off    
     // Sink to Mongodb
-    val ClassificationsCountQuery = newTesting
+    val ClassificationsCountQuery = resultDf
           .writeStream
           .format("console")
     //        .option("truncate", "false")
@@ -352,7 +362,7 @@ object StreamClassification3 extends StreamUtils {
     //        .start()
     //        .awaitTermination()
 
-        .foreach(new ForeachWriter[newTesting] {
+        .foreach(new ForeachWriter[ClassificationObj] {
 
           val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
           var mongoConnector: MongoConnector = _
