@@ -304,7 +304,7 @@ object StreamClassification3 extends StreamUtils {
             "APL",
             "PPS"
           ))
-        .setOutputCol("features")        
+        .setOutputCol("features")
         .setHandleInvalid("keep") // options are "keep", "error" or "skip"
 
     val filtered  = classificationDf.filter(
