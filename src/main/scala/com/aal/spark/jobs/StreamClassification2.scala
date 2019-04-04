@@ -57,7 +57,7 @@ object StreamClassification2 extends StreamUtils {
                            Reconnect:Integer,
                            FPS:Integer,
                            TBT:Integer,
-                           APL:Integer,
+                           APL:Integer, 
                            PPS:Double
                          )
    case class ResultObj(
