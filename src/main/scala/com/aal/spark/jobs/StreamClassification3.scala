@@ -303,11 +303,12 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
     
-    // filtered
-    // .writeStream
-    // .format("console")
-    // .outputMode("append")
-    // .start()
+    filtered
+    .writeStream
+    .format("console")
+    .outputMode("append")
+    .start()
+    
     val output = assembler.transform(filtered)
     //   // // output.printSchema()
 
