@@ -183,8 +183,32 @@ object StreamClassification3 extends StreamUtils {
           r.getAs[Integer](19)
       ))
     
+    val filteredConn  = connDf.filter(
+      $"timestamp".isNotNull &&
+      $"uid".isNotNull &&
+      $"idOrigH".isNotNull &&
+      $"idOrigP".isNotNull &&
+      $"idRespH".isNotNull &&
+      $"idRespP".isNotNull &&
+      $"proto".isNotNull &&
+      $"service".isNotNull &&
+      $"duration".isNotNull &&
+      $"orig_bytes".isNotNull &&
+      $"resp_bytes".isNotNull &&
+      $"connState".isNotNull &&
+      $"localOrig".isNotNull &&
+      $"localResp".isNotNull &&
+      $"missedBytes".isNotNull &&
+      $"history".isNotNull &&
+      $"origPkts".isNotNull &&
+      $"origIpBytes".isNotNull &&
+      $"respPkts".isNotNull &&
+      $"respIpBytes".isNotNull
+    )
+
+
       //Sink to Mongodb
-      val ConnCountQuery = connDf
+      val ConnCountQuery = filteredConn
           .writeStream
           .outputMode("append")
 //        .start()
@@ -476,11 +500,11 @@ val dnsDf = dnsParsedRawDf
       $"timestamp".isNotNull
     )
   
-  // dnsFiltered
-  //   .writeStream
-  //   .outputMode("append")
-  //   .format("console")
-  //   .start()
+  dnsFiltered
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
 
 //  Sink to Mongodb
 val DnsCountQuery = dnsFiltered
