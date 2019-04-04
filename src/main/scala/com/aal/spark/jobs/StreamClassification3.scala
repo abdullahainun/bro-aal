@@ -58,26 +58,12 @@ object StreamClassification3 extends StreamUtils {
         respIpBytes: Integer
     )
     case class ClassificationObj(
+      uid: String,
+      idOrigH: String,
       idOrigP: Integer,
+      idRespH: String,
       idRespP: Integer,
-      orig_bytes: Integer,
-      resp_bytes: Integer,
-      missedBytes: Integer,
-      origPkts: Integer,
-      origIpBytes: Integer,
-      respPkts: Integer,
-      respIpBytes: Integer,
-      PX: Integer,
-      NNP: Integer,
-      NSP: Integer,
-      PSP: Double,
-      IOPR: Double,
-      Reconnect: Integer,
-      FPS: Integer,
-      TBT: Integer,
-      APL: Integer,
-      PPS: Double,
-      predictedLabel: String
+      label: String
     )
     
     case class DnsCountObj(
@@ -358,7 +344,7 @@ object StreamClassification3 extends StreamUtils {
       
     //  machine learning model $off    
     // Sink to Mongodb
-    val ClassificationsCountQuery = testing
+    val ClassificationsCountQuery = newTesting
           .writeStream
           .format("console")
     //        .option("truncate", "false")
@@ -366,13 +352,13 @@ object StreamClassification3 extends StreamUtils {
     //        .start()
     //        .awaitTermination()
 
-        .foreach(new ForeachWriter[ResultObj] {
+        .foreach(new ForeachWriter[ClassificationObj] {
 
           val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
           var mongoConnector: MongoConnector = _
-          var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
+          var ConnCounts: mutable.ArrayBuffer[ClassificationObj] = _
 
-          override def process(value: ResultObj): Unit = {
+          override def process(value: ClassificationObj): Unit = {
             ConnCounts.append(value)
           }
 
@@ -381,13 +367,12 @@ object StreamClassification3 extends StreamUtils {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
-                  doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("orig_h", sc.idOrigH)
                   doc.put("orig_p", sc.idOrigP)
                   doc.put("resp_h", sc.idRespH)
                   doc.put("resp_p", sc.idRespP)
-                  doc.put("label", sc.predictedLabel)
+                  doc.put("label", sc.label)
                   doc
                 }).asJava)
               })
@@ -396,7 +381,7 @@ object StreamClassification3 extends StreamUtils {
 
           override def open(partitionId: Long, version: Long): Boolean = {
             mongoConnector = MongoConnector(writeConfig.asOptions)
-            ConnCounts = new mutable.ArrayBuffer[ResultObj]()
+            ConnCounts = new mutable.ArrayBuffer[ClassificationObj]()
             true
           }
 
