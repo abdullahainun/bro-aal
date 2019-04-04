@@ -272,7 +272,6 @@ object StreamClassification3 extends StreamUtils {
     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
 
     val assembler = new VectorAssembler()
-        .setHandleInvalid("skip")
         .setInputCols(Array(
             "idOrigP",
             "idRespP",
@@ -295,28 +294,6 @@ object StreamClassification3 extends StreamUtils {
             "PPS"
           ))
         .setOutputCol("features")        
-    // val smallClassificationDf = classificationDf
-    //   .select(
-    //     col("idOrigP"),
-    //     col("idRespP"),
-    //     col("orig_bytes"),
-    //     col("resp_bytes"),
-    //     col("missedBytes"),
-    //     col("origPkts"),
-    //     col("origIpBytes"),
-    //     col("respPkts"),
-    //     col("respIpBytes"),
-    //     col("PX"),
-    //     col("NNP"),
-    //     col("NSP"),
-    //     col("PSP"),
-    //     col("IOPR"),
-    //     col("Reconnect"),
-    //     col("FPS"),
-    //     col("TBT"),
-    //     col("APL"),
-    //     col("PPS")
-    //   )
 
     val filtered  = classificationDf.filter(
       $"idOrigP".isNotNull &&
@@ -347,9 +324,16 @@ object StreamClassification3 extends StreamUtils {
     // .start()
     val output = assembler.transform(filtered)
     //   // // output.printSchema()
+
+    output
+    .writeStream
+    .format("console")
+    .outputMode("append")
+    .start()
+
+
     //   // // Make predictions on test documents.
-    val testing = connModel
-      .transform(output)
+    val testing = connModel.transform(output)
 
     // if (filtered.isStreaming){
     //   val output = assembler.transform(filtered)
