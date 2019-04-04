@@ -345,11 +345,10 @@ object StreamClassification3 extends StreamUtils {
       .map((r:Row) => ClassificationObj(
         r.getAs[String](0),
         r.getAs[String](1),
-        r.getAs[String](2),
-        r.getAs[Integer](3),
-        r.getAs[String](4),
-        r.getAs[Integer](5),
-        r.getAs[String](6)
+        r.getAs[Integer](2),
+        r.getAs[String](3),
+        r.getAs[Integer](4),
+        r.getAs[String](5)
       ))  
       
     //  machine learning model $off    
