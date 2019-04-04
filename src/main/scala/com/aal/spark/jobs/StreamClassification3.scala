@@ -294,6 +294,7 @@ object StreamClassification3 extends StreamUtils {
             "PPS"
           ))
         .setOutputCol("features")
+        .setHandleInvalid("skip")
     // val smallClassificationDf = classificationDf
     //   .select(
     //     col("idOrigP"),
