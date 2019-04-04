@@ -501,21 +501,21 @@ val dnsDf = dnsParsedRawDf
       $"timestamp".isNotNull
     )
   
-  dnsFiltered
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+  // dnsFiltered
+  //   .writeStream
+  //   .outputMode("append")
+  //   .format("console")
+  //   .start()
 
 //  Sink to Mongodb
 val DnsCountQuery = dnsFiltered
       .writeStream
-//      .format("console")
+      .format("console")
       .outputMode("append")
 
       .foreach(new ForeachWriter[DnsCountObj] {
 
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dnslogs?replicaSet=rs0&authSource=admin"))
       var dnsmongoConnector: MongoConnector = _
       var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
