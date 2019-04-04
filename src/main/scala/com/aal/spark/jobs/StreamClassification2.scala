@@ -92,7 +92,7 @@ object StreamClassification2 extends StreamUtils {
                          )
 
   def main(args: Array[String]): Unit = {
-    val kafkaUrl = "10.8.0.2:9092"
+    val kafkaUrl = "127.0.0.1:9092"
     //val shemaRegistryURL = "http://localhost:8081"
     val topic ="broconn"
 
@@ -308,7 +308,7 @@ object StreamClassification2 extends StreamUtils {
 
         .foreach(new ForeachWriter[ResultObj] {
 
-          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@10.8.0.2:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
+          val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.classifications?replicaSet=rs0&authSource=admin"))
           var mongoConnector: MongoConnector = _
           var ConnCounts: mutable.ArrayBuffer[ResultObj] = _
 
@@ -432,7 +432,7 @@ val DnsCountQuery = dnsFiltered
 
       .foreach(new ForeachWriter[DnsCountObj] {
 
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@10.8.0.2:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
       var dnsmongoConnector: MongoConnector = _
       var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
