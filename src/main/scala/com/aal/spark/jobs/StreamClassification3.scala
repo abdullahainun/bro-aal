@@ -349,9 +349,6 @@ object StreamClassification3 extends StreamUtils {
     //   // // Make predictions on test documents.
     val testing = connModel
       .transform(output)
-      .getOrDefault()
-    
-
 
     // if (filtered.isStreaming){
     //   val output = assembler.transform(filtered)
