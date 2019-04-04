@@ -325,15 +325,22 @@ object StreamClassification3 extends StreamUtils {
     val output = assembler.transform(filtered)
     //   // // output.printSchema()
 
-    output
-    .writeStream
-    .format("console")
-    .outputMode("append")
-    .start()
+    // output
+    // .writeStream
+    // .format("console")
+    // .outputMode("append")
+    // .start()
+
+    val sizeHint = new VectorSizeHint()
+    .setInputCol("features")
+    .setHandleInvalid("skip")
+    .setSize(19)
+
+    val datasetWithSize = sizeHint.transform(output)
 
 
     //   // // Make predictions on test documents.
-    val testing = connModel.transform(output)
+    val testing = connModel.transform(datasetWithSize)
 
     // if (filtered.isStreaming){
     //   val output = assembler.transform(filtered)
