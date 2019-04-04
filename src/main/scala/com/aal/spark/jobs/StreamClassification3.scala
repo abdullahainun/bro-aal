@@ -29,7 +29,7 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
-import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.feature.{VectorAssembler, VectorSizeHint}
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 
