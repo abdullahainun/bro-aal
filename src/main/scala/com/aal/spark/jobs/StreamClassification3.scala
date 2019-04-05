@@ -101,6 +101,7 @@ object StreamClassification3 extends StreamUtils {
         .option("kafka.bootstrap.servers",kafkaUrl)
         .option("subscribe", topic)
         .option("startingOffsets","earliest")
+        .option("maxOffsetsPerTrigger",1000)
         .load()
 
       val connSchema : StructType = StructType(
