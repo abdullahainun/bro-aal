@@ -305,7 +305,6 @@ object StreamClassification3 extends StreamUtils {
             "PPS"
           ))
         .setOutputCol("features")
-        .setHandleInvalid("keep") // options are "keep", "error" or "skip"
 
     val filtered  = classificationDf.filter(
       $"idOrigP".isNotNull &&
