@@ -276,12 +276,12 @@ object StreamClassification3 extends StreamUtils {
     val APL = TBT.withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("origIpBytes").cast("int"), col("respIpBytes").cast("int")))
     val PPS = APL.withColumn("PPS", lit(0.0))
 
-    val transDF = PPS.withColumn("missedBytesTmp", PPS.missedBytes.cast(IntegerType))
+    val transDF = PPS.withColumn("missedBytesTmp", col("missedBytes").cast("int"))
     .drop("missedBytes")
     .withColumnRenamed("missedBytesTmp", "missedBytes")
 
 
-    val classificationDf = PPS  
+    val classificationDf = transDF  
 
     // classificationDf.printSchema()
 // Load and parse the data
