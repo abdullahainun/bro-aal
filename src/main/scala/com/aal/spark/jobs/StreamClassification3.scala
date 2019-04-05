@@ -287,7 +287,7 @@ object StreamClassification3 extends StreamUtils {
 // Load and parse the data
     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
 
-    val assembler = new VectorAssembler()
+    val assembler = new VectorIndexer()
         .setInputCols(Array(
             "idOrigP",
             "idRespP",
