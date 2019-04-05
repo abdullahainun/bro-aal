@@ -101,7 +101,7 @@ object StreamClassification3 extends StreamUtils {
         .option("kafka.bootstrap.servers",kafkaUrl)
         .option("subscribe", topic)
         .option("startingOffsets","earliest")
-        .option("maxOffsetsPerTrigger",1000)
+        .option("maxOffsetsPerTrigger",5000)
         .load()
 
       val connSchema : StructType = StructType(
@@ -275,6 +275,10 @@ object StreamClassification3 extends StreamUtils {
     val TBT = FPS.withColumn("TBT", BroConnFeatureExtractionFormula.tbt(col("origIpBytes").cast("int"), col("respIpBytes").cast("int")))
     val APL = TBT.withColumn("APL", BroConnFeatureExtractionFormula.apl(col("PX").cast("int"), col("origIpBytes").cast("int"), col("respIpBytes").cast("int")))
     val PPS = APL.withColumn("PPS", lit(0.0))
+
+    val transDF = PPS.withColumn("missedBytesTmp", PPS.missedBytes.cast(IntegerType))
+    .drop("missedBytes")
+    .withColumnRenamed("missedBytesTmp", "missedBytes")
 
 
     val classificationDf = PPS  
