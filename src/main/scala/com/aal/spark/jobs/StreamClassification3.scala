@@ -333,11 +333,11 @@ object StreamClassification3 extends StreamUtils {
       $"PPS".isNotNull
     )
     
-    classificationDf
-    .writeStream
-    .format("console")
-    .outputMode("append")
-    .start()
+    //classificationDf
+    //.writeStream
+    //.format("console")
+    //.outputMode("append")
+    //.start()
 
     filtered
     .writeStream
@@ -345,14 +345,14 @@ object StreamClassification3 extends StreamUtils {
     .outputMode("append")
     .start()
 
-    val output = assembler.setHandleInvalid("skip").transform(filtered)
+    val output = assembler.transform(filtered)
     //   // // output.printSchema()
 
-    // output
-    // .writeStream
-    // .format("console")
-    // .outputMode("append")
-    // .start()
+    output
+    .writeStream
+    .format("console")
+    .outputMode("append")
+    .start()
 
     //   // // Make predictions on test documents.
     val testing = connModel.transform(output)
