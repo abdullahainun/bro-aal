@@ -411,11 +411,11 @@ object StreamClassification extends StreamUtils {
         col("idRespP"),
         col("predictedLabel").as("label")
       )
-      newTesting
-      .writeStream
-      .format("console")
-      .outputMode("append")
-      .start()
+      // newTesting
+      // .writeStream
+      // .format("console")
+      // .outputMode("append")
+      // .start()
     val resultDf = newTesting
       .map((r:Row) => ClassificationObj(
         r.getAs[String](0),
@@ -430,7 +430,7 @@ object StreamClassification extends StreamUtils {
     // Sink to Mongodb
     val ClassificationsCountQuery = resultDf
           .writeStream
-          .format("console")
+          // .format("console")
     //        .option("truncate", "false")
           .outputMode("append")
     //        .start()
@@ -473,6 +473,13 @@ object StreamClassification extends StreamUtils {
 
     val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
+    
+    dnsParsedRawDf
+      .writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+      
     val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
         r.getAs[Timestamp](0),
@@ -496,9 +503,9 @@ object StreamClassification extends StreamUtils {
         r.getAs[Boolean](18)
       ))
 
-    val dnsFiltered  = dnsDf.filter(
-      $"timestamp".isNotNull
-    )
+    // val dnsFiltered  = dnsDf.filter(
+    //   $"ts".isNotNull
+    // )
   
       // dnsFiltered
       //   .writeStream
@@ -507,9 +514,9 @@ object StreamClassification extends StreamUtils {
       //   .start()
 
     //  Sink to Mongodb
-    val DnsCountQuery = dnsDf
+    val DnsCountQuery = dnsFiltered
         .writeStream
-        .format("console")
+        // .format("console")
         .outputMode("append")
         .foreach(new ForeachWriter[DnsCountObj] {
               val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
