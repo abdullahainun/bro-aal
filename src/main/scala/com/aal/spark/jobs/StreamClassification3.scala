@@ -177,7 +177,7 @@ val dnsParsendLogData = kafkaStreamDF
     .outputMode("append")
     .format("console")
     .start()
-    
+
 
     // kafkaStreamDF.select("value")
     // .writeStream
