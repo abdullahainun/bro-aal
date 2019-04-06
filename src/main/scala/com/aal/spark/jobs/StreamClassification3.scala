@@ -88,7 +88,7 @@ object StreamClassification3 extends StreamUtils {
         rejected: Boolean
     )
 
-    def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
       val kafkaUrl = "157.230.241.208:9092"
       val topic ="broconn"
 
@@ -134,49 +134,49 @@ object StreamClassification3 extends StreamUtils {
       )                      
 
        // dns log $on
-val dnsSchema : StructType = StructType(
-      Seq(StructField
-      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
-        StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.orig_p", IntegerType, true),
-        StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", IntegerType, true),
-        StructField("proto", StringType, true),
-        StructField("trans_id", IntegerType, true),
-        StructField("query", StringType, true),
-        StructField("rcode", IntegerType, true),
-        StructField("rcode_name", StringType, true),
-        StructField("AA", BooleanType, true),
-        StructField("TC", BooleanType, true),
-        StructField("RD", BooleanType, true),
-        StructField("RA", BooleanType, true),
-        StructField("Z", IntegerType, true),
-        StructField("answers", ArrayType(StringType, true)),
-        StructField("TTLs", ArrayType(IntegerType, true)),
-        StructField("rejected", BooleanType, true)
-      )
-      )
-      )
-      )
-    )
+    val dnsSchema : StructType = StructType(
+          Seq(StructField
+          ("dns", StructType(Seq(StructField("ts",DoubleType,true),
+            StructField("uid", StringType, true),
+            StructField("id.orig_h", StringType, true),
+            StructField("id.orig_p", IntegerType, true),
+            StructField("id.resp_h", StringType, true),
+            StructField("id.resp_p", IntegerType, true),
+            StructField("proto", StringType, true),
+            StructField("trans_id", IntegerType, true),
+            StructField("query", StringType, true),
+            StructField("rcode", IntegerType, true),
+            StructField("rcode_name", StringType, true),
+            StructField("AA", BooleanType, true),
+            StructField("TC", BooleanType, true),
+            StructField("RD", BooleanType, true),
+            StructField("RA", BooleanType, true),
+            StructField("Z", IntegerType, true),
+            StructField("answers", ArrayType(StringType, true)),
+            StructField("TTLs", ArrayType(IntegerType, true)),
+            StructField("rejected", BooleanType, true)
+          )
+          )
+          )
+          )
+        )
 
-val dnsParsendLogData = kafkaStreamDF
-      .select(col("value")
-        .cast(StringType)
-        .as("col")
-      )
-      .select(from_json(col("col"), dnsSchema)
-        .getField("dns")
-        .alias("dns")
-      )
-      .select("dns.*")
+    val dnsParsendLogData = kafkaStreamDF
+          .select(col("value")
+            .cast(StringType)
+            .as("col")
+          )
+          .select(from_json(col("col"), dnsSchema)
+            .getField("dns")
+            .alias("dns")
+          )
+          .select("dns.*")
 
-  dnsParsendLogData.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
+      dnsParsendLogData.select("*")
+        .writeStream
+        .outputMode("append")
+        .format("console")
+        .start()
 
 
     // kafkaStreamDF.select("value")
@@ -255,11 +255,9 @@ val dnsParsendLogData = kafkaStreamDF
 
 
       //Sink to Mongodb
-      val ConnCountQuery = filteredConn
+    val ConnCountQuery = filteredConn
           .writeStream
           .outputMode("append")
-//        .start()
-//        .awaitTermination()
           .foreach(new ForeachWriter[ConnCountObj] {
 
           val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.conns?replicaSet=rs0&authSource=admin"))
@@ -332,7 +330,7 @@ val dnsParsendLogData = kafkaStreamDF
     val classificationDf = transDF  
 
     // classificationDf.printSchema()
-// Load and parse the data
+    // Load and parse the data
     val connModel = PipelineModel.load("hdfs://localhost:9000/user/hduser/aal/tmp/isot-dt-model")
 
     val assembler = new VectorAssembler()
@@ -473,9 +471,9 @@ val dnsParsendLogData = kafkaStreamDF
 
         }).start()
 
-val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
+    val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
-val dnsDf = dnsParsedRawDf
+    val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
         r.getAs[Timestamp](0),
         r.getAs[String](1),
@@ -498,36 +496,34 @@ val dnsDf = dnsParsedRawDf
         r.getAs[Boolean](18)
       ))
 
-  val dnsFiltered  = dnsDf.filter(
+    val dnsFiltered  = dnsDf.filter(
       $"timestamp".isNotNull
     )
   
-  // dnsFiltered
-  //   .writeStream
-  //   .outputMode("append")
-  //   .format("console")
-  //   .start()
+      // dnsFiltered
+      //   .writeStream
+      //   .outputMode("append")
+      //   .format("console")
+      //   .start()
 
-//  Sink to Mongodb
-val DnsCountQuery = dnsFiltered
-      .writeStream
-      // .format("console")
-      .outputMode("append")
+    //  Sink to Mongodb
+    val DnsCountQuery = dnsFiltered
+        .writeStream
+        .format("console")
+        .outputMode("append")
+        .foreach(new ForeachWriter[DnsCountObj] {
+              val writeConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dns?replicaSet=rs0&authSource=admin"))
+              var mongoConnector: MongoConnector = _
+              var ConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
 
-      .foreach(new ForeachWriter[DnsCountObj] {
-
-      val dnswriteConfig: WriteConfig = WriteConfig(Map("uri" -> "mongodb://admin:jarkoM@127.0.0.1:27017/aal.dnslogs?replicaSet=rs0&authSource=admin"))
-      var dnsmongoConnector: MongoConnector = _
-      var dnsConnCounts: mutable.ArrayBuffer[DnsCountObj] = _
-
-      override def process(value: DnsCountObj): Unit = {
-        dnsConnCounts.append(value)
-      }
+              override def process(value: DnsCountObj): Unit = {
+                ConnCounts.append(value)
+              }
 
       override def close(errorOrNull: Throwable): Unit = {
-        if (dnsConnCounts.nonEmpty) {
-          dnsmongoConnector.withCollectionDo(dnswriteConfig, { collection: MongoCollection[Document] =>
-            collection.insertMany(dnsConnCounts.map(sc => {
+        if (ConnCounts.nonEmpty) {
+          mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
+            collection.insertMany(ConnCounts.map(sc => {
               var doc = new Document()
               doc.put("ts", sc.timestamp)
               doc.put("uid", sc.uid)
@@ -555,14 +551,12 @@ val DnsCountQuery = dnsFiltered
       }
 
       override def open(partitionId: Long, version: Long): Boolean = {
-            dnsmongoConnector = MongoConnector(dnswriteConfig.asOptions)
-            dnsConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
+            mongoConnector = MongoConnector(writeConfig.asOptions)
+            ConnCounts = new mutable.ArrayBuffer[DnsCountObj]()
             true
           }
 
     }).start()
-// dns lof $off
-
 
     spark.streams.awaitAnyTermination()
   }
