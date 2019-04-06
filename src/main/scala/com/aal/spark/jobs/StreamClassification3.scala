@@ -341,20 +341,20 @@ object StreamClassification3 extends StreamUtils {
     //.outputMode("append")
     //.start()
 
-    filtered
-    .writeStream
-    .format("console")
-    .outputMode("append")
-    .start()
+    // filtered
+    // .writeStream
+    // .format("console")
+    // .outputMode("append")
+    // .start()
 
     val output = assembler.transform(filtered)
     //   // // output.printSchema()
 
-    output
-    .writeStream
-    .format("console")
-    .outputMode("append")
-    .start()
+    // output
+    // .writeStream
+    // .format("console")
+    // .outputMode("append")
+    // .start()
 
     //   // // Make predictions on test documents.
     val testing = connModel.transform(output)
@@ -464,6 +464,7 @@ val dnsParsendLogData = kafkaStreamDF
         .getField("dns")
         .alias("dns")
       )
+      .select("dns.*")
 
   dnsParsendLogData.select("dns.*")
     .writeStream
@@ -471,7 +472,7 @@ val dnsParsendLogData = kafkaStreamDF
     .format("console")
     .start()
 
-val dnsParsedRawDf = dnsParsendLogData.select("dns.*").withColumn("ts",to_timestamp(
+val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
 val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
@@ -509,7 +510,7 @@ val dnsDf = dnsParsedRawDf
 //  Sink to Mongodb
 val DnsCountQuery = dnsFiltered
       .writeStream
-      .format("console")
+      // .format("console")
       .outputMode("append")
 
       .foreach(new ForeachWriter[DnsCountObj] {
