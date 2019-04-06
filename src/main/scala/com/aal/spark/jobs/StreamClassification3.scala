@@ -133,6 +133,52 @@ object StreamClassification3 extends StreamUtils {
         )
       )                      
 
+       // dns log $on
+val dnsSchema : StructType = StructType(
+      Seq(StructField
+      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
+        StructField("uid", StringType, true),
+        StructField("id.orig_h", StringType, true),
+        StructField("id.orig_p", IntegerType, true),
+        StructField("id.resp_h", StringType, true),
+        StructField("id.resp_p", IntegerType, true),
+        StructField("proto", StringType, true),
+        StructField("trans_id", IntegerType, true),
+        StructField("query", StringType, true),
+        StructField("rcode", IntegerType, true),
+        StructField("rcode_name", StringType, true),
+        StructField("AA", BooleanType, true),
+        StructField("TC", BooleanType, true),
+        StructField("RD", BooleanType, true),
+        StructField("RA", BooleanType, true),
+        StructField("Z", IntegerType, true),
+        StructField("answers", ArrayType(StringType, true)),
+        StructField("TTLs", ArrayType(IntegerType, true)),
+        StructField("rejected", BooleanType, true)
+      )
+      )
+      )
+      )
+    )
+
+val dnsParsendLogData = kafkaStreamDF
+      .select(col("value")
+        .cast(StringType)
+        .as("col")
+      )
+      .select(from_json(col("col"), dnsSchema)
+        .getField("dns")
+        .alias("dns")
+      )
+      .select("dns.*")
+
+  dnsParsendLogData.select("*")
+    .writeStream
+    .outputMode("append")
+    .format("console")
+    .start()
+    
+
     // kafkaStreamDF.select("value")
     // .writeStream
     // .outputMode("append")
@@ -426,51 +472,6 @@ object StreamClassification3 extends StreamUtils {
           }
 
         }).start()
-
-    // dns log $on
-val dnsSchema : StructType = StructType(
-      Seq(StructField
-      ("dns", StructType(Seq(StructField("ts",DoubleType,true),
-        StructField("uid", StringType, true),
-        StructField("id.orig_h", StringType, true),
-        StructField("id.orig_p", IntegerType, true),
-        StructField("id.resp_h", StringType, true),
-        StructField("id.resp_p", IntegerType, true),
-        StructField("proto", StringType, true),
-        StructField("trans_id", IntegerType, true),
-        StructField("query", StringType, true),
-        StructField("rcode", IntegerType, true),
-        StructField("rcode_name", StringType, true),
-        StructField("AA", BooleanType, true),
-        StructField("TC", BooleanType, true),
-        StructField("RD", BooleanType, true),
-        StructField("RA", BooleanType, true),
-        StructField("Z", IntegerType, true),
-        StructField("answers", ArrayType(StringType, true)),
-        StructField("TTLs", ArrayType(IntegerType, true)),
-        StructField("rejected", BooleanType, true)
-      )
-      )
-      )
-      )
-    )
-
-val dnsParsendLogData = kafkaStreamDF
-      .select(col("value")
-        .cast(StringType)
-        .as("col")
-      )
-      .select(from_json(col("col"), dnsSchema)
-        .getField("dns")
-        .alias("dns")
-      )
-      .select("dns.*")
-
-  dnsParsendLogData.select("*")
-    .writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
 
 val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
       from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
