@@ -466,7 +466,7 @@ val dnsParsendLogData = kafkaStreamDF
       )
       .select("dns.*")
 
-  dnsParsendLogData.select("dns.*")
+  dnsParsendLogData.select("*")
     .writeStream
     .outputMode("append")
     .format("console")
