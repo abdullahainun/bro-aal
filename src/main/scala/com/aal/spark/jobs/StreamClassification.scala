@@ -471,8 +471,8 @@ object StreamClassification extends StreamUtils {
 
         }).start()
 
-    val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_timestamp(
-      from_unixtime(col("ts")),"yyyy/MM/dd HH:mm:ss").alias("ts").cast(TimestampType))
+    val dnsParsedRawDf = dnsParsendLogData.withColumn("ts",to_utc_timestamp(
+        from_unixtime(col("ts")),"GMT").alias("ts").cast(TimestampType))
     
     dnsParsedRawDf
       .writeStream
