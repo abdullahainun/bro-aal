@@ -479,7 +479,7 @@ object StreamClassification extends StreamUtils {
       .outputMode("append")
       .format("console")
       .start()
-      
+
     val dnsDf = dnsParsedRawDf
       .map((r:Row) => DnsCountObj(
         r.getAs[Timestamp](0),
@@ -503,9 +503,9 @@ object StreamClassification extends StreamUtils {
         r.getAs[Boolean](18)
       ))
 
-    // val dnsFiltered  = dnsDf.filter(
-    //   $"ts".isNotNull
-    // )
+    val dnsFiltered  = dnsDf.filter(
+      $"timestamp".isNotNull
+    )
   
       // dnsFiltered
       //   .writeStream
