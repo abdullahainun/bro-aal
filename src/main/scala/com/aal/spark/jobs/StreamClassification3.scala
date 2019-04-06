@@ -496,9 +496,9 @@ object StreamClassification3 extends StreamUtils {
         r.getAs[Boolean](18)
       ))
 
-    val dnsFiltered  = dnsDf.filter(
-      $"timestamp".isNotNull
-    )
+    // val dnsFiltered  = dnsDf.filter(
+    //   $"timestamp".isNotNull
+    // )
   
       // dnsFiltered
       //   .writeStream
@@ -507,7 +507,7 @@ object StreamClassification3 extends StreamUtils {
       //   .start()
 
     //  Sink to Mongodb
-    val DnsCountQuery = dnsFiltered
+    val DnsCountQuery = dnsDf
         .writeStream
         .format("console")
         .outputMode("append")
