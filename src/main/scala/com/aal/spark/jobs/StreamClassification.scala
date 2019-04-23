@@ -1,7 +1,7 @@
 package com.aal.spark.jobs
 
 /**
-  * Created by aal on 17/10/18.
+  * Created by aal on 17/10/18.waw
   */
 
 import com.mongodb.client.MongoCollection
@@ -58,6 +58,7 @@ object StreamClassification extends StreamUtils {
         respIpBytes: Integer
     )
     case class ClassificationObj(
+      timestamp: Timestamp,
       uid: String,
       idOrigH: String,
       idOrigP: Integer,
@@ -404,6 +405,7 @@ object StreamClassification extends StreamUtils {
     val testing = connModel.transform(output)
 
     val newTesting = testing.select(
+        col("timestamp")
         col("uid"),
         col("idOrigH"),
         col("idOrigP"),
@@ -418,12 +420,13 @@ object StreamClassification extends StreamUtils {
       // .start()
     val resultDf = newTesting
       .map((r:Row) => ClassificationObj(
-        r.getAs[String](0),
+        r.getAs[Timestamp](0),
         r.getAs[String](1),
-        r.getAs[Integer](2),
-        r.getAs[String](3),
-        r.getAs[Integer](4),
-        r.getAs[String](5)
+        r.getAs[String](2),
+        r.getAs[Integer](3),
+        r.getAs[String](4),
+        r.getAs[Integer](5),
+        r.getAs[String](6)
       ))  
       
     //  machine learning model $off    
@@ -451,6 +454,7 @@ object StreamClassification extends StreamUtils {
               mongoConnector.withCollectionDo(writeConfig, { collection: MongoCollection[Document] =>
                 collection.insertMany(ConnCounts.map(sc => {
                   var doc = new Document()
+                  doc.put("ts", sc.timestamp)
                   doc.put("uid", sc.uid)
                   doc.put("orig_h", sc.idOrigH)
                   doc.put("orig_p", sc.idOrigP)
