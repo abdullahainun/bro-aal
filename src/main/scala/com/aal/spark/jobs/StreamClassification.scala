@@ -405,7 +405,7 @@ object StreamClassification extends StreamUtils {
     val testing = connModel.transform(output)
 
     val newTesting = testing.select(
-        col("timestamp")
+        col("timestamp"),
         col("uid"),
         col("idOrigH"),
         col("idOrigP"),
