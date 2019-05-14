@@ -18,7 +18,7 @@ private[spark] trait StreamUtils {
     val uri: String = args.headOption.getOrElse("mongodb://admin:jarkoM@127.0.0.1:27017/aal.classification?replicaSet=rs0&authSource=admin")
 
     val conf = new SparkConf()
-      .setMaster ("spark://master:7077")
+      .setMaster ("spark://10.8.0.2:7077")
       .setAppName("AnalisaTrafficDNS")
       .set("spark.app.id", "AnalisaTrafficDNS")
       .set("spark.mongodb.input.uri", uri)
