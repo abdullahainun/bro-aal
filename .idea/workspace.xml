@@ -19,21 +19,11 @@
     </projectState>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="StreamClassification2.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/StreamClassification2.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="79">
-              <caret line="16" column="40" lean-forward="true" selection-start-line="16" selection-start-column="40" selection-end-line="16" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="SimpleSVM.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/SimpleSVM.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
+            <state relative-caret-position="51">
               <caret line="8" column="7" lean-forward="false" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
               <folding />
             </state>
@@ -43,8 +33,8 @@
       <file leaf-file-name="BroDnsStream.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroDnsStream.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="181" column="0" lean-forward="true" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+            <state relative-caret-position="51">
+              <caret line="3" column="31" lean-forward="true" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -53,9 +43,11 @@
       <file leaf-file-name="BroConnStream.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroConnStream.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="102" column="39" lean-forward="false" selection-start-line="102" selection-start-column="39" selection-end-line="102" selection-end-column="39" />
-              <folding />
+            <state relative-caret-position="187">
+              <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+              <folding>
+                <marker date="1554576012001" expanded="true" signature="28:54" ph="/**...*/" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,9 +55,33 @@
       <file leaf-file-name="BroConnFeatureExtractionFormula.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnFeatureExtractionFormula.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="134" column="1" lean-forward="false" selection-start-line="134" selection-start-column="1" selection-end-line="134" selection-end-column="1" />
-              <folding />
+            <state relative-caret-position="2261">
+              <caret line="137" column="1" lean-forward="false" selection-start-line="137" selection-start-column="1" selection-end-line="137" selection-end-column="1" />
+              <folding>
+                <marker date="1554435150456" expanded="true" signature="264:479" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="515:670" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="575:609" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="613:647" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="706:876" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="780:815" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="819:854" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="915:1096" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="992:1028" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1032:1074" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1134:1334" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="1219:1272" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1276:1312" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1382:1609" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="1515:1549" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1553:1587" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1645:1863" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="1731:1804" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1808:1840" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="1984:2212" ph="(...)" />
+                <marker date="1554435150456" expanded="true" signature="2075:2122" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="2126:2190" ph="{...}" />
+                <marker date="1554435150456" expanded="true" signature="2217:2868" ph="/.../" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -73,7 +89,7 @@
       <file leaf-file-name="BroConnLabeling.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnLabeling.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-212">
+            <state relative-caret-position="68">
               <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
               <folding />
             </state>
@@ -83,9 +99,12 @@
       <file leaf-file-name="StreamUtils.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/StreamUtils.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
+            <state relative-caret-position="136">
               <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-              <folding />
+              <folding>
+                <marker date="1554351781451" expanded="true" signature="267:1028" ph="{...}" />
+                <marker date="1554351781451" expanded="true" signature="433:1026" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -104,6 +123,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/scala/com/aal/BroStream.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroDnsStream.scala" />
       </list>
     </option>
   </component>
@@ -114,10 +134,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="37" />
-    <option name="y" value="20" />
-    <option name="width" value="1329" />
-    <option name="height" value="748" />
+    <option name="x" value="55" />
+    <option name="y" value="30" />
+    <option name="width" value="1311" />
+    <option name="height" value="738" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -209,16 +229,16 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="configurable.group.language" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Training/automation-testing/ta-automation-kasirsaku-android" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -742,46 +762,48 @@
       <workItem from="1550302869087" duration="1297000" />
       <workItem from="1551141660997" duration="223000" />
       <workItem from="1554202968910" duration="183000" />
+      <workItem from="1557099039432" duration="55000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2882000" />
+    <option name="totallyTimeSpent" value="2937000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="37" y="20" width="1329" height="748" extended-state="6" />
+    <frame x="55" y="30" width="1311" height="738" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24866514" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24905944" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -797,44 +819,9 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/BroStream.scala" />
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/StreamUtils.scala" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sales.csv" />
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnFeatureExtractionFormula.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="134" column="1" lean-forward="false" selection-start-line="134" selection-start-column="1" selection-end-line="134" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/StreamUtils.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnLabeling.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-212">
-          <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroConnStream.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="102" column="39" lean-forward="false" selection-start-line="102" selection-start-column="39" selection-end-line="102" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/StreamClassification2.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
+        <state relative-caret-position="272">
           <caret line="16" column="40" lean-forward="true" selection-start-line="16" selection-start-column="40" selection-end-line="16" selection-end-column="40" />
           <folding />
         </state>
@@ -842,7 +829,156 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/SimpleSVM.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="136">
+          <caret line="8" column="7" lean-forward="false" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroConnStream.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1734">
+          <caret line="102" column="39" lean-forward="false" selection-start-line="102" selection-start-column="39" selection-end-line="102" selection-end-column="39" />
+          <folding>
+            <marker date="1554576012001" expanded="true" signature="28:54" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnFeatureExtractionFormula.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2278">
+          <caret line="134" column="1" lean-forward="false" selection-start-line="134" selection-start-column="1" selection-end-line="134" selection-end-column="1" />
+          <folding>
+            <marker date="1554435150456" expanded="true" signature="264:479" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="515:670" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="575:609" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="613:647" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="706:876" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="780:815" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="819:854" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="915:1096" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="992:1028" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1032:1074" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1134:1334" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1219:1272" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1276:1312" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1382:1609" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1515:1549" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1553:1587" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1645:1863" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1731:1804" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1808:1840" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1984:2212" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="2075:2122" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="2126:2190" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="2217:2868" ph="/.../" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnLabeling.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/StreamUtils.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+          <folding>
+            <marker date="1554351781451" expanded="true" signature="267:1028" ph="{...}" />
+            <marker date="1554351781451" expanded="true" signature="433:1026" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroDnsStream.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3077">
+          <caret line="181" column="0" lean-forward="true" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/BroStream.scala" />
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/StreamUtils.scala" />
+    <entry file="file://$PROJECT_DIR$/src/main/resources/sales.csv" />
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnFeatureExtractionFormula.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2261">
+          <caret line="137" column="1" lean-forward="false" selection-start-line="137" selection-start-column="1" selection-end-line="137" selection-end-column="1" />
+          <folding>
+            <marker date="1554435150456" expanded="true" signature="264:479" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="515:670" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="575:609" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="613:647" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="706:876" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="780:815" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="819:854" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="915:1096" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="992:1028" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1032:1074" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1134:1334" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1219:1272" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1276:1312" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1382:1609" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1515:1549" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1553:1587" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1645:1863" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="1731:1804" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1808:1840" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="1984:2212" ph="(...)" />
+            <marker date="1554435150456" expanded="true" signature="2075:2122" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="2126:2190" ph="{...}" />
+            <marker date="1554435150456" expanded="true" signature="2217:2868" ph="/.../" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/StreamUtils.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+          <folding>
+            <marker date="1554351781451" expanded="true" signature="267:1028" ph="{...}" />
+            <marker date="1554351781451" expanded="true" signature="433:1026" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/utils/BroConnLabeling.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroConnStream.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+          <folding>
+            <marker date="1554576012001" expanded="true" signature="28:54" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/StreamClassification2.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="40" lean-forward="false" selection-start-line="16" selection-start-column="40" selection-end-line="16" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/SimpleSVM.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
           <caret line="8" column="7" lean-forward="false" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
           <folding />
         </state>
@@ -850,8 +986,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/aal/spark/jobs/BroDnsStream.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="181" column="0" lean-forward="true" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+        <state relative-caret-position="51">
+          <caret line="3" column="31" lean-forward="true" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
           <folding />
         </state>
       </provider>

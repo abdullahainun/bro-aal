@@ -90,7 +90,7 @@ object StreamClassification extends StreamUtils {
     )
 
   def main(args: Array[String]): Unit = {
-      val kafkaUrl = "157.230.241.208:9092"
+      val kafkaUrl = "192.168.56.11:9092"
       val topic ="broconn"
 
       val spark = getSparkSession(args)
