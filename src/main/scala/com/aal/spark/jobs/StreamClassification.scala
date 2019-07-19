@@ -90,7 +90,7 @@ object StreamClassification extends StreamUtils {
     )
 
   def main(args: Array[String]): Unit = {
-      val kafkaUrl = "192.168.56.11:9092"
+      val kafkaUrl = "192.168.58.49:9092"
       val topic ="broconn"
 
       val spark = getSparkSession(args)
@@ -173,11 +173,11 @@ object StreamClassification extends StreamUtils {
           )
           .select("dns.*")
 
-      dnsParsendLogData.select("*")
-        .writeStream
-        .outputMode("append")
-        .format("console")
-        .start()
+      // dnsParsendLogData.select("*")
+      //   .writeStream
+      //   .outputMode("append")
+      //   .format("console")
+      //   .start()
 
 
     // kafkaStreamDF.select("value")
@@ -253,7 +253,6 @@ object StreamClassification extends StreamUtils {
       $"respPkts".isNotNull &&
       $"respIpBytes".isNotNull
     )
-
 
       //Sink to Mongodb
     val ConnCountQuery = filteredConn
@@ -395,11 +394,11 @@ object StreamClassification extends StreamUtils {
     val output = assembler.transform(filtered)
     //   // // output.printSchema()
 
-    // output
-    // .writeStream
-    // .format("console")
-    // .outputMode("append")
-    // .start()
+    output
+    .writeStream
+    .format("console")
+    .outputMode("append")
+    .start()
 
     //   // // Make predictions on test documents.
     val testing = connModel.transform(output)
